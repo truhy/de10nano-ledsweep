@@ -1,5 +1,5 @@
 /**************************************************************************//**
- * @file     system_c5soc.c
+ * @file     mmu_c5soc.c
  * @brief    MMU Configuration
  *           Device c5soc
  * @version  V1.1.0
@@ -74,6 +74,8 @@
 	| When remapped to OCRAM    | 0x00000000 - 0x0000FFFF | Normal, RWX, inner-cacheable, shareable                   |
 	| When remapped to Boot ROM |                         | Normal, RO, inner & outer-cacheable, shareable            |
 	+-----------------------------------------------------------------------------------------------------------------+
+
+	*The Cortex-A9 in Cyclone V SoC has Global Monitors so shareable attribute is supported and is required for data coherence on cache when FPGA is using the AXI bridges to access SDRAM.
 
 References:
 	- Cyclone V Hard Processor System Technical Reference Manual
@@ -233,14 +235,14 @@ void MMU_CreateTranslationTable(void){
 	// Example of enabling L1 and L2 tables, but due to table size and range limitations, we will not be using it, nor have we defined any table entries above anyway
 	// If only Arm allowed table split with independent input VA (Vector Address) index range for L1 and L2 tables
 	// See B3.5.4 Selecting between TTBR0 and TTBR1, Short-descriptor translation table format from ARM Architecture v7-A ref manual
-	// The L2 table scheme for Cortex A9 is useless for bare-metal, i.e. too much work to handle fault exception and switch in dynamic table entries for pages
+	// The L2 table scheme for Cortex-A9 is useless for bare-metal, i.e. too much work to handle fault exception and switching in dynamic table entries (pages)
 	//__set_CP(15, 0, TTB_A_BASE | 0x5b, 2, 0, 0);  // Set TTBR0.  Enable level 1 Translation Table
 	//__set_CP(15, 0, TTB_A_BASE | 0x5b, 2, 0, 1);  // Set TTBR1.  Set level 2 Translation Table base address and table walk settings
 	//__set_CP(15, 0, TTBCR_N_L1_8K_L2_16K, 2, 0, 2);  // Set TTBCR.  Select short-descriptor format, use level 1 and level 2 tables
 	//__ISB();
 
 	// Set up domain access control register
-	__set_DACR(1);    // Client access. Accesses are checked against the permission bits in the translation tables, i.e. apply table entry setting
-	//__set_DACR(3);  // Manager access. Accesses are not checked against the permission bits in the translation tables, i.e. ignore table entry setting, unrestricted access
+	__set_DACR(1);    // Client access. Accesses are checked against the permission bits in the translation table, i.e. apply permission from table settings
+	//__set_DACR(3);  // Manager access. Accesses are not checked against the permission bits in the translation table, i.e. ignore permission from table settings, unrestricted access
 	__ISB();
 }

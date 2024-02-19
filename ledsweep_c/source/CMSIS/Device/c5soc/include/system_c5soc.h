@@ -1,5 +1,5 @@
 /**************************************************************************//**
- * @file     system_<Device>.h
+ * @file     system_c5soc.h
  * @brief    CMSIS Cortex-A Device Peripheral Access Layer
  * @version  V5.00
  * @date     10. January 2018
