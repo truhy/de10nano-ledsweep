@@ -25,69 +25,69 @@
 
 /* Memory map description
 
-   Processor memory map of DE-10 Nano processor system (HPS).
+   Processor memory map of DE10-Nano processor system (HPS).
 
-	The implemented MMU table is 4096 short descriptor entries of 1MB sections, which translates the six Cyclone V SoC memory regions below.
-	Notes:
-	- the Peripherals+L3, Boot ROM, SCU+L2 and OCRAM memory regions had to be combined because their sizes do not align to 1MB
-	- bottom 1MB region is assumed to be remapped to SDRAM
-	+-----------------------------------------------------------------------------------------------------------------+
-	| Region                             | Address Range           | MMU table entry attributes                       |
-	|-----------------------------------------------------------------------------------------------------------------|
-	| Periph+L3, Boot ROM, SCU+L2, OCRAM | 0xFF400000 - 0xFFFFFFFF | Shared device, RW, non-cacheable, shareable      |
-	|-----------------------------------------------------------------------------------------------------------------|
-	| LW H-to-F                          | 0xFF200000 - 0xFF3FFFFF | Shared device, RW, non-cacheable, shareable      |
-	|-----------------------------------------------------------------------------------------------------------------|
-	| DAP                                | 0xFF000000 - 0xFF1FFFFF | Shared device, RW, non-cacheable, shareable      |
-	|-----------------------------------------------------------------------------------------------------------------|
-	| STM                                | 0xFC000000 - 0xFEFFFFFF | Shared device, RW, non-cacheable, shareable      |
-	|-----------------------------------------------------------------------------------------------------------------|
-	| H-to-F                             | 0xC0000000 - 0xFBFFFFFF | Shared device, RW, non-cacheable, shareable      |
-	|-----------------------------------------------------------------------------------------------------------------|
-	| 3GB SDRAM                          | 0x00000000 - 0xBFFFFFFF | Normal, RWX, inner & outer-cacheable, shareable  |
-	+-----------------------------------------------------------------------------------------------------------------+
+   The implemented MMU table is 4096 short descriptor entries of 1MB sections, which translates the six Cyclone V SoC memory regions below.
+   Notes:
+   - the Peripherals+L3, Boot ROM, SCU+L2 and OCRAM memory regions had to be combined because their sizes do not align to 1MB
+   - bottom 1MB region is assumed to be remapped to SDRAM
+   +-----------------------------------------------------------------------------------------------------------------+
+   | Region                             | Address Range           | MMU table entry attributes                       |
+   |-----------------------------------------------------------------------------------------------------------------|
+   | Periph+L3, Boot ROM, SCU+L2, OCRAM | 0xFF400000 - 0xFFFFFFFF | Shared device, RW, non-cacheable, shareable      |
+   |-----------------------------------------------------------------------------------------------------------------|
+   | LW H-to-F                          | 0xFF200000 - 0xFF3FFFFF | Shared device, RW, non-cacheable, shareable      |
+   |-----------------------------------------------------------------------------------------------------------------|
+   | DAP                                | 0xFF000000 - 0xFF1FFFFF | Shared device, RW, non-cacheable, shareable      |
+   |-----------------------------------------------------------------------------------------------------------------|
+   | STM                                | 0xFC000000 - 0xFEFFFFFF | Shared device, RW, non-cacheable, shareable      |
+   |-----------------------------------------------------------------------------------------------------------------|
+   | H-to-F                             | 0xC0000000 - 0xFBFFFFFF | Shared device, RW, non-cacheable, shareable      |
+   |-----------------------------------------------------------------------------------------------------------------|
+   | 3GB SDRAM                          | 0x00000000 - 0xBFFFFFFF | Normal, RWX, inner & outer-cacheable, shareable  |
+   +-----------------------------------------------------------------------------------------------------------------+
 
-	Below is the ideal MMU table, but it is not easily achievable:
-	+-----------------------------------------------------------------------------------------------------------------+
-	| Region                    | Address Range           | MMU table entry attributes                                |
-	|-----------------------------------------------------------------------------------------------------------------|
-	| OCRAM (On-Chip RAM)       | 0xFFFF0000 - 0xFFFFFFFF | Normal, RWX, inner-cacheable, shareable                   |
-	|-----------------------------------------------------------------------------------------------------------------|
-	| SCU and L2 Registers      | 0xFFFEC000 - 0xFFFEFFFF | Shared device, RW, non-cacheable, shareable               |
-	|-----------------------------------------------------------------------------------------------------------------|
-	| Boot ROM                  | 0xFFFD0000 - 0xFFFEBFFF | Shared device, RO, non-cacheable, shareable               |
-	|-----------------------------------------------------------------------------------------------------------------|
-	| Peripherals and L3 GPV    | 0xFF400000 - 0xFFFCFFFF | Shared device, RW, non-cacheable, shareable               |
-	|-----------------------------------------------------------------------------------------------------------------|
-	| LW H-to-F                 | 0xFF200000 - 0xFF3FFFFF | Shared device, RW, non-cacheable, shareable               |
-	|-----------------------------------------------------------------------------------------------------------------|
-	| DAP                       | 0xFF000000 - 0xFF1FFFFF | Shared device, RW, non-cacheable, shareable               |
-	|-----------------------------------------------------------------------------------------------------------------|
-	| STM                       | 0xFC000000 - 0xFEFFFFFF | Shared device, RW, non-cacheable, shareable               |
-	|-----------------------------------------------------------------------------------------------------------------|
-	| H-to-F                    | 0xC0000000 - 0xFBFFFFFF | Shared device, RW, non-cacheable, shareable               |
-	|-----------------------------------------------------------------------------------------------------------------|
-	| SDRAM                     | 0x00100000 - 0xBFFFFFFF | Normal, RWX, inner & outer-cacheable, shareable           |
-	|-----------------------------------------------------------------------------------------------------------------|
-	| When remapped to SDRAM    | 0x00010000 - 0x000FFFFF | Normal, RWX, inner & outer-cacheable, shareable           |
-	|-----------------------------------------------------------------------------------------------------------------+
-	| When remapped to OCRAM    | 0x00000000 - 0x0000FFFF | Normal, RWX, inner-cacheable, shareable                   |
-	| When remapped to Boot ROM |                         | Normal, RO, inner & outer-cacheable, shareable            |
-	+-----------------------------------------------------------------------------------------------------------------+
+   Below is the ideal MMU table, but it is not easily achievable:
+   +-----------------------------------------------------------------------------------------------------------------+
+   | Region                    | Address Range           | MMU table entry attributes                                |
+   |-----------------------------------------------------------------------------------------------------------------|
+   | OCRAM (On-Chip RAM)       | 0xFFFF0000 - 0xFFFFFFFF | Normal, RWX, inner-cacheable, shareable                   |
+   |-----------------------------------------------------------------------------------------------------------------|
+   | SCU and L2 Registers      | 0xFFFEC000 - 0xFFFEFFFF | Shared device, RW, non-cacheable, shareable               |
+   |-----------------------------------------------------------------------------------------------------------------|
+   | Boot ROM                  | 0xFFFD0000 - 0xFFFEBFFF | Shared device, RO, non-cacheable, shareable               |
+   |-----------------------------------------------------------------------------------------------------------------|
+   | Peripherals and L3 GPV    | 0xFF400000 - 0xFFFCFFFF | Shared device, RW, non-cacheable, shareable               |
+   |-----------------------------------------------------------------------------------------------------------------|
+   | LW H-to-F                 | 0xFF200000 - 0xFF3FFFFF | Shared device, RW, non-cacheable, shareable               |
+   |-----------------------------------------------------------------------------------------------------------------|
+   | DAP                       | 0xFF000000 - 0xFF1FFFFF | Shared device, RW, non-cacheable, shareable               |
+   |-----------------------------------------------------------------------------------------------------------------|
+   | STM                       | 0xFC000000 - 0xFEFFFFFF | Shared device, RW, non-cacheable, shareable               |
+   |-----------------------------------------------------------------------------------------------------------------|
+   | H-to-F                    | 0xC0000000 - 0xFBFFFFFF | Shared device, RW, non-cacheable, shareable               |
+   |-----------------------------------------------------------------------------------------------------------------|
+   | SDRAM                     | 0x00100000 - 0xBFFFFFFF | Normal, RWX, inner & outer-cacheable, shareable           |
+   |-----------------------------------------------------------------------------------------------------------------|
+   | When remapped to SDRAM    | 0x00010000 - 0x000FFFFF | Normal, RWX, inner & outer-cacheable, shareable           |
+   |-----------------------------------------------------------------------------------------------------------------+
+   | When remapped to OCRAM    | 0x00000000 - 0x0000FFFF | Normal, RWX, inner-cacheable, shareable                   |
+   | When remapped to Boot ROM |                         | Normal, RO, inner & outer-cacheable, shareable            |
+   +-----------------------------------------------------------------------------------------------------------------+
 
-	*The Cortex-A9 in Cyclone V SoC has Global Monitors so shareable attribute is supported and is required for data coherence on cache when FPGA is using the AXI bridges to access SDRAM.
+   *The Cortex-A9 in Cyclone V SoC has Global Monitors so shareable attribute is supported and is required for data coherence on cache when FPGA is using the AXI bridges to access SDRAM.
 
-References:
-	- Cyclone V Hard Processor System Technical Reference Manual
-	    Notable sections:
-	      - Figure 8-4: Address Maps for System Interconnect Masters
+   References:
+     - Cyclone V Hard Processor System Technical Reference Manual
+         Notable sections:
+           - Figure 8-4: Address Maps for System Interconnect Masters
 
-	- ARM Architecture v7-A ref manual
-	    Notable sections:
-	      - B3.5.4 Selecting between TTBR0 and TTBR1, Short-descriptor translation table format
-	      - B4.1.153 TTBCR, Translation Table Base Control Register, VMSA
-	      - B4.1.154 TTBR0, Translation Table Base Register 0, VMSA
-	      - B4.1.155 TTBR1, Translation Table Base Register 1, VMSA
+     - ARM Architecture v7-A ref manual
+         Notable sections:
+           - B3.5.4 Selecting between TTBR0 and TTBR1, Short-descriptor translation table format
+           - B4.1.153 TTBCR, Translation Table Base Control Register, VMSA
+           - B4.1.154 TTBR0, Translation Table Base Register 0, VMSA
+           - B4.1.155 TTBR1, Translation Table Base Register 1, VMSA
 */
 
 // L1 Cache info and restrictions about architecture of the caches (CCSIR register):
@@ -192,7 +192,7 @@ void MMU_CreateTranslationTable(void){
 	// This configuration has these limitations:
 	//   L1 max entries = 16384 / 4 = 4096
 	//   Due to 1MB granularity (size and alignment), it is not possible to have separate sections for these mis-aligned regions: peripherals/L3, BootROM, SCU/L2 and OCRAM
-	//   We will overlap those regions with 1MB sections and we will also have to set memory type to shared device, non-executable
+	//   We will overlap these regions with 1MB sections and set memory type to shared device and non-executable for all of them
 	MMU_TTSection((uint32_t *)TTB_A_BASE, C5SOC_RAM_BASE, 3072U, L1_Section_Attrib_Normal_RWX);   // Define 1MB sections for 3GB SDRAM region
 	MMU_TTSection((uint32_t *)TTB_A_BASE, C5SOC_H2F_BASE, 960U, L1_Section_Attrib_Device_RW);     // Define 1MB sections for H2F region
 	MMU_TTSection((uint32_t *)TTB_A_BASE, C5SOC_STM_BASE, 48U, L1_Section_Attrib_Device_RW);      // Define 1MB sections for STM region
