@@ -75,7 +75,7 @@
    | When remapped to Boot ROM | 0x00000000 - 0x0000FFFF | Normal, RO, inner & outer-cacheable, shareable            |
    +-----------------------------------------------------------------------------------------------------------------+
 
-   *The Cortex-A9 in Cyclone V SoC has Global Monitors so shareable attribute is supported, and is required for data coherence on cache - required when the FPGA is using the AXI bridges to access SDRAM.
+   *The Cortex-A9 in Cyclone V SoC has Global Monitors so shareable attribute is supported, and is required for AXI bridge data coherence on cached regions - required when the FPGA is using the AXI bridges to access SDRAM.
 
    References:
      - Cyclone V Hard Processor System Technical Reference Manual
