@@ -371,9 +371,9 @@ endif
 endif
 endif
 
-# ===============================
-# Compile and linke rules (Debug)
-# ===============================
+# ==============================
+# Compile and link rules (Debug)
+# ==============================
 
 # Compile source files
 $(DBG_PATH)/%.o: $(DBG_SRCS_PRE)
@@ -410,9 +410,9 @@ endif
 endif
 endif
 
-# =================================
-# Compile and linke rules (Release)
-# =================================
+# ================================
+# Compile and link rules (Release)
+# ================================
 
 # Compile source files
 $(REL_PATH)/%.o: $(REL_SRCS_PRE)
