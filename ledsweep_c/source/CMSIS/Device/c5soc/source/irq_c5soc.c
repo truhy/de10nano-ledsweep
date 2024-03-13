@@ -27,6 +27,7 @@
 // Define CMSIS IRQ handler table (see irq_ctrl_gic.h)
 IRQHandler_t IRQTable[IRQ_GIC_LINE_COUNT] = { 0U };
 
+// Overrride CMSIS default weak prototype (see irq_ctrl_gic.h)
 int32_t IRQ_Initialize(void){
 	uint32_t i;
 
@@ -44,7 +45,7 @@ int32_t IRQ_Initialize(void){
 #pragma GCC diagnostic push
 #pragma GCC diagnostic ignored "-Wattributes"
 
-// Overrride CMSIS default weak main IRQ handler (see irq_ctrl_gic.h)
+// Overrride CMSIS default weak prototype (see irq_ctrl_gic.h)
 void __attribute__((interrupt("IRQ"))) IRQ_Handler(void){
 	// Save floating point registers (VFP registers)
 #if((__FPU_PRESENT == 1) && (__FPU_USED == 1))
@@ -79,7 +80,7 @@ void __attribute__((interrupt("IRQ"))) IRQ_Handler(void){
 
 #pragma GCC diagnostic pop
 
-// Overrride CMSIS default weak main IRQ GetHandler (see irq_ctrl_gic.h)
+// Overrride CMSIS default weak prototype (see irq_ctrl_gic.h)
 IRQHandler_t IRQ_GetHandler(IRQn_ID_t irqn) {
 	IRQHandler_t h;
 

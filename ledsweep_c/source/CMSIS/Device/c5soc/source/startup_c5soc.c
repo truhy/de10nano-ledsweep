@@ -235,7 +235,7 @@ void Reset_Handler(RESET_ARGS) {
   );
 }
 
-#if(TRU_EXIT_TO_UBOOT)
+//#if(TRU_EXIT_TO_UBOOT)
   // =============================
   // Override newlib _stack_init()
   // =============================
@@ -243,7 +243,7 @@ void Reset_Handler(RESET_ARGS) {
   // This makes newlib setup only the system stack
   void _stack_init(void){
   }
-#endif
+//#endif
 
 /*----------------------------------------------------------------------------
   Default Handler for Exceptions / Interrupts

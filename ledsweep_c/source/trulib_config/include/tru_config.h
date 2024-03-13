@@ -123,7 +123,7 @@
 			#define TRU_CLEAN_CACHE 1U
 		#endif
 		#ifndef TRU_MMU_ENABLE
-			#define TRU_MMU_ENABLE 0U
+			#define TRU_MMU_ENABLE 1U
 		#endif
 		#ifndef TRU_SMP_COHERENCY_ENABLE
 			#define TRU_SMP_COHERENCY_ENABLE 0U
