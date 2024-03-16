@@ -116,18 +116,18 @@
 
 // L2 table pointers
 //-----------------------------------------------------
-#define PRIVATE_TABLE_L2_BASE_4k       (0x80504000) //Map 4k Private Address space
-#define SYNC_FLAGS_TABLE_L2_BASE_4k    (0x80504C00) //Map 4k Flag synchronization
-#define PERIPHERAL_A_TABLE_L2_BASE_64k (0x80504400) //Map 64k Peripheral #1 
-#define PERIPHERAL_B_TABLE_L2_BASE_64k (0x80504800) //Map 64k Peripheral #2 
+#define PRIVATE_TABLE_L2_BASE_4k       (0x80504000UL) //Map 4k Private Address space
+#define SYNC_FLAGS_TABLE_L2_BASE_4k    (0x80504C00UL) //Map 4k Flag synchronization
+#define PERIPHERAL_A_TABLE_L2_BASE_64k (0x80504400UL) //Map 64k Peripheral #1
+#define PERIPHERAL_B_TABLE_L2_BASE_64k (0x80504800UL) //Map 64k Peripheral #2
 
 //--------------------- PERIPHERALS -------------------
-#define PERIPHERAL_A_FAULT             (0x00000000 + 0x1C000000) 
-#define PERIPHERAL_B_FAULT             (0x00100000 + 0x1C000000) 
+#define PERIPHERAL_A_FAULT             (0x00000000UL + 0x1C000000UL)
+#define PERIPHERAL_B_FAULT             (0x00100000UL + 0x1C000000UL)
 
 //--------------------- SYNC FLAGS --------------------
-#define FLAG_SYNC                       0xFFFFF000
-#define F_SYNC_BASE                     0xFFF00000  //1M aligned
+#define FLAG_SYNC                       0xFFFFF000UL
+#define F_SYNC_BASE                     0xFFF00000UL  //1M aligned
 
 //Import symbols from linker
 //extern uint32_t Image$$VECTORS$$Base;
@@ -138,19 +138,19 @@ extern uint32_t Image$$TTB$$ZI$$Base;
 // TTB (Translation Table Base) address.
 // I've defined TTB A and TTB B sections to allow switching of L1 and L2 assignment
 // If L1 table only then TTB A = L1 table, else TTB A = L2 table and TTB B = L1 table
-#define TTB_L2_SIZE 0x4000
+#define TTB_L2_SIZE 0x4000U
 #define TTB_A_BASE ((uint32_t)&Image$$TTB$$ZI$$Base)
 #define TTB_B_BASE (((uint32_t)&Image$$TTB$$ZI$$Base) + TTB_L2_SIZE)
 
 // TTBxx register values for setting the L1 table size and VA range (see ARM Architecture v7-A ref manual)
-#define TTBCR_N_L1_16K        0x0
-#define TTBCR_N_L1_8K_L2_16K  0x1
-#define TTBCR_N_L1_4K_L2_16K  0x2
-#define TTBCR_N_L1_2K_L2_16K  0x3
-#define TTBCR_N_L1_1K_L2_16K  0x4
-#define TTBCR_N_L1_512_L2_16K 0x5
-#define TTBCR_N_L1_256_L2_16K 0x6
-#define TTBCR_N_L1_128_L2_16K 0x7
+#define TTBCR_N_L1_16K        0x0U
+#define TTBCR_N_L1_8K_L2_16K  0x1U
+#define TTBCR_N_L1_4K_L2_16K  0x2U
+#define TTBCR_N_L1_2K_L2_16K  0x3U
+#define TTBCR_N_L1_1K_L2_16K  0x4U
+#define TTBCR_N_L1_512_L2_16K 0x5U
+#define TTBCR_N_L1_256_L2_16K 0x6U
+#define TTBCR_N_L1_128_L2_16K 0x7U
 
 // Layout 1: Use only L1 table
 void MMU_CreateTranslationTable(void){

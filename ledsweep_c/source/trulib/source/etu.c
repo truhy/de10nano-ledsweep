@@ -21,16 +21,15 @@
 	OUT OF OR IN CONNECTION WITH THE SOFTWARE OR THE USE OR OTHER DEALINGS IN THE
 	SOFTWARE.
 
-	Version: 20240205
+	Version: 20240316
 
 	Exit to U-Boot support.
 */
 
 #include "etu.h"
+#include "tru_logger.h"
 
 #if(TRU_EXIT_TO_UBOOT)
-
-#include "tru_logger.h"
 
 // ===============================================
 // Global variables for returning back into U-Boot
@@ -100,11 +99,15 @@ void __attribute__((naked)) etu(int rc){
 
 // Override newlib _exit()
 void __attribute__((noreturn)) _exit(int status){
-#if(TRU_EXIT_TO_UBOOT)
 	etu(status);
-#endif
+	while(1);
+}
 
-	DEBUG_PRINTF("DEBUG: Starting infinity loop"_NL);
+#else
+
+// Override newlib _exit()
+void __attribute__((noreturn)) _exit(int status){
+	DEBUG_PRINTF("Starting infinity loop\n");
 	while(1);
 }
 

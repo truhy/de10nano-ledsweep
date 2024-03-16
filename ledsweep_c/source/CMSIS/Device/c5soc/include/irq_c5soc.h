@@ -51,7 +51,7 @@ typedef void (*IRQHandler_t) (void);
 // priority (all 1s), however, this value is set aside for the IRQ CPU
 // priority mask, so cannot be used, the lowest useable group-priority
 // is one less, i.e. 30.
-#define GIC_IRQ_PRIORITY_GRP5SUB3_SPLIT(grp, sub) (((unsigned char)grp << 3) | (unsigned char)sub)
+#define GIC_IRQ_PRIORITY_GRP5SUB3_SPLIT(grp, sub) (((unsigned char)grp << 3U) | (unsigned char)sub)
 
 #define GIC_IRQ_PRIORITY_GRP5SUB3_LOWEST  GIC_IRQ_PRIORITY_GRP5SUB3_SPLIT(30U, 7U)
 #define GIC_IRQ_PRIORITY_GRP5SUB3_HIGHEST GIC_IRQ_PRIORITY_GRP5SUB3_SPLIT( 0U, 0U)

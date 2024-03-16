@@ -36,13 +36,13 @@
 /*----------------------------------------------------------------------------
   Definitions
  *----------------------------------------------------------------------------*/
-#define USR_MODE 0x10            // User mode
-#define FIQ_MODE 0x11            // Fast Interrupt Request mode
-#define IRQ_MODE 0x12            // Interrupt Request mode
-#define SVC_MODE 0x13            // Supervisor mode
-#define ABT_MODE 0x17            // Abort mode
-#define UND_MODE 0x1B            // Undefined Instruction mode
-#define SYS_MODE 0x1F            // System mode
+#define USR_MODE 0x10U            // User mode
+#define FIQ_MODE 0x11U            // Fast Interrupt Request mode
+#define IRQ_MODE 0x12U            // Interrupt Request mode
+#define SVC_MODE 0x13U            // Supervisor mode
+#define ABT_MODE 0x17U            // Abort mode
+#define UND_MODE 0x1BU            // Undefined Instruction mode
+#define SYS_MODE 0x1FU            // System mode
 
 /*----------------------------------------------------------------------------
   Internal References
@@ -221,6 +221,7 @@ void Reset_Handler(RESET_ARGS) {
 #if(TRU_SMP_COHERENCY_ENABLE == 1U)
   // Enable SMP cache coherency support
   "MRC    p15, 0, r0, c1, c0, 1                    \n"  // Read ACTLR
+  "ORR    r0, r0, #(0x1 << 22)                     \n"  // Set bit 22 to enable shared attribute override. Recommended for ACP data coherency from Cyclone V HPS tech ref
   "ORR    r0, r0, #(0x1 << 6)                      \n"  // Set bit 6 to participate in SMP coherency
   "ORR    r0, r0, #(0x1 << 2)                      \n"  // Set bit 2 to enable L1 dside prefetch
   "ORR    r0, r0, #(0x1 << 0)                      \n"  // Set bit 0 to enable maintenance broadcast

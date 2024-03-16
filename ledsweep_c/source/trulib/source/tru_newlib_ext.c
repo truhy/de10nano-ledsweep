@@ -21,7 +21,7 @@
 	OUT OF OR IN CONNECTION WITH THE SOFTWARE OR THE USE OR OTHER DEALINGS IN THE
 	SOFTWARE.
 
-	Version: 20240211
+	Version: 20240315
 
 	Minimal implementation of required newlib function stubs.
 */
@@ -77,7 +77,7 @@
 		}
 
 		int _write(int fd, char *ptr, int len){
-			tru_uart_ll_write_str(TRU_UART0_BASE_ADDR, ptr, len);  // Re-target to UART controller
+			tru_uart_ll_write_str((TRU_TARGET_TYPE *)TRU_UART0_BASE_ADDR, ptr, len);  // Re-target to UART controller
 			return len;
 		}
 	#else

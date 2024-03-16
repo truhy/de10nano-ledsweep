@@ -21,7 +21,7 @@
     OUT OF OR IN CONNECTION WITH THE SOFTWARE OR THE USE OR OTHER DEALINGS IN THE
     SOFTWARE.
 
-    Version: 20230701
+    Version: 20240316
 
     FPGA IRQ handler.
 */
@@ -36,36 +36,35 @@ static pio_ledsw_t *fpga_pio = NULL;
 
 // User IRQ handler for interrupt triggered from FPGA IRQ0
 static void fpga_72_irqhandler(void){
-	uint32_t fpga_inputs = tru_mem_rd_word(PIO0_DATA);  // Read FPGA input keys from memory mapped L2H bridge
+	uint32_t fpga_inputs = tru_rd32((TRU_TARGET_TYPE *)PIO0_DATA);  // Read FPGA input keys from memory mapped L2H bridge
 
 	// Check which key was pressed
 	switch(fpga_inputs){
 		case PIO0_INPUT_F2H_KEY0:
 			if(fpga_pio->delay_ms >= PIO0_ANIM_DELAY_STEP_ADJ) fpga_pio->delay_ms -= PIO0_ANIM_DELAY_STEP_ADJ;
-			DEBUG_PRINTF("DEBUG: Key 0 pressed! Delay: %lu"_NL, fpga_pio->delay_ms);
+			DEBUG_PRINTF("Key 0 pressed! Delay: %lu\n", fpga_pio->delay_ms);
 			break;
 
 		case PIO0_INPUT_F2H_KEY1:
 			fpga_pio->delay_ms += PIO0_ANIM_DELAY_STEP_ADJ;
-			DEBUG_PRINTF("DEBUG: Key 1 pressed! Delay: %lu"_NL, fpga_pio->delay_ms);
+			DEBUG_PRINTF("Key 1 pressed! Delay: %lu\n", fpga_pio->delay_ms);
 			break;
 
 		case PIO0_INPUT_F2H_KEYX:
-			DEBUG_PRINTF("DEBUG: Keys 0 & 1 pressed!");
 			// Toggle anim on off
 			if(fpga_pio->anim_en == PIO0_OUTPUT_LED_ANIM_ON){
 				fpga_pio->anim_en = PIO0_OUTPUT_LED_ANIM_OFF;
-				DEBUG_PRINTF(" Anim off"_NL);
+				DEBUG_PRINTF("Keys 0 & 1 pressed! Anim off\n");
 			}else{
 				fpga_pio->anim_en = PIO0_OUTPUT_LED_ANIM_ON;
-				DEBUG_PRINTF(" Anim on"_NL);
+				DEBUG_PRINTF("Keys 0 & 1 pressed! Anim on\n");
 			}
 			break;
 
-		default: DEBUG_PRINTF("DEBUG: Unknown!"_NL);
+		default: DEBUG_PRINTF("Unknown!\n");
 	}
 
-	tru_mem_wr_word(PIO0_IRQ_CLR, PIO0_INPUT_F2H_KEYX);  // Clear (re-arm) interrupt triggered flag for selected pins
+	tru_wr32((TRU_TARGET_TYPE *)PIO0_IRQ_CLR, PIO0_INPUT_F2H_KEYX);  // Clear (re-arm) interrupt triggered flag for selected pins
 }
 
 void fpga_init(pio_ledsw_t *pio){
@@ -79,8 +78,8 @@ void fpga_init(pio_ledsw_t *pio){
 	IRQ_Enable(C5SOC_F2H0_IRQn);  // Enable the interrupt
 
 	// Initialise memory mapped registers of Quartus Prime PIOs (Parallel Port IO IP)
-	tru_mem_wr_word(PIO0_DIR, 0);  // Set data direction to input
-	tru_mem_wr_word(PIO0_IRQ_MSK, PIO0_INPUT_F2H_KEYX);  // Unmask (enable triggerable) interrupt for selected pins
+	tru_wr32((TRU_TARGET_TYPE *)PIO0_DIR, 0);  // Set data direction to input
+	tru_wr32((TRU_TARGET_TYPE *)PIO0_IRQ_MSK, PIO0_INPUT_F2H_KEYX);  // Unmask (enable triggerable) interrupt for selected pins
 }
 
 void fpga_deinit(void){
@@ -92,7 +91,7 @@ void fpga_deinit(void){
 // Animate LEDs
 void update_pio0_led_anim(pio_ledsw_t *pio){
 	if(pio->anim_en == PIO0_OUTPUT_LED_ANIM_ON){
-		tru_mem_wr_word(PIO0_OUT_CLR, pio->leds);  // Turn off the current LED
+		tru_wr32((TRU_TARGET_TYPE *)PIO0_OUT_CLR, pio->leds);  // Turn off the current LED
 
 		// Do we change flow direction?
 		if(pio->leds == PIO0_OUTPUT_LED_0_ON && pio->flow == PIO0_OUTPUT_LED_FLOW_R){
@@ -103,6 +102,6 @@ void update_pio0_led_anim(pio_ledsw_t *pio){
 
 		pio->leds = (pio->flow == PIO0_OUTPUT_LED_FLOW_L) ? pio->leds << 1U : pio->leds >> 1U;  // Advance to the next LED
 
-		tru_mem_wr_word(PIO0_OUT_SET, pio->leds);  // Turn on the next LED
+		tru_wr32((TRU_TARGET_TYPE *)PIO0_OUT_SET, pio->leds);  // Turn on the next LED
 	}
 }

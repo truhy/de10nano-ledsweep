@@ -21,7 +21,7 @@
 	OUT OF OR IN CONNECTION WITH THE SOFTWARE OR THE USE OR OTHER DEALINGS IN THE
 	SOFTWARE.
 
-	Version: 20240211
+	Version: 20240315
 
 	Vendor specific low-level UART functions.
 */
@@ -53,11 +53,11 @@
 #define TRU_UART0_SFE_ADDR          0xffc02098UL
 #define TRU_UART0_STET_ADDR         0xffc020a0UL
 
-void tru_uart_ll_wait_empty(uint32_t uart_base_addr);
-void tru_uart_ll_write_str(uint32_t uart_base_addr, const char *str, uint32_t len);
-void tru_uart_ll_write_char(uint32_t uart_base_addr, const char c);
-void tru_uart_ll_write_hex_nibble(uint32_t uart_base_addr, unsigned char nibble);
-void tru_uart_ll_write_inthex(uint32_t uart_base_addr, int num, unsigned int bits);
+void tru_uart_ll_wait_empty(TRU_TARGET_TYPE *uart_base);
+void tru_uart_ll_write_str(TRU_TARGET_TYPE *uart_base, const char *str, uint32_t len);
+void tru_uart_ll_write_char(TRU_TARGET_TYPE *uart_base, const char c);
+void tru_uart_ll_write_hex_nibble(TRU_TARGET_TYPE *uart_base, unsigned char nibble);
+void tru_uart_ll_write_inthex(TRU_TARGET_TYPE *uart_base, int num, unsigned int bits);
 
 #endif
 

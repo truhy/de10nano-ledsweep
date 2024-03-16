@@ -63,7 +63,7 @@
 #define PIO0_OUTPUT_LED_ANIM_ON  0U
 #define PIO0_OUTPUT_LED_ANIM_OFF 1U
 
-#define PIO0_ANIM_DELAY_STEP_ADJ 5UL
+#define PIO0_ANIM_DELAY_STEP_ADJ 10U
 
 // Represents FPGA PIO LEDs
 typedef struct{

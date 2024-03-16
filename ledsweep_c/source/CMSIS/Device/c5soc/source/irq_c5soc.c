@@ -36,7 +36,7 @@ int32_t IRQ_Initialize(void){
 	}
 	GIC_Enable();
 
-	return (0);
+	return (0U);
 }
 
 // Disable: warning: FP registers might be clobbered despite 'interrupt' attribute: compile with '-mgeneral-regs-only' [-Wattributes]
@@ -60,7 +60,7 @@ void __attribute__((interrupt("IRQ"))) IRQ_Handler(void){
 
 	IRQn_ID_t irq_id = IRQ_GetActiveIRQ();  // Get ID of the triggered interrupt
 
-	if((irq_id >= 0) && (irq_id < (IRQn_ID_t)IRQ_GIC_LINE_COUNT)){
+	if((irq_id >= 0U) && (irq_id < (IRQn_ID_t)IRQ_GIC_LINE_COUNT)){
 		IRQTable[irq_id]();  // Call the user registered IRQ handler
 	}
 
@@ -87,10 +87,10 @@ IRQHandler_t IRQ_GetHandler(IRQn_ID_t irqn) {
 	// Ignore CPUID field (software generated interrupts)
 	irqn &= 0x3FFU;
 
-	if((irqn >= 0) && (irqn < (IRQn_ID_t)IRQ_GIC_LINE_COUNT)){
+	if((irqn >= 0U) && (irqn < (IRQn_ID_t)IRQ_GIC_LINE_COUNT)){
 		h = IRQTable[irqn];
 	}else{
-		h = (IRQHandler_t)0;
+		h = (IRQHandler_t)0U;
 	}
 
 	return (h);
@@ -118,7 +118,7 @@ void irq_set_group_priority(IRQn_ID_t irqn, uint8_t grp_priority, uint8_t sub_pr
 		sp_bits = ((1U << num_sub_bits) - 1U) | sub_priority;  // Calculate sub priority bits
 		priority = gp_bits << num_sub_bits | sp_bits;
 	}else{
-		priority = 0xf7;  // Error, assume binary point 2 and setting to lowest priority (30, 7)
+		priority = 0xf7U;  // Error, assume binary point 2 and setting to lowest priority (30, 7)
 	}
 
 	// Apply

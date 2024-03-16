@@ -21,44 +21,63 @@
 	OUT OF OR IN CONNECTION WITH THE SOFTWARE OR THE USE OR OTHER DEALINGS IN THE
 	SOFTWARE.
 
-	Version: 20240203
+	Version: 20240316
 
 	Trulib configuration
  */
 
 #ifndef TRU_CONFIG_H
 #define TRU_CONFIG_H
+// =============
+// User settings
+// =============
 
-// ======================
-// General configurations
-// ======================
+#define TRU_USER_TARGET            TRU_C5SOC
+#define TRU_USER_USE_CMSIS         1U
+#define TRU_USER_STARTUP           0U
+#define TRU_USER_EXIT_TO_UBOOT     0U
+#define TRU_USER_DEBUG_PRINT_LEVEL 1U
+#define TRU_USER_PRINTF_UART       1U
+#define TRU_USER_DEBUG_PRINT_R_NL  1U
+#define TRU_USER_NEON_ENABLE       1U
 
+// ===============================
+// Apply user or override settings
+// ===============================
+
+#ifdef CYCLONEV
+	#define TRU_TARGET TRU_C5SOC
+#else
 #ifndef TRU_TARGET
-	#ifdef CYCLONEV
-		#define TRU_TARGET TRU_C5SOC
-	#endif
+	#define TRU_TARGET TRU_USER_TARGET
+#endif
 #endif
 
 #ifndef TRU_USE_CMSIS
-	#define TRU_USE_CMSIS 1U
+	#define TRU_USE_CMSIS TRU_USER_USE_CMSIS
 #endif
 
-#ifndef TRU_USE_STARTUP
-#if(TRU_USE_CMSIS == 0U)
-	#define TRU_USE_STARTUP 1U
-#else
-	#define TRU_USE_STARTUP 0U
-#endif
+#ifndef TRU_STARTUP
+	#define TRU_STARTUP TRU_USER_STARTUP
 #endif
 
-#ifdef DEBUG
-	#ifndef TRU_PRINTF_UART
-		#define TRU_PRINTF_UART 1U
-	#endif
+#ifndef TRU_EXIT_TO_UBOOT
+	#define TRU_EXIT_TO_UBOOT TRU_USER_EXIT_TO_UBOOT
+#endif
+
+#ifndef TRU_DEBUG_PRINT_LEVEL
+	#define TRU_DEBUG_PRINT_LEVEL TRU_USER_DEBUG_PRINT_LEVEL
+#endif
+
+#ifndef TRU_PRINTF_UART
+	#define TRU_PRINTF_UART TRU_USER_PRINTF_UART
+#endif
+
+#ifdef SEMIHOSTING
+	#define TRU_DEBUG_PRINT_R_NL 0U
 #else
-	#ifndef TRU_PRINTF_UART
-		#define TRU_PRINTF_UART 0U
-	#endif
+	// 1U == Enables insertion of '\r' for each '\n' character
+	#define TRU_DEBUG_PRINT_R_NL TRU_USER_DEBUG_PRINT_R_NL
 #endif
 
 // ======================
@@ -68,10 +87,6 @@
 // Settings:
 //   L1_CACHE_ENABLE: 0 = disable L1 cache, 1 = disable, invalidate and enable L1 cache, 2 = do nothing
 //   L2_CACHE_ENABLE: 0 = disable L2 cache, 1 = disable, invalidate and enable L2 cache, 2 = do nothing
-
-#ifndef TRU_EXIT_TO_UBOOT
-	#define TRU_EXIT_TO_UBOOT 0U
-#endif
 
 #if(TRU_EXIT_TO_UBOOT)
 	#include "etu.h"
