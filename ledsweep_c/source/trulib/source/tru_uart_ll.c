@@ -21,7 +21,7 @@
 	OUT OF OR IN CONNECTION WITH THE SOFTWARE OR THE USE OR OTHER DEALINGS IN THE
 	SOFTWARE.
 
-	Version: 20240315
+	Version: 20240316
 
 	Vendor specific low-level UART functions.
 */
@@ -61,12 +61,13 @@ void tru_uart_ll_write_str(TRU_TARGET_TYPE *uart_base, const char *str, uint32_t
 
 		// For each '\n' character insert '\r'?
 		#if defined(TRU_DEBUG_PRINT_R_NL) && TRU_DEBUG_PRINT_R_NL == 1U
-			if(str[i] == '\n') tru_wr32(uart_base + TRU_UART_RBR_THR_DLL_OFFSET / 4U, '\r');
-			tru_uart_ll_wait_ready(uart_base, fifo_th_en);
-			tru_wr32(uart_base + TRU_UART_RBR_THR_DLL_OFFSET / 4U, str[i]);  // Write a single character to UART controller transmit holding register
-		#else
-			tru_wr32(uart_base + TRU_UART_RBR_THR_DLL_OFFSET / 4U, str[i]);  // Write a single character to UART controller transmit holding register
+			if(str[i] == '\n'){
+				tru_wr32(uart_base + TRU_UART_RBR_THR_DLL_OFFSET / 4U, '\r');
+				tru_uart_ll_wait_ready(uart_base, fifo_th_en);
+			}
 		#endif
+
+		tru_wr32(uart_base + TRU_UART_RBR_THR_DLL_OFFSET / 4U, str[i]);  // Write a single character to UART controller transmit holding register
 	}
 }
 
@@ -78,12 +79,13 @@ void tru_uart_ll_write_char(TRU_TARGET_TYPE *uart_base, const char c){
 
 	// For each '\n' character insert '\r'?
 	#if defined(TRU_DEBUG_PRINT_R_NL) && TRU_DEBUG_PRINT_R_NL == 1U
-		if(c == '\n') tru_wr32(uart_base + TRU_UART_RBR_THR_DLL_OFFSET / 4U, '\r');
-		tru_uart_ll_wait_ready(uart_base, fifo_th_en);
-		tru_wr32(uart_base + TRU_UART_RBR_THR_DLL_OFFSET / 4U, c);  // Write a single character to UART controller transmit holding register
-	#else
-		tru_wr32(uart_base + TRU_UART_RBR_THR_DLL_OFFSET / 4U, c);  // Write a single character to UART controller transmit holding register
+		if(c == '\n'){
+			tru_wr32(uart_base + TRU_UART_RBR_THR_DLL_OFFSET / 4U, '\r');
+			tru_uart_ll_wait_ready(uart_base, fifo_th_en);
+		}
 	#endif
+
+	tru_wr32(uart_base + TRU_UART_RBR_THR_DLL_OFFSET / 4U, c);  // Write a single character to UART controller transmit holding register
 }
 
 void tru_uart_ll_write_hex_nibble(TRU_TARGET_TYPE *uart_base, unsigned char nibble){
