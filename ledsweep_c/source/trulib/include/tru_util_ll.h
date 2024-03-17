@@ -21,7 +21,7 @@
 	OUT OF OR IN CONNECTION WITH THE SOFTWARE OR THE USE OR OTHER DEALINGS IN THE
 	SOFTWARE.
 
-	Version: 20240314
+	Version: 20240317
 
 	Vendor specific low-level utility functions.
 */
@@ -71,7 +71,7 @@ static inline void tru_w32_unaligned(void *dst, uint32_t val)
 
 static inline uint32_t *tru_align_buffer_up(void *buf, uint32_t alignment){
 	if((uint32_t)buf % alignment){
-		return (uint32_t *)((uint32_t)buf & ~(alignment - 1U) + alignment);
+		return (uint32_t *)(((uint32_t)buf & ~(alignment - 1U)) + alignment);
 	}
 
 	return buf;
