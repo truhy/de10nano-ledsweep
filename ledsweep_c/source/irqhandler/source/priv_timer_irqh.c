@@ -1,25 +1,25 @@
 /*
-    MIT License
+	MIT License
 
-    Copyright (c) 2023 Truong Hy
+	Copyright (c) 2023 Truong Hy
 
-    Permission is hereby granted, free of charge, to any person obtaining a copy
-    of this software and associated documentation files (the "Software"), to deal
-    in the Software without restriction, including without limitation the rights
-    to use, copy, modify, merge, publish, distribute, sublicense, and/or sell
-    copies of the Software, and to permit persons to whom the Software is
-    furnished to do so, subject to the following conditions:
+	Permission is hereby granted, free of charge, to any person obtaining a copy
+	of this software and associated documentation files (the "Software"), to deal
+	in the Software without restriction, including without limitation the rights
+	to use, copy, modify, merge, publish, distribute, sublicense, and/or sell
+	copies of the Software, and to permit persons to whom the Software is
+	furnished to do so, subject to the following conditions:
 
-    The above copyright notice and this permission notice shall be included in all
-    copies or substantial portions of the Software.
+	The above copyright notice and this permission notice shall be included in all
+	copies or substantial portions of the Software.
 
-    THE SOFTWARE IS PROVIDED "AS IS", WITHOUT WARRANTY OF ANY KIND, EXPRESS OR
-    IMPLIED, INCLUDING BUT NOT LIMITED TO THE WARRANTIES OF MERCHANTABILITY,
-    FITNESS FOR A PARTICULAR PURPOSE AND NONINFRINGEMENT. IN NO EVENT SHALL THE
-    AUTHORS OR COPYRIGHT HOLDERS BE LIABLE FOR ANY CLAIM, DAMAGES OR OTHER
-    LIABILITY, WHETHER IN AN ACTION OF CONTRACT, TORT OR OTHERWISE, ARISING FROM,
-    OUT OF OR IN CONNECTION WITH THE SOFTWARE OR THE USE OR OTHER DEALINGS IN THE
-    SOFTWARE.
+	THE SOFTWARE IS PROVIDED "AS IS", WITHOUT WARRANTY OF ANY KIND, EXPRESS OR
+	IMPLIED, INCLUDING BUT NOT LIMITED TO THE WARRANTIES OF MERCHANTABILITY,
+	FITNESS FOR A PARTICULAR PURPOSE AND NONINFRINGEMENT. IN NO EVENT SHALL THE
+	AUTHORS OR COPYRIGHT HOLDERS BE LIABLE FOR ANY CLAIM, DAMAGES OR OTHER
+	LIABILITY, WHETHER IN AN ACTION OF CONTRACT, TORT OR OTHERWISE, ARISING FROM,
+	OUT OF OR IN CONNECTION WITH THE SOFTWARE OR THE USE OR OTHER DEALINGS IN THE
+	SOFTWARE.
 
 	Version: 20240319
 
@@ -28,26 +28,28 @@
 	Timer preload value calculation
 	===============================
 
-	In the Cortex-A9 Tech Ref Manual, under Calculating timer intervals, an equation is provided:
-
-	interval = ((prescaler + 1) * (preload + 1)) / peripheral_clk
-	where interval (i.e. duration) is in seconds
+	In the Cortex-A9 Tech Ref Manual, under Calculating timer intervals, an
+	equation is provided:
+		interval = ((prescaler + 1) * (preload + 1)) / peripheral_clk
+		where interval (i.e. duration) is in seconds
 
 	If we use a prescaler of 0, the formula is simplified to:
-	interval = (preload + 1) / peripheral_clk
+		interval = (preload + 1) / peripheral_clk
 
 	Rearranging it for preload, gives:
-	preload = peripheral_clk * interval - 1
+		preload = peripheral_clk * interval - 1
 
-	Interval can be written as 1/interval_freq, so the equation can be written as:
-	preload = peripheral_clk * (1 / interval_freq) - 1
-	Simplified, gives:
-	preload = peripheral_clk / interval_freq - 1
+	Interval can be written as 1/interval_freq, so the equation can be written
+	as:
+		preload = peripheral_clk * (1 / interval_freq) - 1
+		Simplified, gives:
+		preload = peripheral_clk / interval_freq - 1
 
-	If we want an interval of 1ms then we use interval = 1/1000, and plugging this into the equation, we get:
-	preload = peripheral_clk * (1 / 1000) - 1
-	Simplified, gives:
-	preload = peripheral_clk / 1000 - 1
+	If we want an interval of 1ms then we use interval = 1/1000, and plugging
+	this into the equation, we get:
+		preload = peripheral_clk * (1 / 1000) - 1
+		Simplified, gives:
+		preload = peripheral_clk / 1000 - 1
 */
 
 #include "priv_timer_irqh.h"
