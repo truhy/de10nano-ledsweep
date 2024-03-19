@@ -21,50 +21,81 @@
     OUT OF OR IN CONNECTION WITH THE SOFTWARE OR THE USE OR OTHER DEALINGS IN THE
     SOFTWARE.
 
-    Version: 20230701
+    Version: 20240319
 
     Private timer IRQ handler.
+
+    Timer preload value calculation
+    ===============================
+
+    In the Cortex-A9 Tech Ref Manual, under Calculating timer intervals, an equation is provided:
+
+	interval = ((prescaler + 1) * (preload + 1)) / peripheral_clk
+	where interval (i.e. duration) is in seconds
+
+	If we use a prescaler of 0, the formula is simplified to:
+	interval = (preload + 1) / peripheral_clk
+
+	Rearranging it for preload, gives:
+	preload = peripheral_clk * interval - 1
+
+	Interval can be written as 1/interval_freq, so the equation can be written as:
+	preload = peripheral_clk * (1 / interval_freq) - 1
+	Simplified, gives:
+	preload = peripheral_clk / interval_freq - 1
+
+	If we want an interval of 1ms then we use interval = 1/1000, and plugging this into the equation, we get:
+	preload = peripheral_clk * (1 / 1000) - 1
+	Simplified, gives:
+	preload = peripheral_clk / 1000 - 1
 */
 
 #include "priv_timer_irqh.h"
-#include "RTE_Components.h"   // CMSIS
-#include CMSIS_device_header  // CMSIS
+#include "tru_irq.h"
+#include "tru_cortex_a9.h"
 #include "alt_clock_manager.h"
 
-static const uint32_t TICK_RATE_HZ = 1000U;
-static volatile uint32_t sys_ticks;
+// Systick interval = 1/SYSTICK_INTERVAL_FREQ
+// In this case, interval = 1/1000 = 1ms
+static const uint32_t SYSTICK_INTERVAL_FREQ = 1000U;
 
+// Systick counter
+static volatile uint32_t systicks;
+
+// Private timer interrupt - gets triggered when timer reaches 0
 static void systick_irqhandler(void){
-	sys_ticks++;
-	__SEV();  // Signal event
+	systicks++;
+	__sev();  // Signal event
 }
 
 void priv_timer_init(void){
 	alt_freq_t periph_freq;
 
-	// Install and enable specified IRQ..
-	IRQ_SetHandler(SecurePhyTimer_IRQn, systick_irqhandler);  // Register user interrupt handler
-	IRQ_SetPriority(SecurePhyTimer_IRQn, GIC_IRQ_PRIORITY_LEVEL30_7);  // Set lowest usable priority
-	IRQ_SetMode(SecurePhyTimer_IRQn, IRQ_MODE_TYPE_IRQ | IRQ_MODE_CPU_0 | IRQ_MODE_TRIG_LEVEL | IRQ_MODE_TRIG_LEVEL_HIGH);
-	IRQ_Enable(SecurePhyTimer_IRQn);  // Enable the interrupt
+	// Register and enable the specified IRQ
+	tru_irq_register(
+		TRU_IRQ_PPI_TIMER_PRIVATE,   // IRQ ID
+		TRU_GIC_DIST_CPU0,           // CPU0
+		TRU_GIC_PRIORITY_LEVEL30_7,  // Set lowest usable priority
+		systick_irqhandler           // Register user interrupt handler
+	);
 
 	// Note: The clock source of the private timer is set to the peripheral base clock
-	alt_clk_freq_get(ALT_CLK_MPU_PERIPH, &periph_freq);  // Get peripheral base clock.
+	alt_clk_freq_get(ALT_CLK_MPU_PERIPH, &periph_freq);  // Get peripheral base clock - normally 200MHz on Cortex-A9
 
-	// Setup private timer for the specified tick rate
-	PTIM_SetLoadValue((periph_freq / TICK_RATE_HZ) - 1U);
-	PTIM_SetControl(PTIM_GetControl() | 7U);
+	// Setup private timer preload for the specified tick rate (interval frequency)
+	// We use frequency instead of interval (seconds) to avoid fractions in the calculation
+	PTIM_SetLoadValue((periph_freq / SYSTICK_INTERVAL_FREQ) - 1U);
+	PTIM_SetControl(PTIM_GetControl() | 7U);  // Start the timer with interrupt enable and auto reload (auto restarts)
 }
 
 void priv_timer_deinit(void){
-	IRQ_Disable(SecurePhyTimer_IRQn);
-	IRQ_SetHandler(SecurePhyTimer_IRQn, NULL);
+	tru_irq_unregister(TRU_IRQ_PPI_TIMER_PRIVATE);
 }
 
-void priv_timer_delay_ms(uint32_t ms){
-  uint32_t target_ticks = sys_ticks + ms;
+void priv_timer_delay_ms(uint32_t wait_ms){
+  uint32_t target_ticks = systicks + wait_ms;
 
-  while (sys_ticks < target_ticks){
-    __WFE();  // Power-down until next event
+  while (systicks < target_ticks){
+	  __wfe();  // Power-down until next event
   }
 }
