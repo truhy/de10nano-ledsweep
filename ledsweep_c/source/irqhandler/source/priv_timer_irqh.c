@@ -67,7 +67,7 @@ static volatile uint32_t systicks;
 // Private timer interrupt - gets triggered when timer reaches 0
 static void systick_irqhandler(void){
 	systicks++;
-	__sev();  // Signal event
+	__sev();  // Create signal event
 }
 
 void priv_timer_init(void){
@@ -95,9 +95,9 @@ void priv_timer_deinit(void){
 }
 
 void priv_timer_delay_ms(uint32_t wait_ms){
-  uint32_t target_ticks = systicks + wait_ms;
+	uint32_t target_ticks = systicks + wait_ms;
 
-  while (systicks < target_ticks){
-	  __wfe();  // Power-down until next event
-  }
+	while (systicks < target_ticks){
+	  __wfe();  // Power-down until next event (wait for event)
+	}
 }
