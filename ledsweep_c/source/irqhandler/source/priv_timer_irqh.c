@@ -21,14 +21,14 @@
     OUT OF OR IN CONNECTION WITH THE SOFTWARE OR THE USE OR OTHER DEALINGS IN THE
     SOFTWARE.
 
-    Version: 20240319
+	Version: 20240319
 
-    Private timer IRQ handler.
+	Private timer IRQ handler.
 
-    Timer preload value calculation
-    ===============================
+	Timer preload value calculation
+	===============================
 
-    In the Cortex-A9 Tech Ref Manual, under Calculating timer intervals, an equation is provided:
+	In the Cortex-A9 Tech Ref Manual, under Calculating timer intervals, an equation is provided:
 
 	interval = ((prescaler + 1) * (preload + 1)) / peripheral_clk
 	where interval (i.e. duration) is in seconds
