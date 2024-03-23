@@ -40,12 +40,12 @@
 #define TRU_TARGET_CAST(type, ptr) ((type)(ptr))
 
 // Static inline function to read a memory-mapped 32-bit register
-static inline uint32_t tru_rd32(uint32_t *src){
+static inline uint32_t tru_iom_rd32(uint32_t *src){
 	return *(volatile uint32_t *)src;
 }
 
 // Static inline function to write a memory-mapped 32-bit register
-static inline void tru_wr32(uint32_t *dst, uint32_t val){
+static inline void tru_iom_wr32(uint32_t *dst, uint32_t val){
 	*(volatile uint32_t *)dst = val;
 }
 
@@ -54,13 +54,13 @@ static inline uint32_t tru_u8_to_u32(uint8_t b0, uint8_t b1, uint8_t b2, uint8_t
 }
 
 // Static inline function to read an unaligned memory-mapped 32-bit register
-static inline uint32_t tru_rd32_unaligned(void *src){
+static inline uint32_t tru_iom_rd32_unaligned(void *src){
 	volatile uint8_t * src8 = (uint8_t *)src;
 	return tru_u8_to_u32(src8[0], src8[1], src8[2], src8[3]);
 }
 
 // Static inline function to write an unaligned memory-mapped 32-bit register
-static inline void tru_w32_unaligned(void *dst, uint32_t val)
+static inline void tru_iom_w32_unaligned(void *dst, uint32_t val)
 {
 	volatile uint8_t* dst8 = (uint8_t*)dst;
 	dst8[0] = (uint8_t)val;
