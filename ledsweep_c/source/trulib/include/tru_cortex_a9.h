@@ -29,6 +29,11 @@
 #ifndef TRU_CORTEX_A9_H
 #define TRU_CORTEX_A9_H
 
+#include <stdint.h>
+
+#define TRU_PERIPH_BASE       0xfffec000UL
+#define TRU_GLOBAL_TIMER_BASE (TRU_PERIPH_BASE + 0x0200U)
+
 // GCC inline assembly macros
 #define __wfe() __asm__ volatile("wfe":::"memory")
 #define __sev() __asm__ volatile("sev")
@@ -40,5 +45,42 @@
 #define __read_ccsidr(result) __asm__ volatile("MRC p15, 1, %0, c0, c0, 0" : "=r" (result) : : "memory")
 #define __read_clidr(result)  __asm__ volatile("MRC p15, 1, %0, c0, c0, 1" : "=r" (result) : : "memory")
 #define __read_mpidr(mpidr)   __asm__ volatile("MRC p15, 0, %0, c0, c0, 5" : "=r" (mpidr) : : "memory")
+
+typedef struct{
+  volatile uint32_t counterl;
+  volatile uint32_t counterh;
+  volatile uint32_t control;
+  volatile uint32_t isr;
+  volatile uint32_t compl;
+  volatile uint32_t comph;
+  volatile uint32_t autoinc;
+}global_timer_type;
+#define GTIM ((global_timer_type *)TRU_GLOBAL_TIMER_BASE)
+
+#define GTIM_CONTROL_ENABLE_POS 0U
+#define GTIM_CONTROL_ENABLE_MSK 0x1U
+
+#define GTIM_CONTROL_COMP_ENABLE_POS 1U
+#define GTIM_CONTROL_COMP_ENABLE_MSK (0x1U << GTIM_CONTROL_COMP_ENABLE_POS)
+
+#define GTIM_CONTROL_IRQ_ENABLE_POS 2U
+#define GTIM_CONTROL_IRQ_ENABLE_MSK (0x1U << GTIM_CONTROL_IRQ_ENABLE_POS)
+
+#define GTIM_CONTROL_AUTOINC_POS 3U
+#define GTIM_CONTROL_AUTOINC_MSK (0x1U << GTIM_CONTROL_AUTOINC_POS)
+
+#define GTIM_CONTROL_PRESCALER_POS 8U
+#define GTIM_CONTROL_PRESCALER_MSK (0xffU << GTIM_CONTROL_PRESCALER_POS)
+
+#define GTIM_ISR_EVENTFLAG_POS 1U
+#define GTIM_ISR_EVENTFLAG_MSK 0x1U
+
+static inline void gtim_enable(void){
+	GTIM->control |= GTIM_CONTROL_ENABLE_MSK;
+}
+
+static inline void gtim_disable(void){
+	GTIM->control &= ~(uint32_t)GTIM_CONTROL_ENABLE_MSK;
+}
 
 #endif

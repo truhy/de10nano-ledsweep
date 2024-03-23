@@ -21,7 +21,7 @@
 	OUT OF OR IN CONNECTION WITH THE SOFTWARE OR THE USE OR OTHER DEALINGS IN THE
 	SOFTWARE.
 
-	Version: 20240316
+	Version: 20240323
 
 	Provides debug logging support for bare-metal program development.
 */
@@ -32,16 +32,26 @@
 #include "tru_config.h"
 #include <stdio.h>
 
-#if defined(DEBUG) && TRU_DEBUG_PRINT_LEVEL >= 3U
-	#define DEBUG_PRINTF(fmt, args...) fprintf(stderr, "DEBUG: %s:%d:%s(): " fmt, __FILE__, __LINE__, __func__, ##args)
-#elif defined(DEBUG) && TRU_DEBUG_PRINT_LEVEL >= 2U
-	#define DEBUG_PRINTF(fmt, args...) fprintf(stderr, "DEBUG: %d:%s(): " fmt, __LINE__, __func__, ##args)
-#elif defined(DEBUG)
-	#define DEBUG_PRINTF(fmt, args...) fprintf(stderr, "DEBUG: " fmt, ##args)
-#else
-	#define DEBUG_PRINTF(fmt, args...)  // Do nothing
-#endif
+#if defined(TRU_DEBUG_PRINT_LEVEL) && TRU_DEBUG_PRINT_LEVEL >= 3U
 
-#define DEBUG_PRINTF_PLAIN(fmt, args...) fprintf(stderr, fmt, ##args)
+	#define DEBUG_PRINTF(fmt, args...) fprintf(stderr, "DEBUG: %s:%d:%s(): " fmt, __FILE__, __LINE__, __func__, ##args)
+	#define DEBUG_PRINTF_PLAIN(fmt, args...) fprintf(stderr, fmt, ##args)
+
+#elif defined(TRU_DEBUG_PRINT_LEVEL) && TRU_DEBUG_PRINT_LEVEL >= 2U
+
+	#define DEBUG_PRINTF(fmt, args...) fprintf(stderr, "DEBUG: %d:%s(): " fmt, __LINE__, __func__, ##args)
+	#define DEBUG_PRINTF_PLAIN(fmt, args...) fprintf(stderr, fmt, ##args)
+
+#elif defined(TRU_DEBUG_PRINT_LEVEL) && TRU_DEBUG_PRINT_LEVEL >= 1U
+
+	#define DEBUG_PRINTF(fmt, args...) fprintf(stderr, "DEBUG: " fmt, ##args)
+	#define DEBUG_PRINTF_PLAIN(fmt, args...) fprintf(stderr, fmt, ##args)
+
+#else
+
+	#define DEBUG_PRINTF(fmt, args...)  // Do nothing
+	#define DEBUG_PRINTF_PLAIN(fmt, args...)  // Do nothing
+
+#endif
 
 #endif

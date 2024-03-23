@@ -37,7 +37,7 @@
 #include "irq_ctrl.h"
 
 void tru_irq_init(void){
-#if(TRU_USE_STARTUP && ALT_INT_PROVISION_VECTOR_SUPPORT == 0U)
+#if(TRU_STARTUP && ALT_INT_PROVISION_VECTOR_SUPPORT == 0U)
 	IRQ_Initialize();  // For CMSIS
 #endif
 	irq_mask(0);  // Enable IRQ mode interrupts for this CPU

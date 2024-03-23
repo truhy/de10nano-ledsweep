@@ -130,7 +130,7 @@ module top(
 	// HPS UART (UART-USB). HPS pins wired to chip FTDI FT232R
 	input  HPS_UART_RX,
 	output HPS_UART_TX,
-	inout HPS_CONV_USB_N,
+	inout  HPS_CONV_USB_N,
 	
 	// HPS USB OTG. HPS pins wired to the USB PHY chip (Microchip USB3300)
 	input       HPS_USB_CLKOUT,
@@ -278,8 +278,8 @@ module top(
 		.hps_io_hps_io_gpio_inst_GPIO61(HPS_GSENSOR_INT),
 		
 		// F2H interrupt receiver
-		.hps_0_f2h_irq0_irq(f2h_irq0),  // IRQs 0 to 31
-		.hps_0_f2h_irq1_irq(f2h_irq1),  // IRQs 32 to 63
+		.hps_0_f2h_irq0_irq(f2h_irq0),  // IRQs 72 to 103
+		.hps_0_f2h_irq1_irq(f2h_irq1),  // IRQs 104 to 135
 		
 		// PIO IP mapped to L2F memory region
 		.pio_0_external_connection_in_port(pio_0_in),
@@ -322,6 +322,6 @@ module top(
 	assign f2h_irq1 = 0;                          // IRQ IDs 104 to 135 are unused
 	
 	// Configure logic for keys and LEDs
-	assign pio_0_in[1:0] = fpga_keys;        // Wire PIO inputs to FPGA input keys
+	assign pio_0_in[1:0]  = fpga_keys;       // Wire PIO inputs to FPGA input keys
 	assign fpga_leds[7:0] = pio_0_out[7:0];  // Wire PIO outputs to FPGA output LEDs
 endmodule

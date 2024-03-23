@@ -60,7 +60,7 @@ void tru_uart_ll_write_str(TRU_TARGET_TYPE *uart_base, const char *str, uint32_t
 		tru_uart_ll_wait_ready(uart_base, fifo_th_en);
 
 		// For each '\n' character insert '\r'?
-		#if defined(TRU_DEBUG_PRINT_R_NL) && TRU_DEBUG_PRINT_R_NL == 1U
+		#if defined(TRU_PRINT_UART_R_NL) && TRU_PRINT_UART_R_NL == 1U
 			if(str[i] == '\n'){
 				tru_wr32(uart_base + TRU_UART_RBR_THR_DLL_OFFSET / 4U, '\r');
 				tru_uart_ll_wait_ready(uart_base, fifo_th_en);
@@ -78,7 +78,7 @@ void tru_uart_ll_write_char(TRU_TARGET_TYPE *uart_base, const char c){
 	tru_uart_ll_wait_ready(uart_base, fifo_th_en);
 
 	// For each '\n' character insert '\r'?
-	#if defined(TRU_DEBUG_PRINT_R_NL) && TRU_DEBUG_PRINT_R_NL == 1U
+	#if defined(TRU_PRINT_UART_R_NL) && TRU_PRINT_UART_R_NL == 1U
 		if(c == '\n'){
 			tru_wr32(uart_base + TRU_UART_RBR_THR_DLL_OFFSET / 4U, '\r');
 			tru_uart_ll_wait_ready(uart_base, fifo_th_en);

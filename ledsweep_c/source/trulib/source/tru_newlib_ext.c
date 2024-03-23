@@ -21,13 +21,13 @@
 	OUT OF OR IN CONNECTION WITH THE SOFTWARE OR THE USE OR OTHER DEALINGS IN THE
 	SOFTWARE.
 
-	Version: 20240315
+	Version: 20240323
 
 	Minimal implementation of required newlib function stubs.
 */
 
 #include "tru_config.h"
-#if(TRU_PRINTF_UART)
+#if defined(TRU_PRINT_UART) && TRU_PRINT_UART == 1U
 	#include "tru_uart_ll.h"
 #endif
 #include <errno.h>
@@ -47,7 +47,7 @@
 	// Process ID
 	#define __MYPID 1U
 
-	#if(TRU_PRINTF_UART)
+	#if defined(TRU_PRINT_UART) && TRU_PRINT_UART == 1U
 		// ==========================================================================================
 		// Minimal implementation for a serial terminal (TTY) device based on newlib/libgloss sources
 		// ==========================================================================================

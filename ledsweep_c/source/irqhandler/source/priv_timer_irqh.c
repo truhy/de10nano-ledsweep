@@ -81,8 +81,10 @@ void priv_timer_init(void){
 		systick_irqhandler           // Register user interrupt handler
 	);
 
-	// Note: The clock source of the private timer is set to the peripheral base clock
-	alt_clk_freq_get(ALT_CLK_MPU_PERIPH, &periph_freq);  // Get peripheral base clock - normally 200MHz on Cortex-A9
+	// Note
+	// The clock source of the private timer is set to the peripheral base clock
+	// It is 1/4 of the processor clock.  On the DE10-Nano processor clock is normally 800MHz, so the peripheral base clock is 800/4 = 200MHz
+	alt_clk_freq_get(ALT_CLK_MPU_PERIPH, &periph_freq);  // Get peripheral base clock
 
 	// Setup private timer preload for the specified tick rate (interval frequency)
 	// We use frequency instead of interval (seconds) to avoid fractions in the calculation
