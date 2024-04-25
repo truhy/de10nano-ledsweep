@@ -22,7 +22,9 @@ export FPGA_PROGRAM_NAME=ledsweep
 
 # U-Boot settings
 export UBOOT_OUT_PATH=~/sw-out
-export UBOOT_ZIP=~/devtools/u-boot-2022.10.zip
+export UBOOT_ZIP=~/devtools/u-boot-2024.04.zip
+export UBOOT_PATCH_FOLDER=u-boot-2024.04-patch
+export UBOOT_BSP_GEN_FOLDER=cv_bsp_generator_202301
 export UBOOT_DEFCONFIG=socfpga_de10_nano_defconfig
 export UBOOT_DTS=socfpga_cyclone5_de10_nano
 export ARCH=arm

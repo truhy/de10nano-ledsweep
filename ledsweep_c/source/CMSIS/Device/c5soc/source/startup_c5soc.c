@@ -174,7 +174,7 @@ void Reset_Handler(RESET_ARGS) {
   "ORR     r0, r0, #(1 << 1)                       \n"  // Enable L2 prefetch hint (UNK/WI since r4p1)
   "MCR     p15, 0, r0, c1, c0, 1                   \n"  // Write CP15 Auxiliary Control Register
 
-  // Configure access permissions
+  // Configure access permissions (switch into secure access mode)
   "MRC    p15, 0, r0, c1, c1, 2                    \n"  // Read from NSACR (Non-secure Access Control Register)
   "ORR    r0, r0, #(0x3 << 20)                     \n"  // Setup bits to enable access permissions.  Undocumented Altera/Intel Cyclone V SoC vendor specific
   "MCR    p15, 0, r0, c1, c1, 2                    \n"  // Write to NSACR
@@ -223,7 +223,7 @@ void Reset_Handler(RESET_ARGS) {
   "MRC    p15, 0, r0, c1, c0, 1                    \n"  // Read ACTLR
   "ORR    r0, r0, #(0x1 << 22)                     \n"  // Set bit 22 to enable shared attribute override. Recommended for ACP data coherency from Cyclone V HPS tech ref
   "ORR    r0, r0, #(0x1 << 6)                      \n"  // Set bit 6 to participate in SMP coherency
-  "ORR    r0, r0, #(0x1 << 2)                      \n"  // Set bit 2 to enable L1 dside prefetch
+  //"ORR    r0, r0, #(0x1 << 2)                      \n"  // Set bit 2 to enable L1 dside prefetch
   "ORR    r0, r0, #(0x1 << 0)                      \n"  // Set bit 0 to enable maintenance broadcast
   "MCR    p15, 0, r0, c1, c0, 1                    \n"  // Write ACTLR
 #endif

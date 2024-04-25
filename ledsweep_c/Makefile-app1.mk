@@ -97,9 +97,9 @@ INCS := \
 
 # The linker script to use
 ifeq ($(etu),1)
-LINKER_SCRIPT := $(BM_SRC_PATH1)/ldscript/tru_c5_ddr_etu.ld
+LINKER_SCRIPT := $(BM_SRC_PATH1)/ldscript/tru_c5_ddr_etu_cmsis.ld
 else
-LINKER_SCRIPT := $(BM_SRC_PATH1)/ldscript/tru_c5_ddr.ld
+LINKER_SCRIPT := $(BM_SRC_PATH1)/ldscript/tru_c5_ddr_cmsis.ld
 endif
 
 # =========================================

@@ -165,7 +165,7 @@ void MMU_CreateTranslationTable(void){
 	region.inner_norm_t = WB_WA;
 	region.outer_norm_t = WB_WA;
 	region.mem_t = NORMAL;
-	region.sec_t = NON_SECURE;
+	region.sec_t = SECURE;
 	region.xn_t = EXECUTE;
 	region.priv_t = RW;
 	region.user_t = RW;

@@ -87,6 +87,13 @@ void SystemInit(){
 #endif
 
 #if(__L2C_PRESENT == 1)
+  //L2C_310->AUX_CNT = L2C_310->AUX_CNT & ~(1U << 29U | 1U << 28U);  // Disable L2 instruction and data prefetch
+  //L2C_310->AUX_CNT = L2C_310->AUX_CNT & ~(1U << 21U);  // Disable L2 parity
+
+  // Set data RAM latency
+  __IOM uint32_t *L2C_310_REG1_DATA_RAM_CNT = (__IOM uint32_t *)L2C_310_BASE + 0x10cU;
+  *L2C_310_REG1_DATA_RAM_CNT = (*L2C_310_REG1_DATA_RAM_CNT & ~0x777U) | 0x10U;  // Read access set to 2 cycles of latency (value taken from Intel/Altera HWLib)
+
   L2C_Enable();
 #endif
 
