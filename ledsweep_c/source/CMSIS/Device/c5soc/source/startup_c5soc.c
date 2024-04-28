@@ -25,9 +25,9 @@
 #include <c5soc.h>
 #include <core_ca.h>
 
-#if(!TRU_USE_STARTUP)
+#if(TRU_STARTUP == 0U)
 
-#if(TRU_EXIT_TO_UBOOT)
+#if(TRU_EXIT_TO_UBOOT == 1U)
   #define RESET_ARGS int argc, char *const argv[]
 #else
   #define RESET_ARGS void
@@ -90,7 +90,7 @@ void Reset_Handler(RESET_ARGS) {
   // Mask interrupts
   "CPSID   if                                      \n"
 
-#if(TRU_EXIT_TO_UBOOT)
+#if(TRU_EXIT_TO_UBOOT == 1U)
   // Save U-Boot argc
   "LDR r3, =uboot_argc                             \n"
   "STR r0, [r3]                                    \n"
