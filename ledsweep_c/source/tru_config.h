@@ -104,7 +104,7 @@
 //   L2_CACHE_ENABLE: 0 = disable L2 cache, 1 = disable, invalidate and enable L2 cache, 2 = do nothing
 
 #if(TRU_EXIT_TO_UBOOT)
-	#include "etu.h"
+	#include "tru_etu.h"
 
 	// We do not want cache in DEBUG mode
 	#ifdef DEBUG

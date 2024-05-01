@@ -62,7 +62,7 @@
 #include "fpga_irqh.h"
 #include "tru_logger.h"
 
-#if(TRU_EXIT_TO_UBOOT)
+#if(TRU_EXIT_TO_UBOOT == 1U)
 	#include <stdlib.h>
 #endif
 
@@ -122,7 +122,7 @@ int main(int argc, char **argv){
 
 	init();
 
-#if(TRU_EXIT_TO_UBOOT)
+#if(TRU_EXIT_TO_UBOOT == 1U)
 	uint32_t num_updates = 10 * 7;  // Default number of LED updates
 
 	if(uboot_argc >= 2){
