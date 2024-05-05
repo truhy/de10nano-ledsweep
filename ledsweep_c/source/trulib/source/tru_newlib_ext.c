@@ -21,14 +21,14 @@
 	OUT OF OR IN CONNECTION WITH THE SOFTWARE OR THE USE OR OTHER DEALINGS IN THE
 	SOFTWARE.
 
-	Version: 20240323
+	Version: 20240505
 
 	Minimal implementation of required newlib function stubs.
 */
 
 #include "tru_config.h"
 #if defined(TRU_PRINT_UART) && TRU_PRINT_UART == 1U
-	#include "tru_uart_ll.h"
+	#include "tru_c5soc_hps_uart_ll.h"
 #endif
 #include <errno.h>
 #include <sys/stat.h>
@@ -77,7 +77,7 @@
 		}
 
 		int _write(int fd, char *ptr, int len){
-			tru_uart_ll_write_str((TRU_TARGET_TYPE *)TRU_UART0_BASE_ADDR, ptr, len);  // Re-target to UART controller
+			tru_hps_uart_ll_write_str((TRU_TARGET_TYPE *)TRU_HPS_UART0_BASE, ptr, len);  // Re-target to UART controller
 			return len;
 		}
 	#else
