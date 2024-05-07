@@ -21,7 +21,7 @@
 	OUT OF OR IN CONNECTION WITH THE SOFTWARE OR THE USE OR OTHER DEALINGS IN THE
 	SOFTWARE.
 
-	Version: 20242701
+	Version: 20240507
 
 	Bare-metal C startup initialisations for the Intel Cyclone V SoC (HPS), ARM Cortex-A9.
 	My own standalone init functions.
@@ -615,12 +615,12 @@ void clean_l1_dcache_all(void){
 	}
 }
 
-// ==============================================================================
+// ===========================================================================================================================================
 // MMU table setup
 // For details see these documents:
 //   Arm Cortex-A9 Technical Reference Manual.  Notable refs: Ch8 System Interconnect
 //   ARM Architecture Reference Manual ARMv7-A and ARMv7-R edition. Notable refs: B3.5.1 Short-descriptor translation table format descriptors
-// ==============================================================================
+// ===========================================================================================================================================
 
 // The implemented MMU table is 4096 short descriptor entries of 1MB sections, which translates the six Cyclone V SoC memory regions below.
 // Notes:
@@ -641,6 +641,9 @@ void clean_l1_dcache_all(void){
 // |-----------------------------------------------------------------------------------------------------------------|
 // | 3GB SDRAM                          | 0x00000000 - 0xBFFFFFFF | Normal, RWX, inner & outer-cacheable, shareable  |
 // +-----------------------------------------------------------------------------------------------------------------+
+
+// Note, the DE10-Nano only has 1GB of SDRAM populated, but since there is enough table entries, and it wrap to
+// address 0 it is safe to cover the entire 3GB range.
 
 // Below is the ideal MMU table, but it is not easily achievable:
 // +-----------------------------------------------------------------------------------------------------------------+
@@ -676,49 +679,49 @@ __asm__(
 	// =========
 
 	// Memory region Privileged eXecute-Never bit
-	".set MMU_SHORT_PXN_NONEXECUTE,            0x1UL             \n"  // Bit 0 = 1. Non-execute
-	".set MMU_SHORT_PXN_EXECUTE,               0x0UL             \n"  // Bit 0 = 0
+	".set MMU_SHORT_PXN_NONEXECUTE,            0x1U              \n"  // Bit 0 = 1. Non-execute
+	".set MMU_SHORT_PXN_EXECUTE,               0x0U              \n"  // Bit 0 = 0
 	// Memory region eXecute-Never bit
-	".set MMU_SHORT_XN_NONEXECUTE,             0x10UL            \n"  // Bit 4 = 1. Non-execute
-	".set MMU_SHORT_XN_EXECUTE,                0x00UL            \n"  // Bit 4 = 0
+	".set MMU_SHORT_XN_NONEXECUTE,             0x10U             \n"  // Bit 4 = 1. Non-execute
+	".set MMU_SHORT_XN_EXECUTE,                0x00U             \n"  // Bit 4 = 0
 	// Memory region domain number
-	".set MMU_SHORT_DOMAIN_ZERO,               0x000UL           \n"  // Bit 8, 7, 6, 5. Domain number
+	".set MMU_SHORT_DOMAIN_ZERO,               0x000U            \n"  // Bit 8, 7, 6, 5. Domain number
 	// Memory region and cache type
 	// When TEX[2] == 0 & TRE == 0
-	".set MMU_SHORT_TEXCB_STRONGLY_ORDERED,    0x0000UL          \n"  // Bits 14, 13, 12, 3, 2. Memory type = Strongly-ordered
-	".set MMU_SHORT_TEXCB_SHAREABLE_DEV,       0x0004UL          \n"  // Bits 14, 13, 12, 3, 2. Memory type = Shareable Device
-	".set MMU_SHORT_TEXCB_NORMAL_OWT_IWT,      0x0008UL          \n"  // Bits 14, 13, 12, 3, 2. Memory type = Normal, Outer WT, Inner WT
-	".set MMU_SHORT_TEXCB_NORMAL_OWB_IWB,      0x000cUL          \n"  // Bits 14, 13, 12, 3, 2. Memory type = Normal, Outer WB, Inner WB
-	".set MMU_SHORT_TEXCB_NORMAL,              0x1000UL          \n"  // Bits 14, 13, 12, 3, 2. Memory type = Normal, non-cacheable
-	".set MMU_SHORT_TEXCB_VENDOR,              0x1008UL          \n"  // Bits 14, 13, 12, 3, 2. Memory type = Vendor implementation defined
-	".set MMU_SHORT_TEXCB_NORMAL_OWBWA_IWBWA,  0x100cUL          \n"  // Bits 14, 13, 12, 3, 2. Memory type = Normal, Outer WB + WA, Inner WB + WA
-	".set MMU_SHORT_TEXCB_NONSHAREABLE_DEV,    0x2000UL          \n"  // Bits 14, 13, 12, 3, 2. Memory type = Non-shareable Device
+	".set MMU_SHORT_TEXCB_STRONGLY_ORDERED,    0x0000U           \n"  // Bits 14, 13, 12, 3, 2. Memory type = Strongly-ordered
+	".set MMU_SHORT_TEXCB_SHAREABLE_DEV,       0x0004U           \n"  // Bits 14, 13, 12, 3, 2. Memory type = Shareable Device
+	".set MMU_SHORT_TEXCB_NORMAL_OWT_IWT,      0x0008U           \n"  // Bits 14, 13, 12, 3, 2. Memory type = Normal, Outer WT, Inner WT
+	".set MMU_SHORT_TEXCB_NORMAL_OWB_IWB,      0x000cU           \n"  // Bits 14, 13, 12, 3, 2. Memory type = Normal, Outer WB, Inner WB
+	".set MMU_SHORT_TEXCB_NORMAL,              0x1000U           \n"  // Bits 14, 13, 12, 3, 2. Memory type = Normal, non-cacheable
+	".set MMU_SHORT_TEXCB_VENDOR,              0x1008U           \n"  // Bits 14, 13, 12, 3, 2. Memory type = Vendor implementation defined
+	".set MMU_SHORT_TEXCB_NORMAL_OWBWA_IWBWA,  0x100cU           \n"  // Bits 14, 13, 12, 3, 2. Memory type = Normal, Outer WB + WA, Inner WB + WA
+	".set MMU_SHORT_TEXCB_NONSHAREABLE_DEV,    0x2000U           \n"  // Bits 14, 13, 12, 3, 2. Memory type = Non-shareable Device
 	// When TEX[2] == 1 & TRE == 0
-	".set MMU_SHORT_TEXCB2_NORMAL,             0x4000UL          \n"  // Bits 14, 13, 12, 3, 2. Memory type = Normal, non-cacheable
-	".set MMU_SHORT_TEXCB2_NORMAL_IWBWA,       0x4004UL          \n"  // Bits 14, 13, 12, 3, 2. Memory type = Normal, Inner WB + WA
-	".set MMU_SHORT_TEXCB2_NORMAL_IWT,         0x4008UL          \n"  // Bits 14, 13, 12, 3, 2. Memory type = Normal, Inner WT
-	".set MMU_SHORT_TEXCB2_NORMAL_IWB,         0x400cUL          \n"  // Bits 14, 13, 12, 3, 2. Memory type = Normal, Inner WB
-	".set MMU_SHORT_TEXCB2_NORMAL_OWBWA,       0x5000UL          \n"  // Bits 14, 13, 12, 3, 2. Memory type = Normal, Outer WB + WA
-	".set MMU_SHORT_TEXCB2_NORMAL_OWBWA_IWBWA, 0x5004UL          \n"  // Bits 14, 13, 12, 3, 2. Memory type = Normal, Outer WB + WA, Inner WB + WA
-	".set MMU_SHORT_TEXCB2_NORMAL_OWBWA_IWT,   0x5008UL          \n"  // Bits 14, 13, 12, 3, 2. Memory type = Normal, Outer WB + WA, Inner WT
-	".set MMU_SHORT_TEXCB2_NORMAL_OWBWA_IWB,   0x500cUL          \n"  // Bits 14, 13, 12, 3, 2. Memory type = Normal, Outer WB + WA, Inner WB
-	".set MMU_SHORT_TEXCB2_NORMAL_OWT,         0x6000UL          \n"  // Bits 14, 13, 12, 3, 2. Memory type = Normal, Outer WT
-	".set MMU_SHORT_TEXCB2_NORMAL_OWT_IWBWA,   0x6004UL          \n"  // Bits 14, 13, 12, 3, 2. Memory type = Normal, Outer WT, Inner WB + WA
-	".set MMU_SHORT_TEXCB2_NORMAL_OWT_IWT,     0x6008UL          \n"  // Bits 14, 13, 12, 3, 2. Memory type = Normal, Outer WT, Inner WT
-	".set MMU_SHORT_TEXCB2_NORMAL_OWT_IWB,     0x600cUL          \n"  // Bits 14, 13, 12, 3, 2. Memory type = Normal, Outer WT, Inner WB
-	".set MMU_SHORT_TEXCB2_NORMAL_OWB,         0x7000UL          \n"  // Bits 14, 13, 12, 3, 2. Memory type = Normal, Outer WB
-	".set MMU_SHORT_TEXCB2_NORMAL_OWB_IWBWA,   0x7004UL          \n"  // Bits 14, 13, 12, 3, 2. Memory type = Normal, Outer WB, Inner WB + WA
-	".set MMU_SHORT_TEXCB2_NORMAL_OWB_IWT,     0x7008UL          \n"  // Bits 14, 13, 12, 3, 2. Memory type = Normal, Outer WB, Inner WT
-	".set MMU_SHORT_TEXCB2_NORMAL_OWB_IWB,     0x700cUL          \n"  // Bits 14, 13, 12, 3, 2. Memory type = Normal, Outer WB, Inner WB
+	".set MMU_SHORT_TEXCB2_NORMAL,             0x4000U           \n"  // Bits 14, 13, 12, 3, 2. Memory type = Normal, non-cacheable
+	".set MMU_SHORT_TEXCB2_NORMAL_IWBWA,       0x4004U           \n"  // Bits 14, 13, 12, 3, 2. Memory type = Normal, Inner WB + WA
+	".set MMU_SHORT_TEXCB2_NORMAL_IWT,         0x4008U           \n"  // Bits 14, 13, 12, 3, 2. Memory type = Normal, Inner WT
+	".set MMU_SHORT_TEXCB2_NORMAL_IWB,         0x400cU           \n"  // Bits 14, 13, 12, 3, 2. Memory type = Normal, Inner WB
+	".set MMU_SHORT_TEXCB2_NORMAL_OWBWA,       0x5000U           \n"  // Bits 14, 13, 12, 3, 2. Memory type = Normal, Outer WB + WA
+	".set MMU_SHORT_TEXCB2_NORMAL_OWBWA_IWBWA, 0x5004U           \n"  // Bits 14, 13, 12, 3, 2. Memory type = Normal, Outer WB + WA, Inner WB + WA
+	".set MMU_SHORT_TEXCB2_NORMAL_OWBWA_IWT,   0x5008U           \n"  // Bits 14, 13, 12, 3, 2. Memory type = Normal, Outer WB + WA, Inner WT
+	".set MMU_SHORT_TEXCB2_NORMAL_OWBWA_IWB,   0x500cU           \n"  // Bits 14, 13, 12, 3, 2. Memory type = Normal, Outer WB + WA, Inner WB
+	".set MMU_SHORT_TEXCB2_NORMAL_OWT,         0x6000U           \n"  // Bits 14, 13, 12, 3, 2. Memory type = Normal, Outer WT
+	".set MMU_SHORT_TEXCB2_NORMAL_OWT_IWBWA,   0x6004U           \n"  // Bits 14, 13, 12, 3, 2. Memory type = Normal, Outer WT, Inner WB + WA
+	".set MMU_SHORT_TEXCB2_NORMAL_OWT_IWT,     0x6008U           \n"  // Bits 14, 13, 12, 3, 2. Memory type = Normal, Outer WT, Inner WT
+	".set MMU_SHORT_TEXCB2_NORMAL_OWT_IWB,     0x600cU           \n"  // Bits 14, 13, 12, 3, 2. Memory type = Normal, Outer WT, Inner WB
+	".set MMU_SHORT_TEXCB2_NORMAL_OWB,         0x7000U           \n"  // Bits 14, 13, 12, 3, 2. Memory type = Normal, Outer WB
+	".set MMU_SHORT_TEXCB2_NORMAL_OWB_IWBWA,   0x7004U           \n"  // Bits 14, 13, 12, 3, 2. Memory type = Normal, Outer WB, Inner WB + WA
+	".set MMU_SHORT_TEXCB2_NORMAL_OWB_IWT,     0x7008U           \n"  // Bits 14, 13, 12, 3, 2. Memory type = Normal, Outer WB, Inner WT
+	".set MMU_SHORT_TEXCB2_NORMAL_OWB_IWB,     0x700cU           \n"  // Bits 14, 13, 12, 3, 2. Memory type = Normal, Outer WB, Inner WB
 	// Memory region access permission
-	".set MMU_SHORT_AP_NONE,                   0x0000UL          \n"  // Bits 15, 11, 10. Access Permission = No access
-	".set MMU_SHORT_AP_RW_PL1,                 0x0400UL          \n"  // Bits 15, 11, 10. Access Permission = RW at level 1
-	".set MMU_SHORT_AP_RW_PL1_R_PL0,           0x0800UL          \n"  // Bits 15, 11, 10. Access Permission = RW at level 1 and R at level 0
-	".set MMU_SHORT_AP_RW_ANY,                 0x0c00UL          \n"  // Bits 15, 11, 10. Access Permission = RW at level 1 and level 0
-	".set MMU_SHORT_AP_RESERVED,               0x8000UL          \n"  // Bits 15, 11, 10. Access Permission = Reserved
-	".set MMU_SHORT_AP_R_PL1,                  0x8400UL          \n"  // Bits 15, 11, 10. Access Permission = R at level 1
-	".set MMU_SHORT_AP_R_PL1_R_PL0_DEP,        0x8800UL          \n"  // Bits 15, 11, 10. Access Permission = R at level 1 and level 0 deprecated, use below instead
-	".set MMU_SHORT_AP_R_ANY,                  0x8c00UL          \n"  // Bits 15, 11, 10. Access Permission = R at level 1 and level 0
+	".set MMU_SHORT_AP_NONE,                   0x0000U           \n"  // Bits 15, 11, 10. Access Permission = No access
+	".set MMU_SHORT_AP_RW_PL1,                 0x0400U           \n"  // Bits 15, 11, 10. Access Permission = RW at level 1
+	".set MMU_SHORT_AP_RW_PL1_R_PL0,           0x0800U           \n"  // Bits 15, 11, 10. Access Permission = RW at level 1 and R at level 0
+	".set MMU_SHORT_AP_RW_ANY,                 0x0c00U           \n"  // Bits 15, 11, 10. Access Permission = RW at level 1 and level 0
+	".set MMU_SHORT_AP_RESERVED,               0x8000U           \n"  // Bits 15, 11, 10. Access Permission = Reserved
+	".set MMU_SHORT_AP_R_PL1,                  0x8400U           \n"  // Bits 15, 11, 10. Access Permission = R at level 1
+	".set MMU_SHORT_AP_R_PL1_R_PL0_DEP,        0x8800U           \n"  // Bits 15, 11, 10. Access Permission = R at level 1 and level 0 deprecated, use below instead
+	".set MMU_SHORT_AP_R_ANY,                  0x8c00U           \n"  // Bits 15, 11, 10. Access Permission = R at level 1 and level 0
 	// Memory region shareable bit for normal memory type
 	".set MMU_SHORT_S_SHAREABLE,               0x10000UL         \n"  // Bit 16 = 1. Shareable
 	".set MMU_SHORT_S_NONSHAREABLE,            0x00000UL         \n"  // Bit 16 = 0. Non-shareable
@@ -731,7 +734,7 @@ __asm__(
 	".set MMU_SHORT_NS_SECURE,                 0x00000UL         \n"  // Bit 19 = 0. NS bit = Secure
 	".set MMU_SHORT_NS_NONSECURE,              0x80000UL         \n"  // Bit 19 = 1. NS bit = Non-secure
 	// Section address
-	".set MMU_SECTION_ADDR,                    0x000UL           \n"  // A 12 bit section address which occupies bits 31 to 20 for an MMU table short descriptor
+	".set MMU_SECTION_ADDR,                    0x000U            \n"  // A 12 bit section address which occupies bits 31 to 20 for an MMU table short descriptor
 
 	// ================
 	// Inline MMU table
@@ -741,7 +744,7 @@ __asm__(
 	// linker file.  Since we explicitly specified a custom section, we should set
 	// the section flag, we set the section as "a" = allocatable.
 
-	".section mmu_entries, \"a\"                                 \n"
+	".section mmu_ttb_l1_entries, \"a\"                          \n"
 	".globl c5soc_mmu_tbl                                        \n"
 	"c5soc_mmu_tbl:                                              \n"
 		// Use repeat directive to create multiple MMU table entries for the 3GB DDR-3 SDRAM memory region

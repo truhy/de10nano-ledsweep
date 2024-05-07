@@ -6,8 +6,6 @@ ENTRY(Reset_Handler)  /* Entry point */
 /* __RAM_BASE       = 0x0; */           /* For making a program that starts from beginning of DDR-3 SDRAM with lower 1MB address remapped */
 __RAM_BASE       = 0x1000;              /* For making a program that can be loaded in the U-Boot console and run with go command. Note: U-Boot console has some reserved memories that perhaps cannot be used, e.g. 0x0-0xfff (see with bdinfo command) */
 __RAM_SIZE       = 1024M - __RAM_BASE;  /* DDR3 SDRAM size of this app */
-__MMU_L1_SIZE    = 16384;               /* MMU TTB (Translation Table Block) size for L1 descriptors */
-__MMU_L2_SIZE    = 0;                   /* MMU TTB (Translation Table Block) size for L2 descriptors */
 __FIQ_STACK_SIZE = 4096;
 __IRQ_STACK_SIZE = 4096;
 __SVC_STACK_SIZE = 4096;
@@ -66,16 +64,20 @@ SECTIONS {
         . = ALIGN(4);
     } > __RAM : __LOAD_RX
 
-    /* MMU L1 and L2 translation table block */
-    .mmu_ttb (ALIGN(16384)) : {
-        Image$$TTB$$ZI$$Base = .;       /* Used by CMSIS */
-        
-        __mmu_entries_start = .;
-        *(mmu_entries)
-        __mmu_entries_end = .;
-        . += (__mmu_entries_end - __mmu_entries_start) - __MMU_L2_SIZE + __MMU_L1_SIZE;
-        
-        Image$$TTB$$ZI$$Limit = .;      /* Used by CMSIS */
+    /* MMU L1 translation table block */
+    .mmu_ttb_l1 : {
+				. = ALIGN(16384);
+        __mmu_ttb_l1_entries_start = .;
+				*(mmu_ttb_l1_entries)
+        __mmu_ttb_l1_entries_end = .;
+    } > __RAM : __LOAD_RX
+		
+		/* MMU L2 translation table block */
+    .mmu_ttb_l2 : {
+				. = ALIGN(16384);
+				__mmu_ttb_l2_entries_start = .;
+        *(mmu_ttb_l2_entries)
+        __mmu_ttb_l2_entries_end = .;
     } > __RAM : __LOAD_RX
 
     .ARM.extab : {
