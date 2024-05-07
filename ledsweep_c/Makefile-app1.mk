@@ -67,7 +67,6 @@ EXCLUDE_SRCS := \
 # Get and build a list of source file names from the file system with these locations and pattern
 SRCS := \
 	$(wildcard $(BM_SRC_PATH1)/*.c) \
-	$(wildcard $(BM_SRC_PATH1)/startup/source/*.c) \
 	$(wildcard $(BM_SRC_PATH1)/CMSIS/Core/Source/*.c) \
 	$(wildcard $(BM_SRC_PATH1)/CMSIS/Device/c5soc/source/*.c) \
 	$(wildcard $(BM_SRC_PATH1)/hwlib/src/hwmgr/*.c) \
@@ -75,7 +74,6 @@ SRCS := \
 	$(wildcard $(BM_SRC_PATH1)/hwlib/src/utils/*.c) \
 	$(wildcard $(BM_SRC_PATH1)/hwlib/src/utils/*.S) \
 	$(wildcard $(BM_SRC_PATH1)/trulib/source/*.c) \
-	$(wildcard $(BM_SRC_PATH1)/trulib_config/source/*.c) \
 	$(wildcard $(BM_SRC_PATH1)/irqhandler/source/*.c)
 
 # Remove exclude files
@@ -84,7 +82,6 @@ SRCS := $(filter-out $(EXCLUDE_SRCS),$(SRCS))
 # List of header include search paths
 INCS := \
 	-I$(BM_SRC_PATH1) \
-	-I$(BM_SRC_PATH1)/startup/include \
 	-I$(BM_SRC_PATH1)/CMSIS/Core/Include \
 	-I$(BM_SRC_PATH1)/CMSIS/Core/Include/a-profile \
 	-I$(BM_SRC_PATH1)/CMSIS/Device/c5soc/include \
@@ -92,7 +89,6 @@ INCS := \
 	-I$(BM_SRC_PATH1)/hwlib/include \
 	-I$(BM_SRC_PATH1)/hwlib/include/soc_cv_av \
 	-I$(BM_SRC_PATH1)/trulib/include \
-	-I$(BM_SRC_PATH1)/trulib_config/include \
 	-I$(BM_SRC_PATH1)/irqhandler/include
 
 # The linker script to use

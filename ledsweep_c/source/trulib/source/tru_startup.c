@@ -278,12 +278,12 @@ void __attribute__((naked)) Reset_Handler(RESET_ARGS){
 		"DSB                                                \n"
 		"ISB                                                \n"
 
-		// Invalidate L1 instruction cache (ICIALLU)
+		// Invalidate L1 instruction cache all (ICIALLU)
 		"MCR p15, 0, r0, c7, c5, 0                          \n"
 		"DSB                                                \n"
 		"ISB                                                \n"
 
-		// Invalidate L1 data cache
+		// Invalidate L1 data cache all
 		"BL invalidate_l1_dcache_all                        \n"
 		"DSB                                                \n"
 		"ISB                                                \n"

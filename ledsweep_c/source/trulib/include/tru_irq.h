@@ -239,7 +239,7 @@ typedef enum tru_irqn_e{
 // is one less, i.e. 30.
 #define TRU_GIC_PRIORITY_GRP5SUB3_SPLIT(grp, sub) (((unsigned char)grp << 3) | (unsigned char)sub)
 
-// IRQ priority levels from Lowest to highest (sub-priority 0)
+// IRQ priority levels from lowest to highest (sub-priority 0)
 #define TRU_GIC_PRIORITY_LEVEL0_0  TRU_GIC_PRIORITY_GRP5SUB3_SPLIT( 0U, 0U)
 #define TRU_GIC_PRIORITY_LEVEL1_0  TRU_GIC_PRIORITY_GRP5SUB3_SPLIT( 1U, 0U)
 #define TRU_GIC_PRIORITY_LEVEL2_0  TRU_GIC_PRIORITY_GRP5SUB3_SPLIT( 2U, 0U)
@@ -273,7 +273,7 @@ typedef enum tru_irqn_e{
 #define TRU_GIC_PRIORITY_LEVEL30_0 TRU_GIC_PRIORITY_GRP5SUB3_SPLIT(30U, 0U)
 //#define TRU_GIC_PRIORITY_LEVEL31_0 TRU_GIC_PRIORITY_GRP5SUB3_SPLIT(31U, 0U)  // Reserved for mask condition, unusable
 
-// IRQ priority levels from Lowest to highest (sub-priority 1)
+// IRQ priority levels from lowest to highest (sub-priority 1)
 #define TRU_GIC_PRIORITY_LEVEL0_1  TRU_GIC_PRIORITY_GRP5SUB3_SPLIT( 0U, 1U)
 #define TRU_GIC_PRIORITY_LEVEL1_1  TRU_GIC_PRIORITY_GRP5SUB3_SPLIT( 1U, 1U)
 #define TRU_GIC_PRIORITY_LEVEL2_1  TRU_GIC_PRIORITY_GRP5SUB3_SPLIT( 2U, 1U)
@@ -307,7 +307,7 @@ typedef enum tru_irqn_e{
 #define TRU_GIC_PRIORITY_LEVEL30_1 TRU_GIC_PRIORITY_GRP5SUB3_SPLIT(30U, 1U)
 //#define TRU_GIC_PRIORITY_LEVEL31_1 TRU_GIC_PRIORITY_GRP5SUB3_SPLIT(31U, 1U)  // Reserved for mask condition, unusable
 
-// IRQ priority levels from Lowest to highest (sub-priority 2)
+// IRQ priority levels from lowest to highest (sub-priority 2)
 #define TRU_GIC_PRIORITY_LEVEL0_2  TRU_GIC_PRIORITY_GRP5SUB3_SPLIT( 0U, 2U)
 #define TRU_GIC_PRIORITY_LEVEL1_2  TRU_GIC_PRIORITY_GRP5SUB3_SPLIT( 1U, 2U)
 #define TRU_GIC_PRIORITY_LEVEL2_2  TRU_GIC_PRIORITY_GRP5SUB3_SPLIT( 2U, 2U)
@@ -341,7 +341,7 @@ typedef enum tru_irqn_e{
 #define TRU_GIC_PRIORITY_LEVEL30_2 TRU_GIC_PRIORITY_GRP5SUB3_SPLIT(30U, 2U)
 //#define TRU_GIC_PRIORITY_LEVEL31_2 TRU_GIC_PRIORITY_GRP5SUB3_SPLIT(31U, 2U)  // Reserved for mask condition, unusable
 
-// IRQ priority levels from Lowest to highest (sub-priority 3)
+// IRQ priority levels from lowest to highest (sub-priority 3)
 #define TRU_GIC_PRIORITY_LEVEL0_3  TRU_GIC_PRIORITY_GRP5SUB3_SPLIT( 0U, 3U)
 #define TRU_GIC_PRIORITY_LEVEL1_3  TRU_GIC_PRIORITY_GRP5SUB3_SPLIT( 1U, 3U)
 #define TRU_GIC_PRIORITY_LEVEL2_3  TRU_GIC_PRIORITY_GRP5SUB3_SPLIT( 2U, 3U)
@@ -375,7 +375,7 @@ typedef enum tru_irqn_e{
 #define TRU_GIC_PRIORITY_LEVEL30_3 TRU_GIC_PRIORITY_GRP5SUB3_SPLIT(30U, 3U)
 //#define TRU_GIC_PRIORITY_LEVEL31_3 TRU_GIC_PRIORITY_GRP5SUB3_SPLIT(31U, 3U)  // Reserved for mask condition, unusable
 
-// IRQ priority levels from Lowest to highest (sub-priority 4)
+// IRQ priority levels from lowest to highest (sub-priority 4)
 #define TRU_GIC_PRIORITY_LEVEL0_4  TRU_GIC_PRIORITY_GRP5SUB3_SPLIT( 0U, 4U)
 #define TRU_GIC_PRIORITY_LEVEL1_4  TRU_GIC_PRIORITY_GRP5SUB3_SPLIT( 1U, 4U)
 #define TRU_GIC_PRIORITY_LEVEL2_4  TRU_GIC_PRIORITY_GRP5SUB3_SPLIT( 2U, 4U)
@@ -409,7 +409,7 @@ typedef enum tru_irqn_e{
 #define TRU_GIC_PRIORITY_LEVEL30_4 TRU_GIC_PRIORITY_GRP5SUB3_SPLIT(30U, 4U)
 //#define TRU_GIC_PRIORITY_LEVEL31_4 TRU_GIC_PRIORITY_GRP5SUB3_SPLIT(31U, 4U)  // Reserved for mask condition, unusable
 
-// IRQ priority levels from Lowest to highest (sub-priority 5)
+// IRQ priority levels from lowest to highest (sub-priority 5)
 #define TRU_GIC_PRIORITY_LEVEL0_5  TRU_GIC_PRIORITY_GRP5SUB3_SPLIT( 0U, 5U)
 #define TRU_GIC_PRIORITY_LEVEL1_5  TRU_GIC_PRIORITY_GRP5SUB3_SPLIT( 1U, 5U)
 #define TRU_GIC_PRIORITY_LEVEL2_5  TRU_GIC_PRIORITY_GRP5SUB3_SPLIT( 2U, 5U)
@@ -443,7 +443,7 @@ typedef enum tru_irqn_e{
 #define TRU_GIC_PRIORITY_LEVEL30_5 TRU_GIC_PRIORITY_GRP5SUB3_SPLIT(30U, 5U)
 //#define TRU_GIC_PRIORITY_LEVEL31_5 TRU_GIC_PRIORITY_GRP5SUB3_SPLIT(31U, 5U)  // Reserved for mask condition, unusable
 
-// IRQ priority levels from Lowest to highest (sub-priority 6)
+// IRQ priority levels from lowest to highest (sub-priority 6)
 #define TRU_GIC_PRIORITY_LEVEL0_6  TRU_GIC_PRIORITY_GRP5SUB3_SPLIT( 0U, 6U)
 #define TRU_GIC_PRIORITY_LEVEL1_6  TRU_GIC_PRIORITY_GRP5SUB3_SPLIT( 1U, 6U)
 #define TRU_GIC_PRIORITY_LEVEL2_6  TRU_GIC_PRIORITY_GRP5SUB3_SPLIT( 2U, 6U)
@@ -477,7 +477,7 @@ typedef enum tru_irqn_e{
 #define TRU_GIC_PRIORITY_LEVEL30_6 TRU_GIC_PRIORITY_GRP5SUB3_SPLIT(30U, 6U)
 //#define TRU_GIC_PRIORITY_LEVEL31_6 TRU_GIC_PRIORITY_GRP5SUB3_SPLIT(31U, 6U)  // Reserved for mask condition, unusable
 
-// IRQ priority levels from Lowest to highest (sub-priority 7)
+// IRQ priority levels from lowest to highest (sub-priority 7)
 #define TRU_GIC_PRIORITY_LEVEL0_7  TRU_GIC_PRIORITY_GRP5SUB3_SPLIT( 0U, 7U)
 #define TRU_GIC_PRIORITY_LEVEL1_7  TRU_GIC_PRIORITY_GRP5SUB3_SPLIT( 1U, 7U)
 #define TRU_GIC_PRIORITY_LEVEL2_7  TRU_GIC_PRIORITY_GRP5SUB3_SPLIT( 2U, 7U)
