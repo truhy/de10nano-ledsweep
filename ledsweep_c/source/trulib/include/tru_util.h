@@ -21,7 +21,7 @@
 	OUT OF OR IN CONNECTION WITH THE SOFTWARE OR THE USE OR OTHER DEALINGS IN THE
 	SOFTWARE.
 
-	Version: 20230319
+	Version: 20240514
 
 	Utility functions.
 */
@@ -41,11 +41,47 @@
 #endif
 
 void unaligned_memcpy(void *dst, const void *src, uint32_t size);
-uint16_t le_buf_to_uint16(void *buf);
-uint16_t be_buf_to_uint16(void *buf);
-uint16_t swap_uint16(uint16_t val);
-int16_t swap_int16(int16_t val);
-uint32_t swap_uint32(uint32_t val);
-int32_t swap_int32(int32_t val);
+
+// Convert little-endian buffer to u16
+static inline uint16_t le_buf_to_u16(void *buf){
+	return (((unsigned char *)buf)[1] << 8) | ((unsigned char *)buf)[0];
+}
+
+// Convert little-endian buffer to u32
+static inline uint32_t le_buf_to_u32(void *buf){
+	return (((unsigned char *)buf)[3] << 24) | (((unsigned char *)buf)[2] << 16) | (((unsigned char *)buf)[1] << 8) | ((unsigned char *)buf)[0];
+}
+
+// Convert big-endian buffer to u16
+static inline uint16_t be_buf_to_u16(void *buf){
+	return (((unsigned char *)buf)[0] << 8) | ((unsigned char *)buf)[1];
+}
+
+// Convert big-endian buffer to u32
+static inline uint32_t be_buf_to_u32(void *buf){
+	return (((unsigned char *)buf)[0] << 24) | (((unsigned char *)buf)[1] << 16) | (((unsigned char *)buf)[2] << 8) | ((unsigned char *)buf)[3];
+}
+
+// Byte swap u16
+static inline uint16_t swap_u16(uint16_t val){
+    return (val << 8) | (val >> 8 );
+}
+
+// Byte swap i16
+static inline int16_t swap_int16(int16_t val){
+    return (val << 8) | ((val >> 8) & 0xFF);
+}
+
+// Byte swap u32
+static inline uint32_t swap_u32(uint32_t val){
+    val = ((val << 8) & 0xFF00FF00 ) | ((val >> 8) & 0xFF00FF );
+    return (val << 16) | (val >> 16);
+}
+
+// Byte swap i32
+static inline int32_t swap_i32(int32_t val){
+    val = ((val << 8) & 0xFF00FF00) | ((val >> 8) & 0xFF00FF );
+    return (val << 16) | ((val >> 16) & 0xFFFF);
+}
 
 #endif

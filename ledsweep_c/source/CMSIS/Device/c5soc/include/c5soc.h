@@ -246,16 +246,10 @@ typedef enum IRQn
 #define __CORTEX_A              9U       /* Cortex-A9 Core */
 #define __CA_REV                0x0000U  /* Core revision r0p0 */
 
-#if(TRU_NEON_ENABLE == 1U)
 #define __FPU_PRESENT           1U       /* Set to 1 if FPU is present */
-#endif
-
 #define __GIC_PRESENT           1U       /* Set to 1 if GIC is present */
 #define __TIM_PRESENT           1U       /* Set to 1 if TIM is present */
-
-#if(TRU_L2_CACHE_ENABLE == 1U)
 #define __L2C_PRESENT           1U       /* Set to 1 if L2C is present */
-#endif
 
 #include <core_ca.h>                         /* Processor and core peripherals */
 #include "system_c5soc.h"                    /* System Header */

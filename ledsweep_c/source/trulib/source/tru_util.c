@@ -21,7 +21,7 @@
 	OUT OF OR IN CONNECTION WITH THE SOFTWARE OR THE USE OR OTHER DEALINGS IN THE
 	SOFTWARE.
 
-	Version: 20230319
+	Version: 20240514
 
 	Utility functions.
 */
@@ -45,36 +45,4 @@ void unaligned_memcpy(void *dst, const void *src, uint32_t size){
 	}else{
 		memcpy(dst, src, size);  // Memory pointers are aligned so we can use standard memcpy()
 	}
-}
-
-// Convert little-endian buffer to uint16_t.
-uint16_t le_buf_to_uint16(void *buf){
-	return (((unsigned char *)buf)[1] << 8) | ((unsigned char *)buf)[0];
-}
-
-// Convert big-endian buffer to uint16_t.
-uint16_t be_buf_to_uint16(void *buf){
-	return (((unsigned char *)buf)[0] << 8) | ((unsigned char *)buf)[1];
-}
-
-// Byte swap unsigned short
-uint16_t swap_uint16(uint16_t val){
-    return (val << 8) | (val >> 8 );
-}
-
-// Byte swap short
-int16_t swap_int16(int16_t val){
-    return (val << 8) | ((val >> 8) & 0xFF);
-}
-
-// Byte swap unsigned int
-uint32_t swap_uint32(uint32_t val){
-    val = ((val << 8) & 0xFF00FF00 ) | ((val >> 8) & 0xFF00FF );
-    return (val << 16) | (val >> 16);
-}
-
-// Byte swap int
-int32_t swap_int32(int32_t val){
-    val = ((val << 8) & 0xFF00FF00) | ((val >> 8) & 0xFF00FF );
-    return (val << 16) | ((val >> 16) & 0xFFFF);
 }

@@ -71,7 +71,7 @@ void SystemInit(){
   L1C_InvalidateDCacheAll();
 #endif
 
-#if((__FPU_PRESENT == 1) && (__FPU_USED == 1))
+#if(TRU_NEON_ENABLE == 1U && __FPU_PRESENT == 1 && __FPU_USED == 1)
   __FPU_Enable();
 #endif
 
@@ -86,7 +86,7 @@ void SystemInit(){
   L1C_EnableBTAC();
 #endif
 
-#if(__L2C_PRESENT == 1)
+#if(TRU_L2_CACHE_ENABLE == 1U && __L2C_PRESENT == 1)
   //L2C_310->AUX_CNT = L2C_310->AUX_CNT & ~(1U << 29U | 1U << 28U);  // Disable L2 instruction and data prefetch
   //L2C_310->AUX_CNT = L2C_310->AUX_CNT & ~(1U << 21U);  // Disable L2 parity
 
