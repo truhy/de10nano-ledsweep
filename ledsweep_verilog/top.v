@@ -53,7 +53,7 @@
                       the value indicates the key that was pressed, and then
                       updates the animation speed
     
-    Synonyms:
+    Acronyms:
         HPS = Hard-Processing System - the ARM Cortex A-9 processor system
         PIO = PIO IP (Parallel I/O IP) - a generic I/O IP that is mappable to a
               memory region
