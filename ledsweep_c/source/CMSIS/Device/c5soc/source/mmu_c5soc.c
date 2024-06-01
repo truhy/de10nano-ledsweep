@@ -47,8 +47,8 @@
 	| 3GB SDRAM                          | 0x00000000 - 0xBFFFFFFF | Normal, RWX, inner & outer-cacheable, shareable  |
 	+-----------------------------------------------------------------------------------------------------------------+
 
-	Note, the DE10-Nano only has 1GB of SDRAM populated, but since there is enough table entries, and it wrap to
-	address 0 it is safe to cover the entire 3GB range.
+	Note, the DE10-Nano only has 1GB of SDRAM populated, but since there is enough table entries, and it wraps around
+	to address 0 it is safe to cover the entire 3GB range.
 
 	Below is the ideal MMU table, but it is not easily achievable:
 	+-----------------------------------------------------------------------------------------------------------------+
@@ -78,13 +78,17 @@
 	| When remapped to Boot ROM | 0x00000000 - 0x0000FFFF | Normal, RO, inner & outer-cacheable, shareable            |
 	+-----------------------------------------------------------------------------------------------------------------+
 
-	*The Cortex-A9 in Cyclone V SoC has Global Monitors so shareable attribute is supported, and is required for data coherence support for AXI bridge mapped regions when accessing cached regions - required when the FPGA is using the AXI bridges to access SDRAM.
+	The Cortex-A9 in Cyclone V SoC has Global Monitors so shareable attribute is supported, and is required for data
+	coherence support for AXI bridge mapped regions when accessing cached regions - required when the FPGA is using the
+	AXI bridges to access SDRAM.
 
 	There are two table modes
 	-------------------------
 
 	L1 only table mode:
 	Enabling only L1 translation table supports only 1MB section (or 16MB section if the processor supports it).
+	A 1MB section take up 1 table entry in the L1 table
+	A 16MB section take up 16 table entries in the L1 table
 
 	L1 + L2 table mode:
 	Note, in order to use 64K and 4K pages you need to also enable L2 translation tables.
@@ -146,8 +150,7 @@
 #define USE_L1_AND_L2_TABLE 0U
 #define USE_TTBCR_N TTBCR_N_L1_8K_L2_16K
 
-// L1 table size
-// L2 table input VA address boundary
+// L1 table size + L2 table input VA address boundary
 #if(USE_L1_AND_L2_TABLE == 1U)
 	// Determine L1 table size and alignment
 	#if(USE_TTBCR_N == TTBCR_N_L1_8K_L2_16K)
@@ -220,7 +223,6 @@ void MMU_CreateTranslationTable(void){
 	// This configuration has these limitations:
 	//   L1 max entries = 16384 / 4 = 4096
 	//   Due to 1MB granularity (size and alignment), it is not possible to have separate sections for these mis-aligned regions: peripherals/L3, BootROM, SCU/L2 and OCRAM
-	//   We will overlap these regions with 1MB sections and set memory type to shared device and non-executable for all of them
 	MMU_TTSection((uint32_t *)mmu_ttb_l1, C5SOC_RAM_BASE, 3072U, L1_Section_Attrib_Normal_RWX);   // Define 1MB sections for 3GB SDRAM region
 	MMU_TTSection((uint32_t *)mmu_ttb_l1, C5SOC_H2F_BASE, 960U, L1_Section_Attrib_Device_RW);     // Define 1MB sections for H2F region
 	MMU_TTSection((uint32_t *)mmu_ttb_l1, C5SOC_STM_BASE, 48U, L1_Section_Attrib_Device_RW);      // Define 1MB sections for STM region
