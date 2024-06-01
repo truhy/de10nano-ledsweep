@@ -80,13 +80,18 @@
 
 	*The Cortex-A9 in Cyclone V SoC has Global Monitors so shareable attribute is supported, and is required for data coherence support for AXI bridge mapped regions when accessing cached regions - required when the FPGA is using the AXI bridges to access SDRAM.
 
+	There are two table modes
+	-------------------------
+
+	L1 only table mode:
 	Enabling only L1 translation table supports only 1MB section (or 16MB section if the processor supports it).
 
+	L1 + L2 table mode:
 	Note, in order to use 64K and 4K pages you need to also enable L2 translation tables.
 	A 64K page take up 1 table entry in the L1 table, and 16 table entries in the L2 table
 	A 4K page take up 1 table entry in the L1 table, and 1 table entries in the L2 table
 	When L2 table is enabled and TTBCR register attribute is set N > 0, then L1 table's input (VA) address is limited to an upper boundary.
-	This makes it more or less useless, or atleast very difficult to use.
+	This means swapping is needed, because there is not enough table entries for all the regions, making it very difficult to use.
 
 	References:
 		- Cyclone V Hard Processor System Technical Reference Manual
@@ -125,8 +130,9 @@
 #include <stdint.h>
 #include "c5soc.h"
 
-// ITTBxx register values for setting the L1 table size and VA range (see ARM Architecture v7-A ref manual)
-// If using L1 and L2 then these are the only size split allowed
+// ITTBxx register N values for setting the L1 table size and VA range (see ARM Architecture v7-A ref manual)
+// L1 only table mode must use value 0 (N = 0)
+// L1 and L2 table mode will use a size split (N > 0), i.e. a value 1 to 7.  The split determines the L1 table size and the input VA boundary (address range) for the two tables
 #define TTBCR_N_L1_16K        0x0U
 #define TTBCR_N_L1_8K_L2_16K  0x1U
 #define TTBCR_N_L1_4K_L2_16K  0x2U
@@ -140,6 +146,8 @@
 #define USE_L1_AND_L2_TABLE 0U
 #define USE_TTBCR_N TTBCR_N_L1_8K_L2_16K
 
+// L1 table size
+// L2 table input VA address boundary
 #if(USE_L1_AND_L2_TABLE == 1U)
 	// Determine L1 table size and alignment
 	#if(USE_TTBCR_N == TTBCR_N_L1_8K_L2_16K)
@@ -264,7 +272,8 @@ void MMU_CreateTranslationTable(void){
 
 uint8_t mmu_ttb_l2[16384] __attribute__((aligned(16384), __section__("mmu_ttb_l2_entries")));
 
-// WARNING: Due to the L1 + L2 restrictions, this is not really usable, it is only here to showing how to
+// WARNING: Due to the L1 + L2 table restrictions this does not cover the required memory regions and is incomplete, i.e. not usable really!!
+// This only serve as a sample how to
 // Use L1 + L2 translation table
 void MMU_CreateTranslationTable(void){
 	mmu_region_attributes_Type region;
@@ -369,20 +378,53 @@ void MMU_CreateTranslationTable(void){
 	// This configuration has these limitations:
 	//   L1 max table entries = 8196 / 4  = 2048
 	//   L2 max table entries = 16384 / 4 = 4096
-	//   L1 input addresses must be below the first L2 VA address, in this case = 0x80000000, i.e. section can only address below that
+	//   L1 input addresses must be below the first L2 VA address, in this case = 0x80000000, i.e. section entry addresses must be below this
 	//
 	// Sizes:
 	//   1M section take up 1 L1 table entry
 	//   16MB super section take up 16 L1 table entries is optional so the processor may not support it
 	//   4KB page take up 1 L1 table entry and 1 L2 table entry
 	//   16KB page take up 1 L1 table entry and 16 L2 table entry
+	//
+	// Note 64K pages is actually treated as a block of 16 * 4K pages, so it will take up 16 entries inside the MMU table
+	// The reason for using it is because the 64K block is faster to process than 16 * 4K pages
+	//
 	// Due to the limitations of the level 1 and level 2 table scheme we don't have enough table entries for all memory regions
-	MMU_TTSection ((uint32_t *)mmu_ttb_l1, 0U, 4096U, DESCRIPTOR_FAULT);                                                                                      // Create 4GB of default faulting entries
-	MMU_TTSection((uint32_t *)mmu_ttb_l1, C5SOC_RAM_BASE, 1024U, L1_Section_Attrib_Normal_RWX);                                                               // Define 1MB sections for 1GB SDRAM region
+
+	// First initialise all L1 entries with fault entries
+	MMU_TTSection((uint32_t *)mmu_ttb_l1, 0U, 2048U, DESCRIPTOR_FAULT);
+
+	// Set up 1MB sections
+	// Note: memoory regions H2F, STM, DAP, L2F are all below L2 VA boundary address so they cannot use 4k or 64k pages
+	// Problem we don't have enough MMU table entries to enable these!!
+	MMU_TTSection((uint32_t *)mmu_ttb_l1, C5SOC_RAM_BASE, 1024U, L1_Section_Attrib_Normal_RWX);     // Define 1MB sections for 1GB SDRAM region
+	//MMU_TTSection((uint32_t *)mmu_ttb_l1, C5SOC_H2F_BASE, 960U, L1_Section_Attrib_Device_RW);     // Define 1MB sections for H2F region
+	//MMU_TTSection((uint32_t *)mmu_ttb_l1, C5SOC_STM_BASE, 48U, L1_Section_Attrib_Device_RW);      // Define 1MB sections for STM region
+	//MMU_TTSection((uint32_t *)mmu_ttb_l1, C5SOC_DAP_BASE, 2U, L1_Section_Attrib_Device_RW);       // Define 1MB sections for DAP region
+	//MMU_TTSection((uint32_t *)mmu_ttb_l1, C5SOC_L2F_BASE, 2U, L1_Section_Attrib_Device_RW);       // Define 1MB sections for L2F region
+	//MMU_TTSection((uint32_t *)mmu_ttb_l1, C5SOC_PERI_L3_BASE, 11U, L1_Section_Attrib_Device_RW);  // Define 1MB sections for regions covering most part of peripherals/L3
+	// ----------------------------------------------------------------------------------------------------
+	// Total L1 entries used if including uncommented ones = 2047, then the remaining L1 entry is 1 - ouch!
+	// Total L1 entries used = 1024
+
+	// Set up 4k + 64k pages
 	MMU_TTPage64k((uint32_t *)mmu_ttb_l1, C5SOC_PERI_L3_BASE + 0x00b00000UL, 13U, L1_64k_Attrib_Device_RW, (uint32_t *)mmu_ttb_l2, L2_64k_Attrib_Device_RW);  // Define 64k pages for peripherals/L3 GPV region part 2
 	MMU_TTPage4k((uint32_t *)mmu_ttb_l1, C5SOC_BOOTROM_BASE, 28U, L1_4k_Attrib_Device_R, (uint32_t *)mmu_ttb_l2, L2_4k_Attrib_Device_R);                      // Define 4k pages for BootROM
 	MMU_TTPage4k((uint32_t *)mmu_ttb_l1, C5SOC_SCU_L2_BASE, 4U, L1_4k_Attrib_Device_RW, (uint32_t *)mmu_ttb_l2, L2_4k_Attrib_Device_RW);                      // Define 4k pages for SCU
 	MMU_TTPage64k((uint32_t *)mmu_ttb_l1, C5SOC_OCRAM_BASE, 1U, L1_64k_Attrib_Normal_RWX, (uint32_t *)mmu_ttb_l2, L2_64k_Attrib_Normal_RWX);                  // Define 64k pages for OCRAM
+	// ---------------------------------------------------
+	// Total L1 entries used = 13    + 28 + 4 + 1    = 46
+	// Total L2 entries used = 13*16 + 28 + 4 + 1*16 = 256
+
+	// Final total of entries used
+	// ---------------------------
+	// Total L1 entries used = 1024 + 46 = 1070
+	// Total L2 entries used = 256
+
+	// It is not possible to enable the uncommented entries
+	// ----------------------------------------------------
+	// Total L1 entries used = 2047 + 46 = 2093 (INVALID!!  Must be 2048 or less)
+	// Total L2 entries used = 256
 
 	/* Set location of level 1 page table.  Bit assignments:
 			31:14 - Translation table base addr (31:14-TTBCR.N, TTBCR.N is 0 out of reset)
@@ -411,7 +453,7 @@ void MMU_CreateTranslationTable(void){
 				0b10 Normal memory, Outer Write-Through Cacheable.
 				0b11 Normal memory, Outer Write-Back no Write-Allocate Cacheable. */
 
-	// Enabling L1 and L2 tables
+	// Enable L1 and L2 tables
 	// See B3.5.4 Selecting between TTBR0 and TTBR1, Short-descriptor translation table format from ARM Architecture v7-A ref manual
 	__set_CP(15, 0, (uint32_t)mmu_ttb_l1 | 0x5b, 2, 0, 0);  // Set TTBR0.  Set level 1 translation table base address and table walk settings
 	__set_CP(15, 0, (uint32_t)mmu_ttb_l2 | 0x5b, 2, 0, 1);  // Set TTBR1.  Set level 2 translation Table base address and table walk settings
