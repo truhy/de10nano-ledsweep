@@ -1,35 +1,35 @@
 /*
-    MIT License
+		MIT License
 
-    Copyright (c) 2023 Truong Hy
+		Copyright (c) 2023 Truong Hy
 
-    Permission is hereby granted, free of charge, to any person obtaining a copy
-    of this software and associated documentation files (the "Software"), to deal
-    in the Software without restriction, including without limitation the rights
-    to use, copy, modify, merge, publish, distribute, sublicense, and/or sell
-    copies of the Software, and to permit persons to whom the Software is
-    furnished to do so, subject to the following conditions:
+		Permission is hereby granted, free of charge, to any person obtaining a copy
+		of this software and associated documentation files (the "Software"), to deal
+		in the Software without restriction, including without limitation the rights
+		to use, copy, modify, merge, publish, distribute, sublicense, and/or sell
+		copies of the Software, and to permit persons to whom the Software is
+		furnished to do so, subject to the following conditions:
 
-    The above copyright notice and this permission notice shall be included in all
-    copies or substantial portions of the Software.
+		The above copyright notice and this permission notice shall be included in all
+		copies or substantial portions of the Software.
 
-    THE SOFTWARE IS PROVIDED "AS IS", WITHOUT WARRANTY OF ANY KIND, EXPRESS OR
-    IMPLIED, INCLUDING BUT NOT LIMITED TO THE WARRANTIES OF MERCHANTABILITY,
-    FITNESS FOR A PARTICULAR PURPOSE AND NONINFRINGEMENT. IN NO EVENT SHALL THE
-    AUTHORS OR COPYRIGHT HOLDERS BE LIABLE FOR ANY CLAIM, DAMAGES OR OTHER
-    LIABILITY, WHETHER IN AN ACTION OF CONTRACT, TORT OR OTHERWISE, ARISING FROM,
-    OUT OF OR IN CONNECTION WITH THE SOFTWARE OR THE USE OR OTHER DEALINGS IN THE
-    SOFTWARE.
+		THE SOFTWARE IS PROVIDED "AS IS", WITHOUT WARRANTY OF ANY KIND, EXPRESS OR
+		IMPLIED, INCLUDING BUT NOT LIMITED TO THE WARRANTIES OF MERCHANTABILITY,
+		FITNESS FOR A PARTICULAR PURPOSE AND NONINFRINGEMENT. IN NO EVENT SHALL THE
+		AUTHORS OR COPYRIGHT HOLDERS BE LIABLE FOR ANY CLAIM, DAMAGES OR OTHER
+		LIABILITY, WHETHER IN AN ACTION OF CONTRACT, TORT OR OTHERWISE, ARISING FROM,
+		OUT OF OR IN CONNECTION WITH THE SOFTWARE OR THE USE OR OTHER DEALINGS IN THE
+		SOFTWARE.
 
-    Version: 20240316
-    Target : ARM Cortex-A9 on the DE10-Nano development board (Intel Cyclone V
-             SoC FPGA)
-    Type   : Bare-metal C
+		Version: 20240316
+		Target : ARM Cortex-A9 on the DE10-Nano development board (Intel Cyclone V
+		         SoC FPGA)
+		Type   : Bare-metal C
 
-    A bare-metal C program that demonstrates the processor system (HPS) working
+		A bare-metal C program that demonstrates the processor system (HPS) working
 		with FPGA logic.
 
-    This is the software part of the ledsweep, programmed to work with the
+		This is the software part of the ledsweep, programmed to work with the
 		FPGA logic design.  It animates the 8x FPGA LEDs (0 to 7) by sweeping
 		them from side to side.  Pressing the FPGA tactile keys (0 and 1) will
 		increase and decrease the animation speed.
@@ -38,22 +38,22 @@
 		LEDs by using the L2F memory map registers, and also sets up the FPGA keys
 		so they will trigger a GIC interrupt and is forwarded to the HPS side.
 
-    Learning objectives:
-      - To capture FPGA input pins (tactile keys) and send to FPGA-to-HPS
-        interrupt receiver
-      - To control FPGA output pins (LEDs) from the processor using the
-        Light-Weight HPS to FPGA (L2F) bridge
-      - To use PIO IP with the L2F bridge
-      - To setup GIC interrupt handler
-      - To use the Arm private timer interrupt for creating delays
-      - To use edge mode interrupt capture with the PIO IP (simulates edge
-        triggered interrupt)
+		Learning objectives:
+			- To capture FPGA input pins (tactile keys) and send to FPGA-to-HPS
+			  interrupt receiver
+			- To control FPGA output pins (LEDs) from the processor using the
+			  Light-Weight HPS to FPGA (L2F) bridge
+			- To use PIO IP with the L2F bridge
+			- To setup GIC interrupt handler
+			- To use the Arm private timer interrupt for creating delays
+			- To use edge mode interrupt capture with the PIO IP (simulates edge
+			  triggered interrupt)
 
-    This software is designed to work with the FPGA logic design (Verilog) so
-    the correct run order is as follows:
-      1. configure the FPGA first using the bitstream file ledsweep.sof or
-         ledsweep.rbf
-      2. and then execute this program
+		This software is designed to work with the FPGA logic design (Verilog) so
+		the correct run order is as follows:
+			1. configure the FPGA first using the bitstream file ledsweep.sof or
+			   ledsweep.rbf
+			2. and then execute this program
 */
 
 #include "RTE_Components.h"   // CMSIS

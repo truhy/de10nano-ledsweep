@@ -1,64 +1,64 @@
 /*
-    MIT License
+	MIT License
 
-    Copyright (c) 2023 Truong Hy
-    
-    Permission is hereby granted, free of charge, to any person obtaining a copy
-    of this software and associated documentation files (the "Software"), to deal
-    in the Software without restriction, including without limitation the rights
-    to use, copy, modify, merge, publish, distribute, sublicense, and/or sell
-    copies of the Software, and to permit persons to whom the Software is
-    furnished to do so, subject to the following conditions:
+	Copyright (c) 2023 Truong Hy
+	
+	Permission is hereby granted, free of charge, to any person obtaining a copy
+	of this software and associated documentation files (the "Software"), to deal
+	in the Software without restriction, including without limitation the rights
+	to use, copy, modify, merge, publish, distribute, sublicense, and/or sell
+	copies of the Software, and to permit persons to whom the Software is
+	furnished to do so, subject to the following conditions:
 
-    The above copyright notice and this permission notice shall be included in all
-    copies or substantial portions of the Software.
+	The above copyright notice and this permission notice shall be included in all
+	copies or substantial portions of the Software.
 
-    THE SOFTWARE IS PROVIDED "AS IS", WITHOUT WARRANTY OF ANY KIND, EXPRESS OR
-    IMPLIED, INCLUDING BUT NOT LIMITED TO THE WARRANTIES OF MERCHANTABILITY,
-    FITNESS FOR A PARTICULAR PURPOSE AND NONINFRINGEMENT. IN NO EVENT SHALL THE
-    AUTHORS OR COPYRIGHT HOLDERS BE LIABLE FOR ANY CLAIM, DAMAGES OR OTHER
-    LIABILITY, WHETHER IN AN ACTION OF CONTRACT, TORT OR OTHERWISE, ARISING FROM,
-    OUT OF OR IN CONNECTION WITH THE SOFTWARE OR THE USE OR OTHER DEALINGS IN THE
-    SOFTWARE.
+	THE SOFTWARE IS PROVIDED "AS IS", WITHOUT WARRANTY OF ANY KIND, EXPRESS OR
+	IMPLIED, INCLUDING BUT NOT LIMITED TO THE WARRANTIES OF MERCHANTABILITY,
+	FITNESS FOR A PARTICULAR PURPOSE AND NONINFRINGEMENT. IN NO EVENT SHALL THE
+	AUTHORS OR COPYRIGHT HOLDERS BE LIABLE FOR ANY CLAIM, DAMAGES OR OTHER
+	LIABILITY, WHETHER IN AN ACTION OF CONTRACT, TORT OR OTHERWISE, ARISING FROM,
+	OUT OF OR IN CONNECTION WITH THE SOFTWARE OR THE USE OR OTHER DEALINGS IN THE
+	SOFTWARE.
 
-    Developer: Truong Hy
-    HDL      : Verilog
-    Target   : DE10-Nano development kit board (Intel Cyclone V SoC-FPGA)
-    Version  : 20230822
-    
-    FPGA logic design demonstrating two-way interaction between the two separate
-		systems: FPGA and HPS.
-		
-		This is the FPGA logic part of the ledsweep, designed to work with the
-		software counterpart.  It provides the logic to support the software on the
-		HPS so that it is able to control the 8x FPGA LEDs, and to receive interrupt
-		that is triggered by the FPGA input keys 0 and 1.
-    
-    HPS to FPGA interaction (output LEDs):
-        => HPS side : software writes to the L2H bridge using memory addresses
-                      mapped to the PIO outputs
-        => FPGA side: the PIO retrieves the updated values from the L2H bridge
-        => FPGA side: FPGA logic updates LED states according to the PIO
-                      outputs
-        
-    FPGA to HPS interaction (input keys):
-        => FPGA side: when a tactile key is pressed, it updates the PIO inputs
-                      and also the PIO IRQ output (a simulated IRQ signal)
-        => FPGA side: FPGA logic updates the F2H interrupt receiver using the PIO
-                      IRQ output signal
-        => FPGA side: the F2H interrupt receiver generates a processor interrupt
-                      with the pre-assigned IRQ ID
-        => HPS side : interrupt handler is triggered, which reads from the L2H
-                      bridge using memory addresses mapped to the PIO inputs,
-                      the value indicates the key that was pressed, and then
-                      updates the animation speed
-    
-    Acronyms:
-        HPS = Hard-Processing System - the ARM Cortex A-9 processor system
-        PIO = PIO IP (Parallel I/O IP) - a generic I/O IP that is mappable to a
-              memory region
-        L2H = Lightweight-to-HPS bridge
-        F2H interrupt receiver = IRQ receiver for the FPGA-to-HPS bridge
+	Developer: Truong Hy
+	HDL      : Verilog
+	Target   : DE10-Nano development kit board (Intel Cyclone V SoC-FPGA)
+	Version  : 20230822
+	
+	FPGA logic design demonstrating two-way interaction between the two separate
+	systems: FPGA and HPS.
+	
+	This is the FPGA logic part of the ledsweep, designed to work with the
+	software counterpart.  It provides the logic to support the software on the
+	HPS so that it is able to control the 8x FPGA LEDs, and to receive interrupt
+	that is triggered by the FPGA input keys 0 and 1.
+	
+	HPS to FPGA interaction (output LEDs):
+			=> HPS side : software writes to the L2H bridge using memory addresses
+			              mapped to the PIO outputs
+			=> FPGA side: the PIO retrieves the updated values from the L2H bridge
+			=> FPGA side: FPGA logic updates LED states according to the PIO
+			              outputs
+			
+	FPGA to HPS interaction (input keys):
+			=> FPGA side: when a tactile key is pressed, it updates the PIO inputs
+			              and also the PIO IRQ output (a simulated IRQ signal)
+			=> FPGA side: FPGA logic updates the F2H interrupt receiver using the PIO
+			              IRQ output signal
+			=> FPGA side: the F2H interrupt receiver generates a processor interrupt
+			              with the pre-assigned IRQ ID
+			=> HPS side : interrupt handler is triggered, which reads from the L2H
+			              bridge using memory addresses mapped to the PIO inputs,
+			              the value indicates the key that was pressed, and then
+			              updates the animation speed
+	
+	Acronyms:
+			HPS = Hard-Processing System - the ARM Cortex A-9 processor system
+			PIO = PIO IP (Parallel I/O IP) - a generic I/O IP that is mappable to a
+			      memory region
+			L2H = Lightweight-to-HPS bridge
+			F2H interrupt receiver = IRQ receiver for the FPGA-to-HPS bridge
 */
 
 module top(
