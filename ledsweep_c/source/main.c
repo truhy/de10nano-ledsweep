@@ -95,7 +95,7 @@ void deint(void){
 }
 
 // Do LED tasks forever
-void led_tasks(){
+void led_tasks(void){
 	DEBUG_PRINTF("Executing tasks\n");
 
 	while(1){
