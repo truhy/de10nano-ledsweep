@@ -28,7 +28,7 @@
 	Timer preload value formula
 	===========================
 
-	In the Cortex-A9 Tech Ref Manual, under Calculating timer intervals, an
+	In the Cortex-A9 Tech Ref Manual, under Calculating timer intervals, a
 	formula is provided:
 		interval = ((prescaler + 1) * (preload + 1)) / peripheral_clk
 		where interval (i.e. duration) is in seconds

@@ -74,7 +74,7 @@ void fpga_init(pio_ledsw_t *pio){
 	IRQ_SetHandler(C5SOC_F2H0_IRQn, fpga_72_irqhandler);  // Register user interrupt handler
 	IRQ_SetPriority(C5SOC_F2H0_IRQn, GIC_IRQ_PRIORITY_LEVEL30_7);  // Set lowest usable priority
 	IRQ_SetMode(C5SOC_F2H0_IRQn, IRQ_MODE_TYPE_IRQ | IRQ_MODE_CPU_0 | IRQ_MODE_TRIG_LEVEL | IRQ_MODE_TRIG_LEVEL_HIGH);
-	//IRQ_SetMode(C5SOC_F2H0_IRQn, IRQ_MODE_TYPE_IRQ | IRQ_MODE_CPU_0 | IRQ_MODE_TRIG_EDGE | IRQ_MODE_TRIG_EDGE_RISING);  // F2H IRQ and GIC edge doesn't work on Cyclone V SoC, it behaves as trigger
+	//IRQ_SetMode(C5SOC_F2H0_IRQn, IRQ_MODE_TYPE_IRQ | IRQ_MODE_CPU_0 | IRQ_MODE_TRIG_EDGE | IRQ_MODE_TRIG_EDGE_RISING);  // F2H IRQ and GIC edge doesn't work on Cyclone V SoC, it behaves as trigger level
 	IRQ_Enable(C5SOC_F2H0_IRQn);  // Enable the interrupt
 
 	// Initialise memory mapped registers of Quartus Prime PIOs (Parallel Port IO IP)
