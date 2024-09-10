@@ -25,8 +25,8 @@
 
 	Private timer IRQ handler.
 
-	Timer preload value calculation
-	===============================
+	Timer preload value formula
+	===========================
 
 	In the Cortex-A9 Tech Ref Manual, under Calculating timer intervals, an
 	equation is provided:
@@ -42,13 +42,13 @@
 	Interval can be written as 1/interval_freq, so the equation can be written
 	as:
 		preload = peripheral_clk * (1 / interval_freq) - 1
-		Simplified, gives:
+	Simplified, gives:
 		preload = peripheral_clk / interval_freq - 1
 
-	If we want an interval of 1ms then we use interval = 1/1000, and plugging
+	Example, if we want an interval of 1ms then we use interval = 1/1000, and plugging
 	this into the equation, we get:
 		preload = peripheral_clk * (1 / 1000) - 1
-		Simplified, gives:
+	Simplified, gives:
 		preload = peripheral_clk / 1000 - 1
 */
 
@@ -58,7 +58,7 @@
 #include "alt_clock_manager.h"
 
 // Systick interval = 1/SYSTICK_INTERVAL_FREQ
-// In this case, interval = 1/1000 = 1ms
+// In this case, systick interval = 1ms = 1/1000, therefore:
 static const uint32_t SYSTICK_INTERVAL_FREQ = 1000U;
 
 // Systick counter
@@ -86,9 +86,9 @@ void priv_timer_init(void){
 	// It is 1/4 of the processor clock.  On the DE10-Nano processor clock is normally 800MHz, so the peripheral base clock is 800/4 = 200MHz
 	alt_clk_freq_get(ALT_CLK_MPU_PERIPH, &periph_freq);  // Get peripheral base clock
 
-	// Setup private timer preload for the specified tick rate (interval frequency)
+	// Setup the private timer preload (see formula above) for the specified tick rate (interval frequency)
 	// We use frequency instead of interval (seconds) to avoid fractions in the calculation
-	PTIM_SetLoadValue((periph_freq / SYSTICK_INTERVAL_FREQ) - 1U);
+	PTIM_SetLoadValue(periph_freq / SYSTICK_INTERVAL_FREQ - 1U);
 	PTIM_SetControl(PTIM_GetControl() | 7U);  // Start the timer with interrupt enable and auto reload (auto restarts)
 }
 

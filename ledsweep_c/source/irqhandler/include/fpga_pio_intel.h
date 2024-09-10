@@ -28,26 +28,36 @@
 	Notes
 	=====
 
-	PIO work very much like GPIO port registers you normally see in microprocessors, e.g. PIC, STM32, etc.
+	PIO work very much like GPIO port registers you normally see in
+	microcontrollers, e.g. PIC, STM32, etc.
 
 	There are four modes:
 		- BiDir, which implements bidirectional I/O using FPGA tristate inout ports
-		- InOut, which implements bidirectional I/O using separate FPGA input and output ports
+		- InOut, which implements bidirectional I/O using separate FPGA input and
+		  output ports
 		- Input, which implements input only using FPGA input ports
 		- Output, which implements output only using FPGA output ports
-	Note, InOut mode is unfortunately named similarly to FPGA inout port, but they are different.
+	Note, the PIO InOut mode is unfortunately named similarly to FPGA inout port,
+	but they are different.
 
-	Note, the BiDir and InOut modes are not the same, BiDir = single bidirectional FPGA ports, and InOut = two separate FPGA ports.
+	Note, the BiDir and InOut modes are not the same, BiDir = single bidirectional
+	FPGA port, and InOut = two separate FPGA ports.
 	The direction register is only available when using bidirectional modes.
-	The bidirectional modes (BiDir & InOut) are implemented as dual one-way directional states.
+	The bidirectional modes (BiDir & InOut) are implemented as dual one-way
+	directional states.
 
-	If HPS writes to the PIO data or out register the FPGA can extract the value by reading the PIO output port.
-	Note, the HPS value will not appear in the HPS PIO data register.
-	Basically:
-		- A HPS write to the PIO data (output) or out memory-mapped register will transfer to the FPGA PIO output port
-		- A HPS read from the data (input) register which will read the last changed value made by the FPGA
-		- A FPGA write to the PIO input port will transfer to the PIO data (input) register
-		- A FPGA read from the PIO output port will read the last changed value made by the HPS
+	If HPS writes to the PIO data or the out register the FPGA side can extract
+	this value by reading the PIO output port.  Note, the written HPS value will
+	not appear in the HPS PIO data register when you read it, that is because they
+	are on same side - as mentioned earlier, one-way only:
+		- A HPS write to the output memory-mapped register (PIO data or out) will
+		  transfer to the FPGA PIO output port
+		- A HPS read from the input memory-mapped register (PIO data) will read the
+		  last changed value made by the FPGA PIO input port
+		- A FPGA write to the PIO input port will transfer to the HPS PIO input
+		  memory-mapped register (PIO data)
+		- A FPGA read from the PIO output port will read the last changed value made
+		  by the HPS output memory-mapped register (PIO data or out)
 
 	For more details see Intel Embedded Peripherals IP User Guide, PIO Core:
 	https://www.intel.com/content/www/us/en/docs/programmable/683130/23-4/pio-core.html
