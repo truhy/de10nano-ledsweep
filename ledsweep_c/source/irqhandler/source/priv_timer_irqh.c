@@ -29,7 +29,7 @@
 	===========================
 
 	In the Cortex-A9 Tech Ref Manual, under Calculating timer intervals, an
-	equation is provided:
+	formula is provided:
 		interval = ((prescaler + 1) * (preload + 1)) / peripheral_clk
 		where interval (i.e. duration) is in seconds
 
@@ -39,14 +39,14 @@
 	Rearranging it for preload, gives:
 		preload = peripheral_clk * interval - 1
 
-	Interval can be written as 1/interval_freq, so the equation can be written
+	Interval can be written as 1/interval_freq, so the formula can be written
 	as:
 		preload = peripheral_clk * (1 / interval_freq) - 1
 	Simplified, gives:
 		preload = peripheral_clk / interval_freq - 1
 
-	Example, if we want an interval of 1ms then we use interval = 1/1000, and plugging
-	this into the equation, we get:
+	Example, if we want an interval of 1ms then we use interval = 1/1000, and
+	plugging this into the formula, we get:
 		preload = peripheral_clk * (1 / 1000) - 1
 	Simplified, gives:
 		preload = peripheral_clk / 1000 - 1
@@ -83,7 +83,7 @@ void priv_timer_init(void){
 
 	// Note
 	// The clock source of the private timer is set to the peripheral base clock
-	// It is 1/4 of the processor clock.  On the DE10-Nano processor clock is normally 800MHz, so the peripheral base clock is 800/4 = 200MHz
+	// It is 1/4 of the processor clock.  On the DE10-Nano processor clock is normally 800MHz, in this case the peripheral base clock is 800/4 = 200MHz
 	alt_clk_freq_get(ALT_CLK_MPU_PERIPH, &periph_freq);  // Get peripheral base clock
 
 	// Setup the private timer preload (see formula above) for the specified tick rate (interval frequency)
