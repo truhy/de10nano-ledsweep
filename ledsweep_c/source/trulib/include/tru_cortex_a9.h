@@ -35,6 +35,8 @@
 #define TRU_GLOBAL_TIMER_BASE (TRU_PERIPH_BASE + 0x0200U)
 
 // GCC inline assembly macros
+//===========================
+
 #define __wfe() __asm__ volatile("wfe":::"memory")
 #define __sev() __asm__ volatile("sev")
 #define __dmb() __asm__ volatile("dmb 0xF":::"memory");
@@ -49,6 +51,13 @@
 #define __read_ccsidr(result) __asm__ volatile("MRC p15, 1, %0, c0, c0, 0" : "=r" (result) : : "memory")
 #define __read_clidr(result)  __asm__ volatile("MRC p15, 1, %0, c0, c0, 1" : "=r" (result) : : "memory")
 #define __read_mpidr(mpidr)   __asm__ volatile("MRC p15, 0, %0, c0, c0, 5" : "=r" (mpidr) : : "memory")
+
+// Global timer
+// ============
+
+// The clock source of the global and private timer is the peripheral base clock
+// The peripheral base clock is 1/4 of the processor clock
+// On the DE10-Nano processor, U-Boot (Quartus Prime handoff files) normally sets the clock up for 800MHz so the peripheral base clock is 800/4 = 200MHz
 
 typedef struct{
   volatile uint32_t counterl;
@@ -79,12 +88,28 @@ typedef struct{
 #define GTIM_ISR_EVENTFLAG_POS 1U
 #define GTIM_ISR_EVENTFLAG_MSK 0x1U
 
+// Basic plain running timer mode: timer stopped, no compare, no interrupt, no auto-reset counter, no prescaler
+static inline void gtim_setup_basic_mode(void){
+	GTIM->control &= ~(GTIM_CONTROL_ENABLE_MSK | GTIM_CONTROL_COMP_ENABLE_MSK | GTIM_CONTROL_IRQ_ENABLE_MSK | GTIM_CONTROL_AUTOINC_MSK | GTIM_CONTROL_PRESCALER_MSK);
+}
+
+static inline void gtim_zero_counter(void){
+	GTIM->counterl = 0;
+	GTIM->counterh = 0;
+}
+
+// Start the timer (counting starts)
 static inline void gtim_enable(void){
 	GTIM->control |= GTIM_CONTROL_ENABLE_MSK;
 }
 
+// Stop the timer (counting stopped)
 static inline void gtim_disable(void){
 	GTIM->control &= ~(uint32_t)GTIM_CONTROL_ENABLE_MSK;
+}
+
+static inline uint64_t gtim_counter(void){
+	return (uint64_t)GTIM->counterh << 32 | GTIM->counterl;
 }
 
 #endif

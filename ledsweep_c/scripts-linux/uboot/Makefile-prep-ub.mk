@@ -1,5 +1,5 @@
 # This is free script released into the public domain.
-# GNU make file v20240120 created by Truong Hy.
+# GNU make file v20241003 created by Truong Hy.
 #
 # Prepares the U-Boot source files for building U-Boot for the Intel Cyclone V SoC:
 #   - uncompress U-Boot source
@@ -17,6 +17,18 @@ $(error UBOOT_ZIP environment variable is not set)
 endif
 ifndef UBOOT_OUT_PATH
 $(error UBOOT_OUT_PATH environment variable not set)
+endif
+ifndef UBOOT_PATCH_FOLDER
+$(error UBOOT_PATCH_FOLDER environment variable not set)
+endif
+ifndef UBOOT_BSP_GEN_FOLDER
+$(error UBOOT_BSP_GEN_FOLDER environment variable not set)
+endif
+ifndef UBOOT_DEFCONFIG
+$(error UBOOT_DEFCONFIG environment variable not set)
+endif
+ifndef UBOOT_QTS_FOLDER
+$(error UBOOT_QTS_FOLDER environment variable not set)
 endif
 
 # Check if unzip command exists
@@ -36,19 +48,20 @@ REL_UBOOT_SRC_PATH := $(REL_UBOOT_OUT_PATH)/u-boot
 # ================================
 # U-Boot replacment modified files
 # ================================
-DBG_SRC_FILE1 := Debug/u-boot-2022.10-patch/socfpga_de10_nano_defconfig
-DBG_DST_FILE1 := $(DBG_UBOOT_SRC_PATH)/configs/socfpga_de10_nano_defconfig
-REL_SRC_FILE1 := Release/u-boot-2022.10-patch/socfpga_de10_nano_defconfig
-REL_DST_FILE1 := $(REL_UBOOT_SRC_PATH)/configs/socfpga_de10_nano_defconfig
+
+DBG_SRC_FILE1 := Debug/$(UBOOT_PATCH_FOLDER)/$(UBOOT_DEFCONFIG)
+DBG_DST_FILE1 := $(DBG_UBOOT_SRC_PATH)/configs/$(UBOOT_DEFCONFIG)
+REL_SRC_FILE1 := Release/$(UBOOT_PATCH_FOLDER)/$(UBOOT_DEFCONFIG)
+REL_DST_FILE1 := $(REL_UBOOT_SRC_PATH)/configs/$(UBOOT_DEFCONFIG)
 
 # ============
 # BSP settings
 # ============
 
-ALTERA_BSP_SCRIPT := cv_bsp_generator_202210/cv_bsp_generator.py
+ALTERA_BSP_SCRIPT := $(UBOOT_BSP_GEN_FOLDER)/cv_bsp_generator.py
 HANDOFF := hps_isw_handoff/soc_system_hps_0
-DBG_UBOOT_QTS_PATH := $(DBG_UBOOT_SRC_PATH)/board/altera/cyclone5-socdk/qts
-REL_UBOOT_QTS_PATH := $(REL_UBOOT_SRC_PATH)/board/altera/cyclone5-socdk/qts
+DBG_UBOOT_QTS_PATH := $(DBG_UBOOT_SRC_PATH)/$(UBOOT_QTS_FOLDER)
+REL_UBOOT_QTS_PATH := $(REL_UBOOT_SRC_PATH)/$(UBOOT_QTS_FOLDER)
 
 # ==========================================================================================
 # Dummy prep file so that we have a timestamp for satisfying GNU make's prerequite condition

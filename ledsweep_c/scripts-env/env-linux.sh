@@ -27,6 +27,33 @@ export UBOOT_PATCH_FOLDER=u-boot-2024.04-patch
 export UBOOT_BSP_GEN_FOLDER=cv_bsp_generator_202301
 export UBOOT_DEFCONFIG=socfpga_de10_nano_defconfig
 export UBOOT_DTS=socfpga_cyclone5_de10_nano
+# Note: the QTS location depends on the selected xxx_defconfig file and the parameter CONFIG_TARGET_xxx=y,
+# which is processed by arch\arm\mach-socfpga\Kconfig file, for the conditions, see section "config SYS_BOARD" and "config SYS_VENDOR"
+# So for DE10-nano we could use socfpga_de10_nano_defconfig file and inside there is parameter CONFIG_TARGET_SOCFPGA_TERASIC_DE10_NANO=y,
+# therefore the Kconfig file will use files in board/terasic/de10-nano/qts
+#export UBOOT_QTS_FOLDER=board/is1/qts
+#export UBOOT_QTS_FOLDER=board/sr1500/qts
+#export UBOOT_QTS_FOLDER=board/altera/cyclone5-socdk/qts
+#export UBOOT_QTS_FOLDER=board/altera/arria10-socdk/qts
+#export UBOOT_QTS_FOLDER=board/altera/arria5-socdk/qts
+#export UBOOT_QTS_FOLDER=board/altera/nios2/qts
+#export UBOOT_QTS_FOLDER=board/altera/stratix10-socdk/qts
+#export UBOOT_QTS_FOLDER=board/aries/mcvevk/qts
+#export UBOOT_QTS_FOLDER=board/devboards/dbm-soc1/qts
+#export UBOOT_QTS_FOLDER=board/ebv/socrates/qts
+#export UBOOT_QTS_FOLDER=board/google/chameleonv3/qts
+#export UBOOT_QTS_FOLDER=board/intel/agilex-n6010/qts
+#export UBOOT_QTS_FOLDER=board/intel/agilex-socdk/qts
+#export UBOOT_QTS_FOLDER=board/intel/agilex5-socdk/qts
+#export UBOOT_QTS_FOLDER=board/intel/agilex7-socdk/qts
+#export UBOOT_QTS_FOLDER=board/intel/n5x-socdk/qts
+#export UBOOT_QTS_FOLDER=board/keymile/secu1/qts
+#export UBOOT_QTS_FOLDER=board/softing/vining_fpga/qts
+#export UBOOT_QTS_FOLDER=board/terasic/de0-nano-soc/qts
+#export UBOOT_QTS_FOLDER=board/terasic/de1-soc/qts
+export UBOOT_QTS_FOLDER=board/terasic/de10-nano/qts
+#export UBOOT_QTS_FOLDER=board/terasic/de10-standard/qts
+#export UBOOT_QTS_FOLDER=board/terasic/sockit/qts
 export ARCH=arm
 export CROSS_COMPILE=arm-none-eabi-
 
