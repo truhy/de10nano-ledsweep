@@ -21,7 +21,7 @@
 	OUT OF OR IN CONNECTION WITH THE SOFTWARE OR THE USE OR OTHER DEALINGS IN THE
 	SOFTWARE.
 
-	Version: 20240316
+	Version: 20241009
 
 	FPGA IRQ handler.
 */
@@ -42,26 +42,26 @@ static void fpga_72_irqhandler(void){
 	switch(fpga_inputs){
 		case PIO0_INPUT_F2H_KEY0:
 			if(fpga_pio->delay_ms >= PIO0_ANIM_DELAY_STEP_ADJ) fpga_pio->delay_ms -= PIO0_ANIM_DELAY_STEP_ADJ;
-			DEBUG_PRINTF("Key 0 pressed! Delay: %lu\n", fpga_pio->delay_ms);
+			LOG("Key 0 pressed! Delay: %lu\n", fpga_pio->delay_ms);
 			break;
 
 		case PIO0_INPUT_F2H_KEY1:
 			fpga_pio->delay_ms += PIO0_ANIM_DELAY_STEP_ADJ;
-			DEBUG_PRINTF("Key 1 pressed! Delay: %lu\n", fpga_pio->delay_ms);
+			LOG("Key 1 pressed! Delay: %lu\n", fpga_pio->delay_ms);
 			break;
 
 		case PIO0_INPUT_F2H_KEYX:
 			// Toggle anim on off
 			if(fpga_pio->anim_en == PIO0_OUTPUT_LED_ANIM_ON){
 				fpga_pio->anim_en = PIO0_OUTPUT_LED_ANIM_OFF;
-				DEBUG_PRINTF("Keys 0 & 1 pressed! Anim off\n");
+				LOG("Keys 0 & 1 pressed! Anim off\n");
 			}else{
 				fpga_pio->anim_en = PIO0_OUTPUT_LED_ANIM_ON;
-				DEBUG_PRINTF("Keys 0 & 1 pressed! Anim on\n");
+				LOG("Keys 0 & 1 pressed! Anim on\n");
 			}
 			break;
 
-		default: DEBUG_PRINTF("Unknown!\n");
+		default: LOG("Unknown!\n");
 	}
 
 	tru_iom_wr32((TRU_TARGET_TYPE *)PIO0_IRQ_CLR, PIO0_INPUT_F2H_KEYX);  // Clear (re-arm) interrupt triggered flag for selected pins

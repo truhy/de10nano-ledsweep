@@ -21,7 +21,7 @@
 	OUT OF OR IN CONNECTION WITH THE SOFTWARE OR THE USE OR OTHER DEALINGS IN THE
 	SOFTWARE.
 
-	Version: 20240505
+	Version: 20241009
 */
 
 #include "tru_config.h"
@@ -58,7 +58,7 @@ void tru_hps_uart_ll_write_str(TRU_TARGET_TYPE *uart_base, const char *str, uint
 		tru_hps_uart_ll_wait_ready(uart_base, fifo_th_en);
 
 		// For each '\n' character insert '\r'?
-		#if defined(TRU_PRINT_UART_R_NL) && TRU_PRINT_UART_R_NL == 1U
+		#if defined(TRU_LOG_RN) && TRU_LOG_RN == 1U
 			if(str[i] == '\n'){
 				TRU_HPS_UART_REG(uart_base)->rbr_thr_dll = '\r';
 				tru_hps_uart_ll_wait_ready(uart_base, fifo_th_en);
@@ -76,7 +76,7 @@ void tru_hps_uart_ll_write_char(TRU_TARGET_TYPE *uart_base, const char c){
 	tru_hps_uart_ll_wait_ready(uart_base, fifo_th_en);
 
 	// For each '\n' character insert '\r'?
-	#if defined(TRU_PRINT_UART_R_NL) && TRU_PRINT_UART_R_NL == 1U
+	#if defined(TRU_LOG_RN) && TRU_LOG_RN == 1U
 		if(c == '\n'){
 			TRU_HPS_UART_REG(uart_base)->rbr_thr_dll = '\r';
 			tru_hps_uart_ll_wait_ready(uart_base, fifo_th_en);

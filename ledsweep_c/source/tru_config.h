@@ -21,7 +21,7 @@
 	OUT OF OR IN CONNECTION WITH THE SOFTWARE OR THE USE OR OTHER DEALINGS IN THE
 	SOFTWARE.
 
-	Version: 20240316
+	Version: 20241009
 
 	Trulib configuration
  */
@@ -32,17 +32,15 @@
 // User settings
 // =============
 
-#define TRU_USER_TARGET            TRU_C5SOC
-#define TRU_USER_USE_CMSIS         1U
-#define TRU_USER_STARTUP           0U
-#define TRU_USER_EXIT_TO_UBOOT     0U
-#define TRU_USER_NEON_ENABLE       1U
-
-#define TRU_USER_DEBUG_PRINT_LEVEL 1U
-#define TRU_USER_DEBUG_PRINT_UART  1U
-#define TRU_USER_REL_PRINT_LEVEL   0U
-#define TRU_USER_REL_PRINT_UART    0U
-#define TRU_USER_PRINT_UART_R_NL   1U
+#define TRU_USER_TARGET        TRU_C5SOC
+#define TRU_USER_USE_CMSIS     1U
+#define TRU_USER_STARTUP       0U
+#define TRU_USER_EXIT_TO_UBOOT 0U
+#define TRU_USER_NEON_ENABLE   1U
+#define TRU_USER_PRINT_UART    1U
+#define TRU_USER_LOG_ENABLE    1U
+#define TRU_USER_LOG_RN        1U
+#define TRU_USER_LOG_LOCATION  0U
 
 // ===============================
 // Apply user or override settings
@@ -72,27 +70,13 @@
 	#define TRU_PRINT_UART 0U
 #endif
 
-#ifdef DEBUG
-	#ifndef TRU_DEBUG_PRINT_LEVEL
-		#define TRU_DEBUG_PRINT_LEVEL TRU_USER_DEBUG_PRINT_LEVEL
-	#endif
-
-	#ifndef TRU_PRINT_UART
-		#define TRU_PRINT_UART TRU_USER_DEBUG_PRINT_UART
-	#endif
-#else
-	#ifndef TRU_REL_PRINT_LEVEL
-		#define TRU_DEBUG_PRINT_LEVEL TRU_USER_REL_PRINT_LEVEL
-	#endif
-
-	#ifndef TRU_PRINT_UART
-		#define TRU_PRINT_UART TRU_USER_REL_PRINT_UART
-	#endif
+#ifndef TRU_PRINT_UART
+	#define TRU_PRINT_UART TRU_USER_PRINT_UART
 #endif
 
-#ifndef TRU_PRINT_UART_R_NL
+#ifndef TRU_LOG_RN
 	// 1U == Enables insertion of '\r' for each '\n' character
-	#define TRU_PRINT_UART_R_NL TRU_USER_PRINT_UART_R_NL
+	#define TRU_LOG_RN TRU_USER_LOG_RN
 #endif
 
 // ======================

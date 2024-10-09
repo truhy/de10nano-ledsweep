@@ -21,7 +21,7 @@
 	OUT OF OR IN CONNECTION WITH THE SOFTWARE OR THE USE OR OTHER DEALINGS IN THE
 	SOFTWARE.
 
-	Version: 20240323
+	Version: 20241009
 
 	Provides debug logging support for bare-metal program development.
 */
@@ -32,26 +32,14 @@
 #include "tru_config.h"
 #include <stdio.h>
 
-#if defined(TRU_DEBUG_PRINT_LEVEL) && TRU_DEBUG_PRINT_LEVEL >= 3U
-
-	#define DEBUG_PRINTF(fmt, args...) fprintf(stderr, "DEBUG: %s:%d:%s(): " fmt, __FILE__, __LINE__, __func__, ##args)
-	#define DEBUG_PRINTF_PLAIN(fmt, args...) fprintf(stderr, fmt, ##args)
-
-#elif defined(TRU_DEBUG_PRINT_LEVEL) && TRU_DEBUG_PRINT_LEVEL >= 2U
-
-	#define DEBUG_PRINTF(fmt, args...) fprintf(stderr, "DEBUG: %d:%s(): " fmt, __LINE__, __func__, ##args)
-	#define DEBUG_PRINTF_PLAIN(fmt, args...) fprintf(stderr, fmt, ##args)
-
-#elif defined(TRU_DEBUG_PRINT_LEVEL) && TRU_DEBUG_PRINT_LEVEL >= 1U
-
-	#define DEBUG_PRINTF(fmt, args...) fprintf(stderr, "DEBUG: " fmt, ##args)
-	#define DEBUG_PRINTF_PLAIN(fmt, args...) fprintf(stderr, fmt, ##args)
-
+#if defined(TRU_USER_LOG_ENABLE) && TRU_USER_LOG_ENABLE == 1U
+	#if defined(TRU_USER_LOG_LOCATION) && TRU_USER_LOG_LOCATION == 1U
+		#define LOG(fmt, args...) fprintf(stderr, "%s, %d, %s(), " fmt, __FILE__, __LINE__, __func__, ##args)
+	#else
+		#define LOG(fmt, args...) fprintf(stderr, fmt, ##args)
+	#endif
 #else
-
-	#define DEBUG_PRINTF(fmt, args...)  // Do nothing
-	#define DEBUG_PRINTF_PLAIN(fmt, args...)  // Do nothing
-
+	#define LOG(fmt, args...)  // Do nothing
 #endif
 
 #endif

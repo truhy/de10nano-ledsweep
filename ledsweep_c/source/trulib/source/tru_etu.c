@@ -21,7 +21,7 @@
 	OUT OF OR IN CONNECTION WITH THE SOFTWARE OR THE USE OR OTHER DEALINGS IN THE
 	SOFTWARE.
 
-	Version: 20240430
+	Version: 20241009
 
 	Exit to U-Boot support.
 */
@@ -107,7 +107,7 @@ void __attribute__((noreturn)) _exit(int status){
 
 // Override newlib _exit()
 void __attribute__((noreturn)) _exit(int status){
-	DEBUG_PRINTF("Starting infinity loop\n");
+	LOG("Starting infinity loop\n");
 	while(1);
 }
 

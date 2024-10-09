@@ -21,7 +21,7 @@
 		OUT OF OR IN CONNECTION WITH THE SOFTWARE OR THE USE OR OTHER DEALINGS IN THE
 		SOFTWARE.
 
-		Version: 20240316
+		Version: 20241009
 		Target : ARM Cortex-A9 on the DE10-Nano development board (Intel Cyclone V
 		         SoC FPGA)
 		Type   : Bare-metal C
@@ -79,7 +79,7 @@ pio_ledsw_t pio0 = {
 };
 
 void init(void){
-	DEBUG_PRINTF("Initialising\n");
+	LOG("Initialising\n");
 
 	irq_mask(0);        // Enable IRQ mode interrupts for this CPU
 	priv_timer_init();  // Initialise private timer IRQ
@@ -87,7 +87,7 @@ void init(void){
 }
 
 void deint(void){
-	DEBUG_PRINTF("De-initialising\n");
+	LOG("De-initialising\n");
 
 	fpga_deinit();
 	priv_timer_deinit();
@@ -96,7 +96,7 @@ void deint(void){
 
 // Do LED tasks forever
 void led_tasks(void){
-	DEBUG_PRINTF("Executing tasks\n");
+	LOG("Executing tasks\n");
 
 	while(1){
 		update_pio0_led_anim(&pio0);
@@ -106,7 +106,7 @@ void led_tasks(void){
 
 // Do LED tasks only n times
 void led_tasks_n(uint32_t n){
-	DEBUG_PRINTF("Executing tasks\n");
+	LOG("Executing tasks\n");
 
 	while(n){
 		update_pio0_led_anim(&pio0);
@@ -137,6 +137,6 @@ int main(int argc, char **argv){
 
 	deint();
 
-	DEBUG_PRINTF("Exiting main\n");
+	LOG("Exiting main\n");
 	return 0;
 }
