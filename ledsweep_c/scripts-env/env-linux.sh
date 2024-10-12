@@ -15,7 +15,6 @@ export BM_OUT_PATH=$SCRIPT_PATH
 export BM_HOME_PATH=$SCRIPT_PATH
 export BM_SRC_PATH1=source
 export BM_PROGRAM_NAME1=ledsweep
-export BM_FPGA_NAME1=ledsweep
 
 # FPGA settings
 export FPGA_PROGRAM_NAME=ledsweep
