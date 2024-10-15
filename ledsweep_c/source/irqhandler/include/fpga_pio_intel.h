@@ -21,7 +21,7 @@
 	OUT OF OR IN CONNECTION WITH THE SOFTWARE OR THE USE OR OTHER DEALINGS IN THE
 	SOFTWARE.
 
-	Version: 20230701
+	Version: 20241010
 
 	Supporting code for PIO Core Intel FPGA IP (Parallel IO).
 
@@ -59,6 +59,9 @@
 		- A FPGA read from the PIO output port will read the last changed value made
 		  by the HPS output memory-mapped register (PIO data or out)
 
+	The direction register is only for the BiDir mode, it does nothing for all
+	other modes.
+
 	For more details see Intel Embedded Peripherals IP User Guide, PIO Core:
 	https://www.intel.com/content/www/us/en/docs/programmable/683130/23-4/pio-core.html
 */
@@ -74,5 +77,9 @@
 // These two only exists in the memory register when the Output Register is ticked in Platform Designer
 #define PIO_OUT_SET_OFFSET (4UL * 4UL)
 #define PIO_OUT_CLR_OFFSET (5UL * 4UL)
+
+// Values for direction register in the viewpoint of the HPS.  Note: the direction register defaults to 0 = input
+#define PIO_DIR_INPUT  0U
+#define PIO_DIR_OUTPUT 1U
 
 #endif
