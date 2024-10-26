@@ -63,17 +63,17 @@ ifndef SD_PROGRAM_NAME
 $(error SD_PROGRAM_NAME environment variable is not set)
 endif
 endif
-ifndef BM_PROGRAM_NAME1
-$(error BM_PROGRAM_NAME1 environment variable is not set)
+ifndef APP_PROGRAM_NAME1
+$(error APP_PROGRAM_NAME1 environment variable is not set)
 endif
-ifndef BM_HOME_PATH
-$(error BM_HOME_PATH environment variable is not set)
+ifndef APP_HOME_PATH
+$(error APP_HOME_PATH environment variable is not set)
 endif
-ifndef BM_OUT_PATH
-$(error BM_OUT_PATH environment variable is not set)
+ifndef APP_OUT_PATH
+$(error APP_OUT_PATH environment variable is not set)
 endif
-ifndef BM_SRC_PATH1
-$(error BM_SRC_PATH1 environment variable is not set)
+ifndef APP_SRC_PATH1
+$(error APP_SRC_PATH1 environment variable is not set)
 endif
 ifeq ($(ub),1)
 ifndef UBOOT_DEFCONFIG
@@ -91,9 +91,9 @@ endif
 
 # Convert back-slashes
 ifeq ($(OS),Windows_NT)
-BM_HOME_PATH := $(subst \,/,$(BM_HOME_PATH))
-BM_OUT_PATH := $(subst \,/,$(BM_OUT_PATH))
-BM_SRC_PATH1 := $(subst \,/,$(BM_SRC_PATH1))
+APP_HOME_PATH := $(subst \,/,$(APP_HOME_PATH))
+APP_OUT_PATH := $(subst \,/,$(APP_OUT_PATH))
+APP_SRC_PATH1 := $(subst \,/,$(APP_SRC_PATH1))
 UBOOT_OUT_PATH := $(subst \,/,$(UBOOT_OUT_PATH))
 SD_OUT_PATH := $(subst \,/,$(SD_OUT_PATH))
 endif
@@ -123,19 +123,19 @@ SD_IN_PATH := scripts-linux/sdcard
 # App settings
 # ============
 
-DBG_PATH1 := $(BM_OUT_PATH)/Debug
-DBG_ELF1 := $(DBG_PATH1)/$(BM_PROGRAM_NAME1).elf
-DBG_ELF_LOAD_FILE1 := $(DBG_PATH1)/$(BM_PROGRAM_NAME1).load.txt
-DBG_ELF_ENTRY_FILE1 := $(DBG_PATH1)/$(BM_PROGRAM_NAME1).entry.txt
-DBG_BIN1 := $(DBG_PATH1)/$(BM_PROGRAM_NAME1).bin
-DBG_UIMG1 := $(DBG_PATH1)/$(BM_PROGRAM_NAME1).uimg
+DBG_PATH1 := $(APP_OUT_PATH)/Debug
+DBG_ELF1 := $(DBG_PATH1)/$(APP_PROGRAM_NAME1).elf
+DBG_ELF_LOAD_FILE1 := $(DBG_PATH1)/$(APP_PROGRAM_NAME1).load.txt
+DBG_ELF_ENTRY_FILE1 := $(DBG_PATH1)/$(APP_PROGRAM_NAME1).entry.txt
+DBG_BIN1 := $(DBG_PATH1)/$(APP_PROGRAM_NAME1).bin
+DBG_UIMG1 := $(DBG_PATH1)/$(APP_PROGRAM_NAME1).uimg
 
-REL_PATH1 := $(BM_OUT_PATH)/Release
-REL_ELF1 := $(REL_PATH1)/$(BM_PROGRAM_NAME1).elf
-REL_ELF_LOAD_FILE1 := $(REL_PATH1)/$(BM_PROGRAM_NAME1).load.txt
-REL_ELF_ENTRY_FILE1 := $(REL_PATH1)/$(BM_PROGRAM_NAME1).entry.txt
-REL_BIN1 := $(REL_PATH1)/$(BM_PROGRAM_NAME1).bin
-REL_UIMG1 := $(REL_PATH1)/$(BM_PROGRAM_NAME1).uimg
+REL_PATH1 := $(APP_OUT_PATH)/Release
+REL_ELF1 := $(REL_PATH1)/$(APP_PROGRAM_NAME1).elf
+REL_ELF_LOAD_FILE1 := $(REL_PATH1)/$(APP_PROGRAM_NAME1).load.txt
+REL_ELF_ENTRY_FILE1 := $(REL_PATH1)/$(APP_PROGRAM_NAME1).entry.txt
+REL_BIN1 := $(REL_PATH1)/$(APP_PROGRAM_NAME1).bin
+REL_UIMG1 := $(REL_PATH1)/$(APP_PROGRAM_NAME1).uimg
 
 # =======================
 # U-Boot settings (Debug)
@@ -160,14 +160,14 @@ DBG_UBOOT_SCRTXT_L3_STR := fpga load 0 \$${loadaddr} \$${filesize}
 DBG_UBOOT_SCRTXT_L4_STR := fi
 DBG_UBOOT_SCRTXT_L5_STR := bridge enable
 ifeq ($(uimg),1)
-DBG_UBOOT_SCRTXT_L6_STR := fatload mmc $(SDFATDEVPART) \$${loadaddr} $(BM_PROGRAM_NAME1).uimg
+DBG_UBOOT_SCRTXT_L6_STR := fatload mmc $(SDFATDEVPART) \$${loadaddr} $(APP_PROGRAM_NAME1).uimg
 DBG_UBOOT_SCRTXT_L7_STR := setenv autostart y; bootm \$${loadaddr}
 ifneq (,$(UBOOT_SCRTXT_ARGS_STR))
 DBG_UBOOT_SCRTXT_L7_STR := $(DBG_UBOOT_SCRTXT_L7_STR) $(UBOOT_SCRTXT_ARGS_STR)
 endif
 else
 ifeq ($(bin),1)
-DBG_UBOOT_SCRTXT_L6_STR = fatload mmc $(SDFATDEVPART) $(DBG_ELF_LOAD_TEXT1) $(BM_PROGRAM_NAME1).bin
+DBG_UBOOT_SCRTXT_L6_STR = fatload mmc $(SDFATDEVPART) $(DBG_ELF_LOAD_TEXT1) $(APP_PROGRAM_NAME1).bin
 ifeq (,$(UBOOT_SCRTXT_ARGS_STR))
 DBG_UBOOT_SCRTXT_L7_STR = go $(DBG_ELF_ENTRY_TEXT1)
 else
@@ -200,14 +200,14 @@ REL_UBOOT_SCRTXT_L3_STR := fpga load 0 \$${loadaddr} \$${filesize}
 REL_UBOOT_SCRTXT_L4_STR := fi
 REL_UBOOT_SCRTXT_L5_STR := bridge enable
 ifeq ($(uimg),1)
-REL_UBOOT_SCRTXT_L6_STR := fatload mmc $(SDFATDEVPART) \$${loadaddr} $(BM_PROGRAM_NAME1).uimg
+REL_UBOOT_SCRTXT_L6_STR := fatload mmc $(SDFATDEVPART) \$${loadaddr} $(APP_PROGRAM_NAME1).uimg
 REL_UBOOT_SCRTXT_L7_STR := setenv autostart y; bootm \$${loadaddr}
 ifneq (,$(UBOOT_SCRTXT_ARGS_STR))
 REL_UBOOT_SCRTXT_L7_STR := $(REL_UBOOT_SCRTXT_L7_STR) $(UBOOT_SCRTXT_ARGS_STR)
 endif
 else
 ifeq ($(bin),1)
-REL_UBOOT_SCRTXT_L6_STR = fatload mmc $(SDFATDEVPART) $(REL_ELF_LOAD_TEXT1) $(BM_PROGRAM_NAME1).bin
+REL_UBOOT_SCRTXT_L6_STR = fatload mmc $(SDFATDEVPART) $(REL_ELF_LOAD_TEXT1) $(APP_PROGRAM_NAME1).bin
 ifeq (,$(UBOOT_SCRTXT_ARGS_STR))
 REL_UBOOT_SCRTXT_L7_STR = go $(REL_ELF_ENTRY_TEXT1)
 else
@@ -461,7 +461,7 @@ clean_1:
 
 # Clean root folder
 clean: clean_ub clean_sd clean_app clean_1
-	@if [ -d "$(BM_OUT_PATH)" ] && [ -z "$$(ls -A $(BM_OUT_PATH))" ]; then echo rm -df $(BM_OUT_PATH); rm -df $(BM_OUT_PATH); fi
+	@if [ -d "$(APP_OUT_PATH)" ] && [ -z "$$(ls -A $(APP_OUT_PATH))" ]; then echo rm -df $(APP_OUT_PATH); rm -df $(APP_OUT_PATH); fi
 
 # ===============================================================
 # Clean temporary files rules (does not remove user target files)
@@ -475,6 +475,8 @@ ifneq ($(OS),Windows_NT)
 		if [ -f "$(DBG_UBOOT_SCR)" ]; then echo rm -f $(DBG_UBOOT_SCR); rm -f $(DBG_UBOOT_SCR); fi; \
 		if [ -f "$(REL_UBOOT_SCRTXT)" ]; then echo rm -f $(REL_UBOOT_SCRTXT); rm -f $(REL_UBOOT_SCRTXT); fi; \
 		if [ -f "$(REL_UBOOT_SCR)" ]; then echo rm -f $(REL_UBOOT_SCR); rm -f $(REL_UBOOT_SCR); fi; \
+		if [ -d "$(DBG_UBOOT_SUB_PATH)" ]; then echo rm -rf $(DBG_UBOOT_SUB_PATH); rm -rf $(DBG_UBOOT_SUB_PATH); fi; \
+		if [ -d "$(REL_UBOOT_SUB_PATH)" ]; then echo rm -rf $(REL_UBOOT_SUB_PATH); rm -rf $(REL_UBOOT_SUB_PATH); fi; \
 		if [ -d "$(DBG_UBOOT_SRC_PATH)/Makefile)" ]; then make -C $(DBG_UBOOT_SRC_PATH) --no-print-directory clean; fi; \
 		make -C $(UBOOT_IN_PATH) --no-print-directory -f Makefile-prep-ub.mk clean; \
 	fi
@@ -518,7 +520,7 @@ cleantemp_app:
 
 # Clean root folder
 cleantemp: cleantemp_ub cleantemp_sd cleantemp_app
-	@if [ -d "$(BM_OUT_PATH)" ]; then \
+	@if [ -d "$(APP_OUT_PATH)" ]; then \
 		if [ -f "$(DBG_UBOOT_SCRTXT)" ]; then echo rm -f $(DBG_UBOOT_SCRTXT); rm -f $(DBG_UBOOT_SCRTXT); fi; \
 		if [ -f "$(DBG_UBOOT_SCR)" ]; then echo rm -f $(DBG_UBOOT_SCR); rm -f $(DBG_UBOOT_SCR); fi; \
 		if [ -f "$(REL_UBOOT_SCRTXT)" ]; then echo rm -f $(REL_UBOOT_SCRTXT); rm -f $(REL_UBOOT_SCRTXT); fi; \
@@ -811,7 +813,7 @@ ifeq ($(alt),1)
 else
 	@make -C $(SD_IN_PATH) --no-print-directory -f Makefile-sd-tru.mk debug
 endif
-ifneq ($(SD_OUT_PATH),$(BM_OUT_PATH))
+ifneq ($(SD_OUT_PATH),$(APP_OUT_PATH))
 	@if [ -f "$(DBG_SD_IMG)" ]; then \
 		mkdir -p $(DBG_SD_CP_PATH); \
 		cp -f $@ $(DBG_SD_CP_PATH); \
@@ -890,7 +892,7 @@ ifeq ($(alt),1)
 else
 	@make -C $(SD_IN_PATH) --no-print-directory -f Makefile-sd-tru.mk release
 endif
-ifneq ($(SD_OUT_PATH),$(BM_OUT_PATH))
+ifneq ($(SD_OUT_PATH),$(APP_OUT_PATH))
 	@if [ -f "$(REL_SD_IMG)" ]; then \
 		mkdir -p $(REL_SD_CP_PATH); \
 		cp -f $@ $(REL_SD_CP_PATH); \

@@ -1,13 +1,14 @@
 #!/bin/bash
 
-if [ -z "${BM_HOME_PATH+x}" ]; then
+if [ -z "${SCRIPT_PATH+x}" ]; then
+	chmod +x ../scripts-env/env-linux.sh
 	source ../scripts-env/env-linux.sh
 fi
 
 # Clean prepared U-Boot source code
-cd "$BM_HOME_PATH/scripts-linux/uboot"
+cd "$SCRIPT_PATH/scripts-linux/uboot"
 echo "Clean prepared U-Boot source"
-#make -C "$BM_HOME_PATH/scripts-linux/uboot" --no-print-directory -f Makefile-prep-ub.mk clean
+#make -C "$SCRIPT_PATH/scripts-linux/uboot" --no-print-directory -f Makefile-prep-ub.mk clean
 make -f Makefile-prep-ub.mk clean
 
 # If shell is child level 1 (e.g. Run as a Program) then stay in shell

@@ -39,6 +39,7 @@ int32_t IRQ_Initialize(void){
 	return (0U);
 }
 
+#if !TRU_CMSIS_WEAK_IRQH
 // Disable: warning: FP registers might be clobbered despite 'interrupt' attribute: compile with '-mgeneral-regs-only' [-Wattributes]
 // The warning is about some ARM CPUs, e.g. Cortex A series do not automatically save floating point registers on interrupt.
 // Code is added to save and restore the VFP registers, which covers this warning so is safe to silence it.
@@ -79,6 +80,7 @@ void __attribute__((interrupt("IRQ"))) IRQ_Handler(void){
 }
 
 #pragma GCC diagnostic pop
+#endif
 
 // Overrride CMSIS default weak prototype (see irq_ctrl_gic.h)
 IRQHandler_t IRQ_GetHandler(IRQn_ID_t irqn) {

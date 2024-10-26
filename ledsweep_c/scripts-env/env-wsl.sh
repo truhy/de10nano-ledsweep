@@ -10,11 +10,11 @@ TOOLCHAIN_PATH=~/devtools/xpack-arm-none-eabi-gcc-13.2.1-1.1/bin
 OPENOCD_PATH=~/devtools/xpack-openocd-0.12.0-2/bin
 if [ -z "${QUARTUS_ROOTDIR+x}" ]; then QUARTUS_ROOTDIR=~/intelFPGA_lite/22.1std/quartus/bin; fi
 
-# Bare-metal settings
-export BM_OUT_PATH=$SCRIPT_PATH
-export BM_HOME_PATH=$SCRIPT_PATH
-export BM_SRC_PATH1=source
-export BM_PROGRAM_NAME1=ledsweep
+# Application settings
+export APP_HOME_PATH=$SCRIPT_PATH
+export APP_OUT_PATH=$SCRIPT_PATH
+export APP_SRC_PATH1=source
+export APP_PROGRAM_NAME1=ledsweep
 
 # FPGA settings
 export FPGA_PROGRAM_NAME=ledsweep
@@ -58,7 +58,7 @@ export CROSS_COMPILE=arm-none-eabi-
 
 # SD card image settings
 export SD_OUT_PATH=~/sw-out
-export SD_PROGRAM_NAME=$BM_PROGRAM_NAME1
+export SD_PROGRAM_NAME=$APP_PROGRAM_NAME1
 
 # Search path settings
 export PATH=$PATH:$SCRIPT_PATH/scripts-env:$SCRIPT_PATH/scripts-linux

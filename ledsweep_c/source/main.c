@@ -21,7 +21,7 @@
 		OUT OF OR IN CONNECTION WITH THE SOFTWARE OR THE USE OR OTHER DEALINGS IN THE
 		SOFTWARE.
 
-		Version: 20241009
+		Version: 20241021
 		Target : ARM Cortex-A9 on the DE10-Nano development board (Intel Cyclone V
 		         SoC FPGA)
 		Type   : Bare-metal C
@@ -56,11 +56,15 @@
 			2. and then execute this program
 */
 
-#include "RTE_Components.h"   // CMSIS
-#include CMSIS_device_header  // CMSIS
 #include "priv_timer_irqh.h"
 #include "fpga_irqh.h"
+
+// Trulib includes
 #include "tru_logger.h"
+
+// CMSIS includes
+#include "RTE_Components.h"
+#include CMSIS_device_header
 
 #if(TRU_EXIT_TO_UBOOT == 1U)
 	#include <stdlib.h>

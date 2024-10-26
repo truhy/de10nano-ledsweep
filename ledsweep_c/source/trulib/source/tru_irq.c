@@ -21,14 +21,14 @@
 	OUT OF OR IN CONNECTION WITH THE SOFTWARE OR THE USE OR OTHER DEALINGS IN THE
 	SOFTWARE.
 
-	Version: 20242701
+	Version: 20241021
 
 	GIC (PrimeCell Generic Interrupt Controller (PL390)) interrupt functions.
 */
 
 #include "tru_irq.h"
 
-#if(TRU_USE_CMSIS == 1U)
+#if(TRU_CMSIS == 1U)
 
 // ===================
 // Use CMSIS functions
@@ -50,7 +50,7 @@ void tru_irq_deinit(void){
 void tru_irq_register(IRQn_ID_t intr_id, uint32_t intr_target, uint32_t intr_priority, IRQHandler_t handler){
 	IRQ_SetHandler(intr_id, handler);  // Register user interrupt handler
 	IRQ_SetPriority(intr_id, intr_priority);
-	IRQ_SetMode(intr_id, IRQ_MODE_TYPE_IRQ | intr_target | IRQ_MODE_TRIG_LEVEL | IRQ_MODE_TRIG_LEVEL_HIGH);
+	IRQ_SetMode(intr_id, IRQ_MODE_TYPE_IRQ | intr_target << IRQ_MODE_CPU_Pos | IRQ_MODE_TRIG_LEVEL | IRQ_MODE_TRIG_LEVEL_HIGH);
 	IRQ_Enable(intr_id);  // Enable the interrupt
 }
 

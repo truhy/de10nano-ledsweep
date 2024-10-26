@@ -1,0 +1,239 @@
+IP Upgrade report for ledsweep
+Sat Oct 26 14:24:49 2024
+Quartus Prime Version 23.1std.0 Build 991 11/28/2023 SC Lite Edition
+
+
+---------------------
+; Table of Contents ;
+---------------------
+  1. Legal Notice
+  2. IP Upgrade Summary
+  3. Successfully Upgraded IP Components
+  4. IP Upgrade Messages
+
+
+
+----------------
+; Legal Notice ;
+----------------
+Copyright (C) 2023  Intel Corporation. All rights reserved.
+Your use of Intel Corporation's design tools, logic functions 
+and other software and tools, and any partner logic 
+functions, and any output files from any of the foregoing 
+(including device programming or simulation files), and any 
+associated documentation or information are expressly subject 
+to the terms and conditions of the Intel Program License 
+Subscription Agreement, the Intel Quartus Prime License Agreement,
+the Intel FPGA IP License Agreement, or other applicable license
+agreement, including, without limitation, that your use is for
+the sole purpose of programming logic devices manufactured by
+Intel and sold by Intel or its authorized distributors.  Please
+refer to the applicable agreement for further details, at
+https://fpgasoftware.intel.com/eula.
+
+
+
++-------------------------------------------------------------------------------+
+; IP Upgrade Summary                                                            ;
++------------------------------+------------------------------------------------+
+; IP Components Upgrade Status ; Passed - Sat Oct 26 14:24:49 2024              ;
+; Quartus Prime Version        ; 23.1std.0 Build 991 11/28/2023 SC Lite Edition ;
+; Revision Name                ; ledsweep                                       ;
+; Top-level Entity Name        ; top                                            ;
+; Family                       ; Cyclone V                                      ;
++------------------------------+------------------------------------------------+
+
+
++-----------------------------------------------------------------------------------------------------------------------------------------------------+
+; Successfully Upgraded IP Components                                                                                                                 ;
++-------------+----------------+---------+-------------------------------------+----------------------+-------------------------------------+---------+
+; Entity Name ; Component Name ; Version ; Original Source File                ; Generation File Path ; New Source File                     ; Message ;
++-------------+----------------+---------+-------------------------------------+----------------------+-------------------------------------+---------+
+; soc_system  ; Qsys           ; 22.1    ; soc_system/synthesis/soc_system.qip ; soc_system.qsys      ; soc_system/synthesis/soc_system.qip ;         ;
++-------------+----------------+---------+-------------------------------------+----------------------+-------------------------------------+---------+
+
+
++---------------------+
+; IP Upgrade Messages ;
++---------------------+
+Info (11902): Backing up file "soc_system.qsys" to "soc_system.BAK.qsys"
+Info (11902): Backing up file "soc_system/synthesis/soc_system.v" to "soc_system.BAK.v"
+Info (11837): Started upgrading IP component Qsys with file "soc_system.qsys"
+Info: 2024.10.26.14:22:30 Info: Starting to upgrade the IP cores in the Platform Designer system
+Info: 2024.10.26.14:22:30 Info: Finished upgrading the ip cores
+Info: 2024.10.26.14:22:47 Info: Saving generation log to D:/Documents/Programming/FPGA/de10nano-c-verilog/ledsweep/ledsweep_verilog/soc_system
+Info: 2024.10.26.14:22:47 Info: Starting: Create simulation model
+Info: 2024.10.26.14:22:47 Info: qsys-generate D:\Documents\Programming\FPGA\de10nano-c-verilog\ledsweep\ledsweep_verilog\soc_system.qsys --simulation=VERILOG --allow-mixed-language-simulation --output-directory=D:\Documents\Programming\FPGA\de10nano-c-verilog\ledsweep\ledsweep_verilog\soc_system\simulation --family="Cyclone V" --part=5CSEBA6U23I7
+Info: 2024.10.26.14:22:47 Info: Loading ledsweep_verilog
+Info: 2024.10.26.14:22:48 Info: Reading input file
+Info: 2024.10.26.14:22:48 Info: Adding clk_0 [clock_source 23.1]
+Info: 2024.10.26.14:22:48 Info: Parameterizing module clk_0
+Info: 2024.10.26.14:22:48 Info: Adding clock_bridge_0 [altera_clock_bridge 23.1]
+Info: 2024.10.26.14:22:48 Info: Parameterizing module clock_bridge_0
+Info: 2024.10.26.14:22:48 Info: Adding hps_0 [altera_hps 23.1]
+Info: 2024.10.26.14:22:48 Info: Parameterizing module hps_0
+Info: 2024.10.26.14:22:48 Info: Adding pio_0 [altera_avalon_pio 23.1]
+Info: 2024.10.26.14:22:48 Info: Parameterizing module pio_0
+Info: 2024.10.26.14:22:48 Info: Adding pll_0 [altera_pll 23.1]
+Info: 2024.10.26.14:22:48 Info: Parameterizing module pll_0
+Info: 2024.10.26.14:22:48 Info: Building connections
+Info: 2024.10.26.14:22:48 Info: Parameterizing connections
+Info: 2024.10.26.14:22:48 Info: Validating
+Info: 2024.10.26.14:22:55 Info: Done reading input file
+Info: 2024.10.26.14:22:59 Info: soc_system.hps_0: HPS Main PLL counter settings: n = 0  m = 63
+Info: 2024.10.26.14:22:59 Info: soc_system.hps_0: HPS peripherial PLL counter settings: n = 0  m = 39
+Info: 2024.10.26.14:22:59 Info: soc_system.pio_0: PIO inputs are not hardwired in test bench. Undefined values will be read from PIO inputs during simulation.
+Info: 2024.10.26.14:22:59 Info: soc_system.pll_0: The legal reference clock frequency is 5.0 MHz..700.0 MHz
+Info: 2024.10.26.14:22:59 Info: soc_system.pll_0: Able to implement PLL with user settings
+Info: 2024.10.26.14:23:00 Info: soc_system: Generating soc_system "soc_system" for SIM_VERILOG
+Info: 2024.10.26.14:23:05 Info: Interconnect is inserted between master hps_0.h2f_lw_axi_master and slave pio_0.s1 because the master is of type axi and the slave is of type avalon.
+Info: 2024.10.26.14:23:11 Info: hps_0: "Running  for module: hps_0"
+Info: 2024.10.26.14:23:12 Info: hps_0: HPS Main PLL counter settings: n = 0  m = 63
+Info: 2024.10.26.14:23:12 Info: hps_0: HPS peripherial PLL counter settings: n = 0  m = 39
+Info: 2024.10.26.14:23:16 Info: hps_0: "soc_system" instantiated altera_hps "hps_0"
+Info: 2024.10.26.14:23:16 Info: pio_0: Starting RTL generation for module 'soc_system_pio_0'
+Info: 2024.10.26.14:23:16 Info: pio_0:   Generation command is [exec C:/intelfpga_lite/23.1std/quartus/bin64/perl/bin/perl.exe -I C:/intelfpga_lite/23.1std/quartus/bin64/perl/lib -I C:/intelfpga_lite/23.1std/quartus/sopc_builder/bin/europa -I C:/intelfpga_lite/23.1std/quartus/sopc_builder/bin -I C:/intelfpga_lite/23.1std/quartus/../ip/altera/sopc_builder_ip/common -I C:/intelfpga_lite/23.1std/quartus/../ip/altera/sopc_builder_ip/altera_avalon_pio -- C:/intelfpga_lite/23.1std/quartus/../ip/altera/sopc_builder_ip/altera_avalon_pio/generate_rtl.pl --name=soc_system_pio_0 --dir=C:/Users/Truong/AppData/Local/Temp/alt0022_6481342677872457409.dir/0002_pio_0_gen/ --quartus_dir=C:/intelfpga_lite/23.1std/quartus --verilog --config=C:/Users/Truong/AppData/Local/Temp/alt0022_6481342677872457409.dir/0002_pio_0_gen//soc_system_pio_0_component_configuration.pl  --do_build_sim=1    --sim_dir=C:/Users/Truong/AppData/Local/Temp/alt0022_6481342677872457409.dir/0002_pio_0_gen
+Info: 2024.10.26.14:23:17 Info: pio_0: Done RTL generation for module 'soc_system_pio_0'
+Info: 2024.10.26.14:23:17 Info: pio_0: "soc_system" instantiated altera_avalon_pio "pio_0"
+Info: 2024.10.26.14:23:17 Info: pll_0: Generating simgen model
+Info: Info: Quartus Prime Shell was successful. 0 errors, 0 warnings
+    Info: Peak virtual memory: 4661 megabytes
+    Info: Processing ended: Sat Oct 26 14:23:26 2024
+    Info: Elapsed time: 00:00:08
+    Info: Total CPU time (on all processors): 00:00:01
+2024.10.26.14:23:28 Info: pll_0: Simgen was successful
+Info: 2024.10.26.14:23:28 Info: pll_0: "soc_system" instantiated altera_pll "pll_0"
+Info: 2024.10.26.14:23:30 Info: avalon_st_adapter: Inserting error_adapter: error_adapter_0
+Info: 2024.10.26.14:23:32 Info: mm_interconnect_0: "soc_system" instantiated altera_mm_interconnect "mm_interconnect_0"
+Info: 2024.10.26.14:23:32 Info: rst_controller: "soc_system" instantiated altera_reset_controller "rst_controller"
+Info: 2024.10.26.14:23:32 Info: fpga_interfaces: "hps_0" instantiated altera_interface_generator "fpga_interfaces"
+Info: 2024.10.26.14:23:33 Info: hps_io: "hps_0" instantiated altera_hps_io "hps_io"
+Info: 2024.10.26.14:23:33 Info: pio_0_s1_translator: "mm_interconnect_0" instantiated altera_merlin_slave_translator "pio_0_s1_translator"
+Info: 2024.10.26.14:23:34 Info: hps_0_h2f_lw_axi_master_agent: "mm_interconnect_0" instantiated altera_merlin_axi_master_ni "hps_0_h2f_lw_axi_master_agent"
+Info: 2024.10.26.14:23:34 Info: pio_0_s1_agent: "mm_interconnect_0" instantiated altera_merlin_slave_agent "pio_0_s1_agent"
+Info: 2024.10.26.14:23:34 Info: pio_0_s1_agent_rsp_fifo: "mm_interconnect_0" instantiated altera_avalon_sc_fifo "pio_0_s1_agent_rsp_fifo"
+Info: 2024.10.26.14:23:34 Info: router: "mm_interconnect_0" instantiated altera_merlin_router "router"
+Info: 2024.10.26.14:23:34 Info: router_002: "mm_interconnect_0" instantiated altera_merlin_router "router_002"
+Info: 2024.10.26.14:23:34 Info: pio_0_s1_burst_adapter: "mm_interconnect_0" instantiated altera_merlin_burst_adapter "pio_0_s1_burst_adapter"
+Info: 2024.10.26.14:23:34 Info: Reusing file D:/Documents/Programming/FPGA/de10nano-c-verilog/ledsweep/ledsweep_verilog/soc_system/simulation/submodules
+Info: 2024.10.26.14:23:34 Info: cmd_demux: "mm_interconnect_0" instantiated altera_merlin_demultiplexer "cmd_demux"
+Info: 2024.10.26.14:23:34 Info: cmd_mux: "mm_interconnect_0" instantiated altera_merlin_multiplexer "cmd_mux"
+Info: 2024.10.26.14:23:34 Info: rsp_demux: "mm_interconnect_0" instantiated altera_merlin_demultiplexer "rsp_demux"
+Info: 2024.10.26.14:23:34 Info: rsp_mux: "mm_interconnect_0" instantiated altera_merlin_multiplexer "rsp_mux"
+Info: 2024.10.26.14:23:34 Info: Reusing file D:/Documents/Programming/FPGA/de10nano-c-verilog/ledsweep/ledsweep_verilog/soc_system/simulation/submodules
+Info: 2024.10.26.14:23:35 Info: avalon_st_adapter: "mm_interconnect_0" instantiated altera_avalon_st_adapter "avalon_st_adapter"
+Info: 2024.10.26.14:23:35 Info: border: "hps_io" instantiated altera_interface_generator "border"
+Info: 2024.10.26.14:23:35 Info: Reusing file D:/Documents/Programming/FPGA/de10nano-c-verilog/ledsweep/ledsweep_verilog/soc_system/simulation/submodules
+Info: 2024.10.26.14:23:35 Info: Reusing file D:/Documents/Programming/FPGA/de10nano-c-verilog/ledsweep/ledsweep_verilog/soc_system/simulation/submodules
+Info: 2024.10.26.14:23:35 Info: Reusing file D:/Documents/Programming/FPGA/de10nano-c-verilog/ledsweep/ledsweep_verilog/soc_system/simulation/submodules
+Info: 2024.10.26.14:23:35 Info: Reusing file D:/Documents/Programming/FPGA/de10nano-c-verilog/ledsweep/ledsweep_verilog/soc_system/simulation/submodules
+Info: 2024.10.26.14:23:35 Info: Reusing file D:/Documents/Programming/FPGA/de10nano-c-verilog/ledsweep/ledsweep_verilog/soc_system/simulation/submodules
+Info: 2024.10.26.14:23:35 Info: Reusing file D:/Documents/Programming/FPGA/de10nano-c-verilog/ledsweep/ledsweep_verilog/soc_system/simulation/submodules
+Info: 2024.10.26.14:23:35 Info: Reusing file D:/Documents/Programming/FPGA/de10nano-c-verilog/ledsweep/ledsweep_verilog/soc_system/simulation/submodules
+Info: 2024.10.26.14:23:35 Info: error_adapter_0: "avalon_st_adapter" instantiated error_adapter "error_adapter_0"
+Info: 2024.10.26.14:23:35 Info: soc_system: Done "soc_system" with 22 modules, 48 files
+Info: 2024.10.26.14:23:35 Info: qsys-generate succeeded.
+Info: 2024.10.26.14:23:35 Info: Finished: Create simulation model
+Info: 2024.10.26.14:23:35 Info: Starting: Create Modelsim Project.
+Info: 2024.10.26.14:23:35 Info: sim-script-gen --spd=D:\Documents\Programming\FPGA\de10nano-c-verilog\ledsweep\ledsweep_verilog\soc_system\soc_system.spd --output-directory=D:/Documents/Programming/FPGA/de10nano-c-verilog/ledsweep/ledsweep_verilog/soc_system/simulation
+Info: 2024.10.26.14:23:35 Info: Doing: ip-make-simscript --spd=D:\Documents\Programming\FPGA\de10nano-c-verilog\ledsweep\ledsweep_verilog\soc_system\soc_system.spd --output-directory=D:/Documents/Programming/FPGA/de10nano-c-verilog/ledsweep/ledsweep_verilog/soc_system/simulation
+Info: 2024.10.26.14:23:36 Info: Generating the following file(s) for MODELSIM simulator in D:/Documents/Programming/FPGA/de10nano-c-verilog/ledsweep/ledsweep_verilog/soc_system/simulation
+Info: 2024.10.26.14:23:36 Info:     mentor
+Info: 2024.10.26.14:23:36 Info: Generating the following file(s) for RIVIERA simulator in D:/Documents/Programming/FPGA/de10nano-c-verilog/ledsweep/ledsweep_verilog/soc_system/simulation
+Info: 2024.10.26.14:23:36 Info:     aldec
+Info: 2024.10.26.14:23:36 Info: For information on how to simulate your IP, see the explanatory comments in the simulator-specific subdirectories under D:/Documents/Programming/FPGA/de10nano-c-verilog/ledsweep/ledsweep_verilog/soc_system/simulation
+Info: 2024.10.26.14:23:36 Info: Regenerate these scripts whenever you make any change to any Quartus-generated IP in your project.
+Info: 2024.10.26.14:23:36 Info: Finished: Create Modelsim Project.
+Info: 2024.10.26.14:23:36 Info: Starting: Create block symbol file (.bsf)
+Info: 2024.10.26.14:23:36 Info: qsys-generate D:\Documents\Programming\FPGA\de10nano-c-verilog\ledsweep\ledsweep_verilog\soc_system.qsys --block-symbol-file --output-directory=D:\Documents\Programming\FPGA\de10nano-c-verilog\ledsweep\ledsweep_verilog\soc_system --family="Cyclone V" --part=5CSEBA6U23I7
+Info: 2024.10.26.14:23:36 Info: Loading ledsweep_verilog
+Info: 2024.10.26.14:23:37 Info: Reading input file
+Info: 2024.10.26.14:23:37 Info: Adding clk_0 [clock_source 23.1]
+Info: 2024.10.26.14:23:37 Info: Parameterizing module clk_0
+Info: 2024.10.26.14:23:37 Info: Adding clock_bridge_0 [altera_clock_bridge 23.1]
+Info: 2024.10.26.14:23:37 Info: Parameterizing module clock_bridge_0
+Info: 2024.10.26.14:23:37 Info: Adding hps_0 [altera_hps 23.1]
+Info: 2024.10.26.14:23:37 Info: Parameterizing module hps_0
+Info: 2024.10.26.14:23:37 Info: Adding pio_0 [altera_avalon_pio 23.1]
+Info: 2024.10.26.14:23:37 Info: Parameterizing module pio_0
+Info: 2024.10.26.14:23:37 Info: Adding pll_0 [altera_pll 23.1]
+Info: 2024.10.26.14:23:37 Info: Parameterizing module pll_0
+Info: 2024.10.26.14:23:37 Info: Building connections
+Info: 2024.10.26.14:23:37 Info: Parameterizing connections
+Info: 2024.10.26.14:23:37 Info: Validating
+Info: 2024.10.26.14:23:44 Info: Done reading input file
+Info: 2024.10.26.14:23:47 Info: soc_system.hps_0: HPS Main PLL counter settings: n = 0  m = 63
+Info: 2024.10.26.14:23:47 Info: soc_system.hps_0: HPS peripherial PLL counter settings: n = 0  m = 39
+Info: 2024.10.26.14:23:47 Info: soc_system.pio_0: PIO inputs are not hardwired in test bench. Undefined values will be read from PIO inputs during simulation.
+Info: 2024.10.26.14:23:47 Info: soc_system.pll_0: The legal reference clock frequency is 5.0 MHz..700.0 MHz
+Info: 2024.10.26.14:23:47 Info: soc_system.pll_0: Able to implement PLL with user settings
+Info: 2024.10.26.14:23:48 Info: qsys-generate succeeded.
+Info: 2024.10.26.14:23:48 Info: Finished: Create block symbol file (.bsf)
+Info: 2024.10.26.14:23:48 Info:
+Info: 2024.10.26.14:23:48 Info: Starting: Create HDL design files for synthesis
+Info: 2024.10.26.14:23:48 Info: qsys-generate D:\Documents\Programming\FPGA\de10nano-c-verilog\ledsweep\ledsweep_verilog\soc_system.qsys --synthesis=VERILOG --output-directory=D:\Documents\Programming\FPGA\de10nano-c-verilog\ledsweep\ledsweep_verilog\soc_system\synthesis --family="Cyclone V" --part=5CSEBA6U23I7
+Info: 2024.10.26.14:23:48 Info: Loading ledsweep_verilog
+Info: 2024.10.26.14:23:48 Info: Reading input file
+Info: 2024.10.26.14:23:48 Info: Adding clk_0 [clock_source 23.1]
+Info: 2024.10.26.14:23:48 Info: Parameterizing module clk_0
+Info: 2024.10.26.14:23:48 Info: Adding clock_bridge_0 [altera_clock_bridge 23.1]
+Info: 2024.10.26.14:23:48 Info: Parameterizing module clock_bridge_0
+Info: 2024.10.26.14:23:48 Info: Adding hps_0 [altera_hps 23.1]
+Info: 2024.10.26.14:23:48 Info: Parameterizing module hps_0
+Info: 2024.10.26.14:23:48 Info: Adding pio_0 [altera_avalon_pio 23.1]
+Info: 2024.10.26.14:23:48 Info: Parameterizing module pio_0
+Info: 2024.10.26.14:23:48 Info: Adding pll_0 [altera_pll 23.1]
+Info: 2024.10.26.14:23:48 Info: Parameterizing module pll_0
+Info: 2024.10.26.14:23:48 Info: Building connections
+Info: 2024.10.26.14:23:48 Info: Parameterizing connections
+Info: 2024.10.26.14:23:48 Info: Validating
+Info: 2024.10.26.14:23:56 Info: Done reading input file
+Info: 2024.10.26.14:23:59 Info: soc_system.hps_0: HPS Main PLL counter settings: n = 0  m = 63
+Info: 2024.10.26.14:23:59 Info: soc_system.hps_0: HPS peripherial PLL counter settings: n = 0  m = 39
+Info: 2024.10.26.14:23:59 Info: soc_system.pio_0: PIO inputs are not hardwired in test bench. Undefined values will be read from PIO inputs during simulation.
+Info: 2024.10.26.14:23:59 Info: soc_system.pll_0: The legal reference clock frequency is 5.0 MHz..700.0 MHz
+Info: 2024.10.26.14:23:59 Info: soc_system.pll_0: Able to implement PLL with user settings
+Info: 2024.10.26.14:24:01 Info: soc_system: Generating soc_system "soc_system" for QUARTUS_SYNTH
+Info: 2024.10.26.14:24:05 Info: Interconnect is inserted between master hps_0.h2f_lw_axi_master and slave pio_0.s1 because the master is of type axi and the slave is of type avalon.
+Info: 2024.10.26.14:24:11 Info: hps_0: "Running  for module: hps_0"
+Info: 2024.10.26.14:24:11 Info: hps_0: HPS Main PLL counter settings: n = 0  m = 63
+Info: 2024.10.26.14:24:11 Info: hps_0: HPS peripherial PLL counter settings: n = 0  m = 39
+Info: 2024.10.26.14:24:15 Info: hps_0: "soc_system" instantiated altera_hps "hps_0"
+Info: 2024.10.26.14:24:15 Info: pio_0: Starting RTL generation for module 'soc_system_pio_0'
+Info: 2024.10.26.14:24:15 Info: pio_0:   Generation command is [exec C:/intelfpga_lite/23.1std/quartus/bin64/perl/bin/perl.exe -I C:/intelfpga_lite/23.1std/quartus/bin64/perl/lib -I C:/intelfpga_lite/23.1std/quartus/sopc_builder/bin/europa -I C:/intelfpga_lite/23.1std/quartus/sopc_builder/bin -I C:/intelfpga_lite/23.1std/quartus/../ip/altera/sopc_builder_ip/common -I C:/intelfpga_lite/23.1std/quartus/../ip/altera/sopc_builder_ip/altera_avalon_pio -- C:/intelfpga_lite/23.1std/quartus/../ip/altera/sopc_builder_ip/altera_avalon_pio/generate_rtl.pl --name=soc_system_pio_0 --dir=C:/Users/Truong/AppData/Local/Temp/alt0022_6481342677872457409.dir/0020_pio_0_gen/ --quartus_dir=C:/intelfpga_lite/23.1std/quartus --verilog --config=C:/Users/Truong/AppData/Local/Temp/alt0022_6481342677872457409.dir/0020_pio_0_gen/
+Info: 2024.10.26.14:24:16 Info: pio_0: Done RTL generation for module 'soc_system_pio_0'
+Info: 2024.10.26.14:24:16 Info: pio_0: "soc_system" instantiated altera_avalon_pio "pio_0"
+Info: 2024.10.26.14:24:16 Info: pll_0: "soc_system" instantiated altera_pll "pll_0"
+Info: 2024.10.26.14:24:18 Info: avalon_st_adapter: Inserting error_adapter: error_adapter_0
+Info: 2024.10.26.14:24:19 Info: mm_interconnect_0: "soc_system" instantiated altera_mm_interconnect "mm_interconnect_0"
+Info: 2024.10.26.14:24:19 Info: rst_controller: "soc_system" instantiated altera_reset_controller "rst_controller"
+Info: 2024.10.26.14:24:20 Info: fpga_interfaces: "hps_0" instantiated altera_interface_generator "fpga_interfaces"
+Info: 2024.10.26.14:24:21 Info: hps_io: "hps_0" instantiated altera_hps_io "hps_io"
+Info: 2024.10.26.14:24:21 Info: pio_0_s1_translator: "mm_interconnect_0" instantiated altera_merlin_slave_translator "pio_0_s1_translator"
+Info: 2024.10.26.14:24:21 Info: hps_0_h2f_lw_axi_master_agent: "mm_interconnect_0" instantiated altera_merlin_axi_master_ni "hps_0_h2f_lw_axi_master_agent"
+Info: 2024.10.26.14:24:21 Info: pio_0_s1_agent: "mm_interconnect_0" instantiated altera_merlin_slave_agent "pio_0_s1_agent"
+Info: 2024.10.26.14:24:21 Info: pio_0_s1_agent_rsp_fifo: "mm_interconnect_0" instantiated altera_avalon_sc_fifo "pio_0_s1_agent_rsp_fifo"
+Info: 2024.10.26.14:24:21 Info: router: "mm_interconnect_0" instantiated altera_merlin_router "router"
+Info: 2024.10.26.14:24:21 Info: router_002: "mm_interconnect_0" instantiated altera_merlin_router "router_002"
+Info: 2024.10.26.14:24:21 Info: pio_0_s1_burst_adapter: "mm_interconnect_0" instantiated altera_merlin_burst_adapter "pio_0_s1_burst_adapter"
+Info: 2024.10.26.14:24:21 Info: Reusing file D:/Documents/Programming/FPGA/de10nano-c-verilog/ledsweep/ledsweep_verilog/soc_system/synthesis/submodules
+Info: 2024.10.26.14:24:21 Info: cmd_demux: "mm_interconnect_0" instantiated altera_merlin_demultiplexer "cmd_demux"
+Info: 2024.10.26.14:24:21 Info: cmd_mux: "mm_interconnect_0" instantiated altera_merlin_multiplexer "cmd_mux"
+Info: 2024.10.26.14:24:21 Info: rsp_demux: "mm_interconnect_0" instantiated altera_merlin_demultiplexer "rsp_demux"
+Info: 2024.10.26.14:24:21 Info: rsp_mux: "mm_interconnect_0" instantiated altera_merlin_multiplexer "rsp_mux"
+Info: 2024.10.26.14:24:21 Info: Reusing file D:/Documents/Programming/FPGA/de10nano-c-verilog/ledsweep/ledsweep_verilog/soc_system/synthesis/submodules
+Info: 2024.10.26.14:24:23 Info: avalon_st_adapter: "mm_interconnect_0" instantiated altera_avalon_st_adapter "avalon_st_adapter"
+Info: 2024.10.26.14:24:43 Info: border: "hps_io" instantiated altera_interface_generator "border"
+Info: 2024.10.26.14:24:43 Info: error_adapter_0: "avalon_st_adapter" instantiated error_adapter "error_adapter_0"
+Info: 2024.10.26.14:24:43 Info: soc_system: Done "soc_system" with 22 modules, 79 files
+Info: 2024.10.26.14:24:43 Info: qsys-generate succeeded.
+Info: 2024.10.26.14:24:43 Info: Finished: Create HDL design files for synthesis
+Info (11131): Completed upgrading IP component Qsys with file "soc_system.qsys"
+Info (23030): Evaluation of Tcl script c:/intelfpga_lite/23.1std/quartus/common/tcl/internal/ip_regen/ip_regen.tcl was successful
+Info: Quartus Prime Shell was successful. 0 errors, 0 warnings
+    Info: Peak virtual memory: 4874 megabytes
+    Info: Processing ended: Sat Oct 26 14:24:54 2024
+    Info: Elapsed time: 00:02:50
+    Info: Total CPU time (on all processors): 00:03:26
+
+

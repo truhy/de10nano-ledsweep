@@ -1,6 +1,6 @@
-@IF NOT DEFINED BARESOURCE_PATH CALL ..\scripts-env\env-win.bat
+@IF NOT DEFINED SCRIPT_PATH CALL ..\scripts-env\env-win.bat
 
-@CD %BM_HOME_PATH%
+@CD %SCRIPT_PATH%
 
 @CALL runsof.bat
 @IF %errorlevel% NEQ 0 GOTO :err_handler

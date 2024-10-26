@@ -315,13 +315,12 @@ module top(
 
 	// Create friendly names
 	wire [1:0] fpga_keys = { debounced_key1, debounced_key0 };  // Represents the FPGA input tactile keys
-	wire [7:0] fpga_leds = LED[7:0];                            // Represents the FPGA output LEDs
 	
 	// Configure logic for interrupt receiver
 	assign f2h_irq0 = { {31{1'b0}}, pio_0_irq };  // Wire PIO output to IRQ ID 72.  Remaining IDs 73 to 103 are unused
-	assign f2h_irq1 = 0;                          // IRQ IDs 104 to 135 are unused
+	assign f2h_irq1 = 'b0;                        // IRQ IDs 104 to 135 are unused
 	
 	// Configure logic for keys and LEDs
-	assign pio_0_in[1:0]  = fpga_keys;       // Wire PIO inputs to FPGA input keys
-	assign fpga_leds[7:0] = pio_0_out[7:0];  // Wire PIO outputs to FPGA output LEDs
+	assign pio_0_in[1:0]  = fpga_keys[1:0];  // Wire PIO inputs to FPGA input keys
+	assign LED[7:0]       = pio_0_out[7:0];  // Wire PIO outputs to FPGA output LEDs
 endmodule

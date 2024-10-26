@@ -51,12 +51,12 @@ void SystemInit(){
 /* do not use global variables because this function is called before
    reaching pre-main. RW section may be overwritten afterwards.          */
 
-#if(TRU_MMU_ENABLE == 1U)
+#if(TRU_MMU == 1U)
   // Invalidate entire Unified TLB
   __set_TLBIALL(0);
 #endif
 
-#if(TRU_L1_CACHE_ENABLE == 1U)
+#if(TRU_L1_CACHE == 1U)
   // Invalidate entire branch predictor array
   __set_BPIALL(0);
   __DSB();
@@ -71,22 +71,22 @@ void SystemInit(){
   L1C_InvalidateDCacheAll();
 #endif
 
-#if(TRU_NEON_ENABLE == 1U && __FPU_PRESENT == 1 && __FPU_USED == 1)
+#if(TRU_NEON == 1U && __FPU_PRESENT == 1 && __FPU_USED == 1)
   __FPU_Enable();
 #endif
 
-#if(TRU_MMU_ENABLE == 1U)
+#if(TRU_MMU == 1U)
   MMU_CreateTranslationTable();
   MMU_Enable();
 #endif
 
-#if(TRU_L1_CACHE_ENABLE == 1U)
+#if(TRU_L1_CACHE == 1U)
   // Enable L1 caches
   L1C_EnableCaches();
   L1C_EnableBTAC();
 #endif
 
-#if(TRU_L2_CACHE_ENABLE == 1U && __L2C_PRESENT == 1)
+#if(TRU_L2_CACHE == 1U && __L2C_PRESENT == 1)
   //L2C_310->AUX_CNT = L2C_310->AUX_CNT & ~(1U << 29U | 1U << 28U);  // Disable L2 instruction and data prefetch
   //L2C_310->AUX_CNT = L2C_310->AUX_CNT & ~(1U << 21U);  // Disable L2 parity
 

@@ -21,7 +21,7 @@
 	OUT OF OR IN CONNECTION WITH THE SOFTWARE OR THE USE OR OTHER DEALINGS IN THE
 	SOFTWARE.
 
-	Version: 20230319
+	Version: 20241021
 
  	GIC (PrimeCell Generic Interrupt Controller (PL390)) interrupt functions.
  */
@@ -30,11 +30,12 @@
 #define TRU_IRQ_H
 
 #include "tru_config.h"
-#if(TRU_USE_CMSIS)
+#if(TRU_CMSIS)
 	#include "RTE_Components.h"   // CMSIS
 	#include CMSIS_device_header  // CMSIS
 #else
 	#include "alt_interrupt.h"
+	#include "hwlib.h"
 #endif
 
 #if(TRU_TARGET == TRU_C5SOC)
@@ -511,7 +512,7 @@ typedef enum tru_irqn_e{
 #define TRU_GIC_PRIORITY_LEVEL30_7 TRU_GIC_PRIORITY_GRP5SUB3_SPLIT(30U, 7U)
 //#define TRU_GIC_PRIORITY_LEVEL31_7 TRU_GIC_PRIORITY_GRP5SUB3_SPLIT(31U, 7U)  // Reserved for mask condition, unusable
 
-#if(TRU_USE_CMSIS)
+#if(TRU_CMSIS)
 	void tru_irq_init(void);
 	void tru_irq_deinit(void);
 	void tru_irq_register(IRQn_ID_t intr_id, uint32_t intr_target, uint32_t intr_priority, IRQHandler_t handler);

@@ -1,17 +1,19 @@
-@IF NOT DEFINED BM_HOME_PATH CALL ..\scripts-env\env-win.bat
+@IF NOT DEFINED SCRIPT_PATH CALL ..\scripts-env\env-win.bat
 
-@CD %BM_HOME_PATH%
+@CD %SCRIPT_PATH%
 
 @IF "%1"=="debug" GOTO debug
 
 :release
-@SET app1_elf=Release//%BM_PROGRAM_NAME1%.elf
-@SET ubootspl=%BM_SRC_PATH1%//bsp//u-boot-spl
+@SET app1_elf=Release//%APP_PROGRAM_NAME1%.elf
+@IF NOT EXIST %app1_elf% @SET app1_elf=source//Release//%APP_PROGRAM_NAME1%.elf
+@SET ubootspl=%APP_SRC_PATH1%//bsp//u-boot-spl-nocache
 @GOTO find_elf_entry_point
 
 :debug
-@SET app1_elf=Debug//%BM_PROGRAM_NAME1%.elf
-@SET ubootspl=%BM_SRC_PATH1%//bsp//u-boot-spl-nocache
+@SET app1_elf=Debug//%APP_PROGRAM_NAME1%.elf
+@IF NOT EXIST %app1_elf% @SET app1_elf=source//Debug//%APP_PROGRAM_NAME1%.elf
+@SET ubootspl=%APP_SRC_PATH1%//bsp//u-boot-spl-nocache
 @GOTO find_elf_entry_point
 
 :find_elf_entry_point

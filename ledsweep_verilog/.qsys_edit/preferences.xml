@@ -10,6 +10,7 @@
    <endaddress preferredWidth="85" />
    <name preferredWidth="133" />
    <description preferredWidth="204" />
+   <export preferredWidth="192" />
   </columns>
  </systemtable>
  <library expandedCategories="Project,Library" />

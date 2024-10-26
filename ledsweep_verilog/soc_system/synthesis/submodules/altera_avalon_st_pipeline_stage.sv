@@ -11,9 +11,9 @@
 // agreement for further details.
 
 
-// $File: //acds/rel/23.1std/ip/avalon_st/altera_avalon_st_pipeline_stage/altera_avalon_st_pipeline_stage.sv $
+// $File: //acds/rel/22.1std/ip/avalon_st/altera_avalon_st_pipeline_stage/altera_avalon_st_pipeline_stage.sv $
 // $Revision: #1 $
-// $Date: 2022/10/30 $
+// $Date: 2021/10/27 $
 // $Author: psgswbuild $
 //------------------------------------------------------------------------------
 

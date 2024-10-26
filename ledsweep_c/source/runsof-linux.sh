@@ -8,12 +8,12 @@ function cleanup {
 }
 trap cleanup EXIT
 
-if [ -z "${BM_HOME_PATH+x}" ]; then
+if [ -z "${SCRIPT_PATH+x}" ]; then
 	chmod +x ../scripts-env/env-linux.sh
 	source ../scripts-env/env-linux.sh
 fi
 
-cd $BM_HOME_PATH
+cd $SCRIPT_PATH
 
 chmod +x scripts-linux/runsof.sh
 scripts-linux/runsof.sh

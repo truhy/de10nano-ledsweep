@@ -21,7 +21,7 @@
 	OUT OF OR IN CONNECTION WITH THE SOFTWARE OR THE USE OR OTHER DEALINGS IN THE
 	SOFTWARE.
 
-	Version: 20241009
+	Version: 20241021
 
 	Provides debug logging support for bare-metal program development.
 */
@@ -32,8 +32,8 @@
 #include "tru_config.h"
 #include <stdio.h>
 
-#if defined(TRU_USER_LOG_ENABLE) && TRU_USER_LOG_ENABLE == 1U
-	#if defined(TRU_USER_LOG_LOCATION) && TRU_USER_LOG_LOCATION == 1U
+#if defined(TRU_LOG) && TRU_LOG == 1U
+	#if defined(TRU_LOG_LOC) && TRU_LOG_LOC == 1U
 		#define LOG(fmt, args...) fprintf(stderr, "%s, %d, %s(), " fmt, __FILE__, __LINE__, __func__, ##args)
 	#else
 		#define LOG(fmt, args...) fprintf(stderr, fmt, ##args)

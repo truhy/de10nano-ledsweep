@@ -1,16 +1,16 @@
 Info: Starting: Create block symbol file (.bsf)
-Info: qsys-generate D:\Documents\Programming\FPGA\de10nano-verilog\ledsweep\soc_system.qsys --block-symbol-file --output-directory=D:\Documents\Programming\FPGA\de10nano-verilog\ledsweep\soc_system --family="Cyclone V" --part=5CSEBA6U23I7
-Progress: Loading ledsweep/soc_system.qsys
+Info: qsys-generate D:\Documents\Programming\FPGA\de10nano-c-verilog\ledsweep\ledsweep_verilog\soc_system.qsys --block-symbol-file --output-directory=D:\Documents\Programming\FPGA\de10nano-c-verilog\ledsweep\ledsweep_verilog\soc_system --family="Cyclone V" --part=5CSEBA6U23I7
+Progress: Loading ledsweep_verilog/soc_system.qsys
 Progress: Reading input file
-Progress: Adding clk_0 [clock_source 23.1]
+Progress: Adding clk_0 [clock_source 22.1]
 Progress: Parameterizing module clk_0
-Progress: Adding clock_bridge_0 [altera_clock_bridge 23.1]
+Progress: Adding clock_bridge_0 [altera_clock_bridge 22.1]
 Progress: Parameterizing module clock_bridge_0
-Progress: Adding hps_0 [altera_hps 23.1]
+Progress: Adding hps_0 [altera_hps 22.1]
 Progress: Parameterizing module hps_0
-Progress: Adding pio_0 [altera_avalon_pio 23.1]
+Progress: Adding pio_0 [altera_avalon_pio 22.1]
 Progress: Parameterizing module pio_0
-Progress: Adding pll_0 [altera_pll 23.1]
+Progress: Adding pll_0 [altera_pll 22.1]
 Progress: Parameterizing module pll_0
 Progress: Building connections
 Progress: Parameterizing connections
@@ -25,18 +25,18 @@ Info: qsys-generate succeeded.
 Info: Finished: Create block symbol file (.bsf)
 Info: 
 Info: Starting: Create HDL design files for synthesis
-Info: qsys-generate D:\Documents\Programming\FPGA\de10nano-verilog\ledsweep\soc_system.qsys --synthesis=VERILOG --output-directory=D:\Documents\Programming\FPGA\de10nano-verilog\ledsweep\soc_system\synthesis --family="Cyclone V" --part=5CSEBA6U23I7
-Progress: Loading ledsweep/soc_system.qsys
+Info: qsys-generate D:\Documents\Programming\FPGA\de10nano-c-verilog\ledsweep\ledsweep_verilog\soc_system.qsys --synthesis=VERILOG --output-directory=D:\Documents\Programming\FPGA\de10nano-c-verilog\ledsweep\ledsweep_verilog\soc_system\synthesis --family="Cyclone V" --part=5CSEBA6U23I7
+Progress: Loading ledsweep_verilog/soc_system.qsys
 Progress: Reading input file
-Progress: Adding clk_0 [clock_source 23.1]
+Progress: Adding clk_0 [clock_source 22.1]
 Progress: Parameterizing module clk_0
-Progress: Adding clock_bridge_0 [altera_clock_bridge 23.1]
+Progress: Adding clock_bridge_0 [altera_clock_bridge 22.1]
 Progress: Parameterizing module clock_bridge_0
-Progress: Adding hps_0 [altera_hps 23.1]
+Progress: Adding hps_0 [altera_hps 22.1]
 Progress: Parameterizing module hps_0
-Progress: Adding pio_0 [altera_avalon_pio 23.1]
+Progress: Adding pio_0 [altera_avalon_pio 22.1]
 Progress: Parameterizing module pio_0
-Progress: Adding pll_0 [altera_pll 23.1]
+Progress: Adding pll_0 [altera_pll 22.1]
 Progress: Parameterizing module pll_0
 Progress: Building connections
 Progress: Parameterizing connections
@@ -54,7 +54,7 @@ Info: hps_0: HPS Main PLL counter settings: n = 0  m = 63
 Info: hps_0: HPS peripherial PLL counter settings: n = 0  m = 39
 Info: hps_0: "soc_system" instantiated altera_hps "hps_0"
 Info: pio_0: Starting RTL generation for module 'soc_system_pio_0'
-Info: pio_0:   Generation command is [exec C:/intelfpga_lite/23.1std/quartus/bin64/perl/bin/perl.exe -I C:/intelfpga_lite/23.1std/quartus/bin64/perl/lib -I C:/intelfpga_lite/23.1std/quartus/sopc_builder/bin/europa -I C:/intelfpga_lite/23.1std/quartus/sopc_builder/bin -I C:/intelfpga_lite/23.1std/quartus/../ip/altera/sopc_builder_ip/common -I C:/intelfpga_lite/23.1std/quartus/../ip/altera/sopc_builder_ip/altera_avalon_pio -- C:/intelfpga_lite/23.1std/quartus/../ip/altera/sopc_builder_ip/altera_avalon_pio/generate_rtl.pl --name=soc_system_pio_0 --dir=C:/Users/Truong/AppData/Local/Temp/alt9757_2413052338248663055.dir/0002_pio_0_gen/ --quartus_dir=C:/intelfpga_lite/23.1std/quartus --verilog --config=C:/Users/Truong/AppData/Local/Temp/alt9757_2413052338248663055.dir/0002_pio_0_gen//soc_system_pio_0_component_configuration.pl  --do_build_sim=0  ]
+Info: pio_0:   Generation command is [exec C:/intelfpga_lite/22.1std/quartus/bin64/perl/bin/perl.exe -I C:/intelfpga_lite/22.1std/quartus/bin64/perl/lib -I C:/intelfpga_lite/22.1std/quartus/sopc_builder/bin/europa -I C:/intelfpga_lite/22.1std/quartus/sopc_builder/bin -I C:/intelfpga_lite/22.1std/quartus/../ip/altera/sopc_builder_ip/common -I C:/intelfpga_lite/22.1std/quartus/../ip/altera/sopc_builder_ip/altera_avalon_pio -- C:/intelfpga_lite/22.1std/quartus/../ip/altera/sopc_builder_ip/altera_avalon_pio/generate_rtl.pl --name=soc_system_pio_0 --dir=C:/Users/Truong/AppData/Local/Temp/alt0022_5889930318879400206.dir/0002_pio_0_gen/ --quartus_dir=C:/intelfpga_lite/22.1std/quartus --verilog --config=C:/Users/Truong/AppData/Local/Temp/alt0022_5889930318879400206.dir/0002_pio_0_gen//soc_system_pio_0_component_configuration.pl  --do_build_sim=0  ]
 Info: pio_0: Done RTL generation for module 'soc_system_pio_0'
 Info: pio_0: "soc_system" instantiated altera_avalon_pio "pio_0"
 Info: pll_0: "soc_system" instantiated altera_pll "pll_0"
@@ -70,12 +70,12 @@ Info: pio_0_s1_agent_rsp_fifo: "mm_interconnect_0" instantiated altera_avalon_sc
 Info: router: "mm_interconnect_0" instantiated altera_merlin_router "router"
 Info: router_002: "mm_interconnect_0" instantiated altera_merlin_router "router_002"
 Info: pio_0_s1_burst_adapter: "mm_interconnect_0" instantiated altera_merlin_burst_adapter "pio_0_s1_burst_adapter"
-Info: Reusing file D:/Documents/Programming/FPGA/de10nano-verilog/ledsweep/soc_system/synthesis/submodules/altera_merlin_address_alignment.sv
+Info: Reusing file D:/Documents/Programming/FPGA/de10nano-c-verilog/ledsweep/ledsweep_verilog/soc_system/synthesis/submodules/altera_merlin_address_alignment.sv
 Info: cmd_demux: "mm_interconnect_0" instantiated altera_merlin_demultiplexer "cmd_demux"
 Info: cmd_mux: "mm_interconnect_0" instantiated altera_merlin_multiplexer "cmd_mux"
 Info: rsp_demux: "mm_interconnect_0" instantiated altera_merlin_demultiplexer "rsp_demux"
 Info: rsp_mux: "mm_interconnect_0" instantiated altera_merlin_multiplexer "rsp_mux"
-Info: Reusing file D:/Documents/Programming/FPGA/de10nano-verilog/ledsweep/soc_system/synthesis/submodules/altera_merlin_arbitrator.sv
+Info: Reusing file D:/Documents/Programming/FPGA/de10nano-c-verilog/ledsweep/ledsweep_verilog/soc_system/synthesis/submodules/altera_merlin_arbitrator.sv
 Info: avalon_st_adapter: "mm_interconnect_0" instantiated altera_avalon_st_adapter "avalon_st_adapter"
 Info: border: "hps_io" instantiated altera_interface_generator "border"
 Info: error_adapter_0: "avalon_st_adapter" instantiated error_adapter "error_adapter_0"

@@ -8,20 +8,22 @@ function cleanup {
 }
 trap cleanup EXIT
 
-if [ -z "${BM_HOME_PATH+x}" ]; then
+if [ -z "${SCRIPT_PATH+x}" ]; then
 	chmod +x ../scripts-env/env-linux.sh
 	source ../scripts-env/env-linux.sh
 fi
 
-cd $BM_HOME_PATH
+cd $SCRIPT_PATH
 
 # Determine build from input argument
 if [ $1 = "debug" ]; then
-	app1_elf="Debug/$BM_PROGRAM_NAME1".elf
-	ubootspl="$BM_SRC_PATH1/bsp/u-boot-spl-nocache"
+	app1_elf="Debug/$APP_PROGRAM_NAME1".elf
+	if [ ! -f $app1_elf ]; then app1_elf="source/Debug/$APP_PROGRAM_NAME1".elf fi
+	ubootspl="$APP_SRC_PATH1/bsp/u-boot-spl-nocache"
 else
-	app1_elf="Release/$BM_PROGRAM_NAME1".elf
-	ubootspl="$BM_SRC_PATH1/bsp/u-boot-spl"
+	app1_elf="Release/$APP_PROGRAM_NAME1".elf
+	if [ ! -f $app1_elf ]; then app1_elf="source/Release/$APP_PROGRAM_NAME1".elf fi
+	ubootspl="$APP_SRC_PATH1/bsp/u-boot-spl-nocache"
 fi
 
 # Find elf entry point

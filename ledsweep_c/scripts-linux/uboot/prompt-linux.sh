@@ -1,6 +1,6 @@
 #!/bin/bash
 
-if [ -z "${BM_ROOT_PATH+x}" ]; then
+if [ -z "${SCRIPT_PATH+x}" ]; then
 	source ../../scripts-env/env-linux.sh
 fi
 

@@ -10,11 +10,11 @@ SET TOOLCHAIN_PATH=C:\devtools\xpack-arm-none-eabi-gcc-13.2.1-1.1\bin
 SET OPENOCD_PATH=C:\devtools\xpack-openocd-0.12.0-2\bin
 IF "%QUARTUS_ROOTDIR%"=="" SET QUARTUS_ROOTDIR=C:\intelFPGA\22.1std\qprogrammer
 
-:: Bare-metal settings
-SET BM_OUT_PATH=%SCRIPT_PATH%
-SET BM_HOME_PATH=%SCRIPT_PATH%
-SET BM_SRC_PATH1=source
-SET BM_PROGRAM_NAME1=ledsweep
+:: Application settings
+SET APP_HOME_PATH=%SCRIPT_PATH%
+SET APP_OUT_PATH=%SCRIPT_PATH%
+SET APP_SRC_PATH1=source
+SET APP_PROGRAM_NAME1=ledsweep
 
 :: FPGA settings
 SET FPGA_PROGRAM_NAME=ledsweep

@@ -4,8 +4,8 @@
 # Prepares environment to support building an SD card image.
 
 # These variables are assumed to be set already
-ifndef BM_HOME_PATH
-$(error BM_HOME_PATH environment variable is not set)
+ifndef APP_HOME_PATH
+$(error APP_HOME_PATH environment variable is not set)
 endif
 
 # Represents an empty white space - we need it for extracting the elf entry address from readelf output
@@ -15,7 +15,7 @@ SPACE := $() $()
 # Read file and export some SD enviroment variables
 # =================================================
 
-export SDENVFILE := $(BM_HOME_PATH)/scripts-env/env-sd.sh
+export SDENVFILE := $(APP_HOME_PATH)/scripts-env/env-sd.sh
 
 # Read environment file
 SDENV := $(strip $(file <$(SDENVFILE)))

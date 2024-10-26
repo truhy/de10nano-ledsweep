@@ -157,12 +157,12 @@ void Reset_Handler(RESET_ARGS) {
 "_disable_l1:                                      \n"
   // Reset SCTLR Settings
   "MRC     p15, 0, R0, c1, c0, 0                   \n"  // Read CP15 System Control register
-#if(TRU_L1_CACHE_ENABLE != 2U)
+#if(TRU_L1_CACHE != 2U)
   "BIC     R0, R0, #(0x1 << 12)                    \n"  // Clear I bit 12 to disable I Cache
   "BIC     R0, R0, #(0x1 << 11)                    \n"  // Clear Z bit 11 to disable branch prediction
   "BIC     R0, R0, #(0x1 <<  2)                    \n"  // Clear C bit  2 to disable D Cache
 #endif
-#if(TRU_MMU_ENABLE != 2U)
+#if(TRU_MMU != 2U)
   "BIC     R0, R0, #0x1                            \n"  // Clear M bit  0 to disable MMU
 #endif
   "BIC     R0, R0, #(0x1 << 13)                    \n"  // Clear V bit 13 to disable hivecs
@@ -201,7 +201,7 @@ void Reset_Handler(RESET_ARGS) {
   // Call SystemInit
   "BL     SystemInit                               \n"
 
-#if(TRU_SCU_ENABLE == 1U)
+#if(TRU_SCU == 1U)
   // =======================================
   // Initialise the SCU (Snoop Control Unit)
   // =======================================
@@ -218,7 +218,7 @@ void Reset_Handler(RESET_ARGS) {
   "STR    r1, [r0, #0x0]                           \n"  // Write back modified value
 #endif
 
-#if(TRU_SMP_COHERENCY_ENABLE == 1U)
+#if(TRU_SMP_COHERENCY == 1U)
   // Enable SMP cache coherency support
   "MRC    p15, 0, r0, c1, c0, 1                    \n"  // Read ACTLR
   "ORR    r0, r0, #(0x1 << 22)                     \n"  // Set bit 22 to enable shared attribute override. Recommended for ACP data coherency from Cyclone V HPS tech ref
