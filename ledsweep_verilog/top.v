@@ -82,18 +82,18 @@ module top(
 	inout [35:0] GPIO_1,
 	
 	// FPGA HDMI. FPGA pins to HDMI transmitter chip (Analog Devices ADV7513BSWZ)
-	inout          HDMI_I2C_SCL,
-	inout          HDMI_I2C_SDA,
-	inout          HDMI_I2S,
-	inout          HDMI_LRCLK,
-	inout          HDMI_MCLK,
-	inout          HDMI_SCLK,
-	output         HDMI_TX_CLK,
-	output [23: 0] HDMI_TX_D,
-	output         HDMI_TX_DE,
-	output         HDMI_TX_HS,
-	input          HDMI_TX_INT,
-	output         HDMI_TX_VS,
+	inout         HDMI_I2C_SCL,
+	inout         HDMI_I2C_SDA,
+	inout         HDMI_I2S,
+	inout         HDMI_LRCLK,
+	inout         HDMI_MCLK,
+	inout         HDMI_SCLK,
+	output        HDMI_TX_CLK,
+	output [23:0] HDMI_TX_D,
+	output        HDMI_TX_DE,
+	output        HDMI_TX_HS,
+	input         HDMI_TX_INT,
+	output        HDMI_TX_VS,
 
 	// FPGA push buttons, LEDs and slide switches
 	input  [1:0] KEY,  // FPGA pins to tactile switches
@@ -144,7 +144,7 @@ module top(
 	output       HPS_ENET_MDC,
 	inout        HPS_ENET_MDIO,
 	input        HPS_ENET_RX_CLK,
-	input [3:0]  HPS_ENET_RX_DATA,
+	input  [3:0] HPS_ENET_RX_DATA,
 	input        HPS_ENET_RX_DV,
 	output [3:0] HPS_ENET_TX_DATA,
 	output       HPS_ENET_TX_EN,
@@ -154,7 +154,7 @@ module top(
 	output HPS_SPIM_CLK,
 	input  HPS_SPIM_MISO,
 	output HPS_SPIM_MOSI,
-	inout  HPS_SPIM_SS,
+	output HPS_SPIM_SS,
 
 	// HPS GPIO. HPS pin wired to the LTC 2x7 connector (note, this cannot be used because the 0ohm resistor is not populated)
 	inout HPS_LTC_GPIO,
