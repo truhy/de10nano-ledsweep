@@ -21,7 +21,7 @@
 	OUT OF OR IN CONNECTION WITH THE SOFTWARE OR THE USE OR OTHER DEALINGS IN THE
 	SOFTWARE.
 
-	Version: 20241021
+	Version: 20241103
 
 	FPGA PIO LEDs.
 */
@@ -29,7 +29,7 @@
 #ifndef PIO_LED_H
 #define PIO_LED_H
 
-#include "fpga_pio_intel.h"
+#include "fpga_intel_pio.h"
 #include "tru_c5soc_hps_ll.h"
 #include <stdint.h>
 
@@ -38,12 +38,12 @@
 // Note: The L2F is an AXI bridge between HPS as master to FPGA as slave, which is memory mapped to a block of memory addresses
 #define PIO0_BASE     0x00000000UL
 #define PIO0_L2F_BASE (TRU_HPS_L2F_BASE + PIO0_BASE)
-#define PIO0_DATA     (PIO0_L2F_BASE + PIO_DATA_OFFSET)
-#define PIO0_DIR      (PIO0_L2F_BASE + PIO_DIR_OFFSET)
-#define PIO0_IRQ_MSK  (PIO0_L2F_BASE + PIO_IRQ_MSK_OFFSET)
-#define PIO0_IRQ_CLR  (PIO0_L2F_BASE + PIO_IRQ_CLR_OFFSET)
-#define PIO0_OUT_SET  (PIO0_L2F_BASE + PIO_OUT_SET_OFFSET)
-#define PIO0_OUT_CLR  (PIO0_L2F_BASE + PIO_OUT_CLR_OFFSET)
+#define PIO0_DATA     (PIO0_L2F_BASE + INTEL_PIO_DATA_OFFSET)
+#define PIO0_DIR      (PIO0_L2F_BASE + INTEL_PIO_DIR_OFFSET)
+#define PIO0_IRQ_MSK  (PIO0_L2F_BASE + INTEL_PIO_IRQ_MSK_OFFSET)
+#define PIO0_IRQ_CLR  (PIO0_L2F_BASE + INTEL_PIO_IRQ_CLR_OFFSET)
+#define PIO0_OUT_SET  (PIO0_L2F_BASE + INTEL_PIO_OUT_SET_OFFSET)
+#define PIO0_OUT_CLR  (PIO0_L2F_BASE + INTEL_PIO_OUT_CLR_OFFSET)
 
 // PIO0 input from FPGA bit mapping for IRQ trigger
 #define PIO0_INPUT_F2H_KEY0 (1UL << 0UL)

@@ -21,7 +21,7 @@
 	OUT OF OR IN CONNECTION WITH THE SOFTWARE OR THE USE OR OTHER DEALINGS IN THE
 	SOFTWARE.
 
-	Version: 20241010
+	Version: 20241103
 
 	Supporting code for PIO Core Intel FPGA IP (Parallel IO).
 
@@ -29,7 +29,8 @@
 	=====
 
 	PIO work very much like GPIO port registers you normally see in
-	microcontrollers, e.g. PIC, STM32, etc.
+	microcontrollers, e.g. PIC, STM32, etc.  The direction is in the viewpoint
+	of the HPS, i.e. in = FPGA to HPS, out = HPS to FPGA.
 
 	There are four modes:
 		- BiDir, which implements bidirectional I/O using FPGA tristate inout ports
@@ -66,20 +67,32 @@
 	https://www.intel.com/content/www/us/en/docs/programmable/683130/23-4/pio-core.html
 */
 
-#ifndef FPGA_PIO_INTEL_H
-#define FPGA_PIO_INTEL_H
+#ifndef FPGA_INTEL_PIO_H
+#define FPGA_INTEL_PIO_H
+
+#include <stdint.h>
 
 // Generic address offsets
-#define PIO_DATA_OFFSET    (0UL * 4UL)
-#define PIO_DIR_OFFSET     (1UL * 4UL)
-#define PIO_IRQ_MSK_OFFSET (2UL * 4UL)
-#define PIO_IRQ_CLR_OFFSET (3UL * 4UL)
-// These two only exists in the memory register when the Output Register is ticked in Platform Designer
-#define PIO_OUT_SET_OFFSET (4UL * 4UL)
-#define PIO_OUT_CLR_OFFSET (5UL * 4UL)
+#define INTEL_PIO_DATA_OFFSET    (0UL * 4UL)
+#define INTEL_PIO_DIR_OFFSET     (1UL * 4UL)
+// These two below is active when the "Interrupt/Generate IRQ" option is ticked in Platform Designer
+#define INTEL_PIO_IRQ_MSK_OFFSET (2UL * 4UL)
+#define INTEL_PIO_IRQ_CLR_OFFSET (3UL * 4UL)
+// These two below only exists in the memory register when the "Output Register/Enable individual bit setting/clearing" option is ticked in Platform Designer
+#define INTEL_PIO_OUT_SET_OFFSET (4UL * 4UL)
+#define INTEL_PIO_OUT_CLR_OFFSET (5UL * 4UL)
 
 // Values for direction register in the viewpoint of the HPS.  Note: the direction register defaults to 0 = input
-#define PIO_DIR_INPUT  0U
-#define PIO_DIR_OUTPUT 1U
+#define INTEL_PIO_DIR_INPUT  0U
+#define INTEL_PIO_DIR_OUTPUT 1U
+
+typedef struct{
+	volatile uint32_t data;
+	volatile uint32_t dir;
+	volatile uint32_t irq_msk;
+	volatile uint32_t irq_clr;
+	volatile uint32_t out_set;
+	volatile uint32_t out_clr;
+}intel_pio_t;
 
 #endif

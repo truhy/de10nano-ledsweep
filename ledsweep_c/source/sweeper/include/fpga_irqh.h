@@ -29,7 +29,7 @@
 #ifndef FPGA_IRQH_H
 #define FPGA_IRQH_H
 
-#include "fpga_pio_led.h"
+#include "fpga_led_pio.h"
 
 void fpga_init(pio_ledsw_t *pio);
 void fpga_deinit(void);
