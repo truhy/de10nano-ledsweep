@@ -1,4 +1,8 @@
-%QUARTUS_ROOTDIR%/bin64/quartus_pgm -m jtag -c 1 -o "p;ledsweep.sof@2"
+@IF NOT DEFINED APP_HOME_PATH CALL ..\..\scripts-env\env-win.bat
+
+@CD %APP_HOME_PATH%
+
+@CALL update-bsp-sof.bat
 @IF %errorlevel% NEQ 0 GOTO :err_handler
 
 @GOTO :end_of_script

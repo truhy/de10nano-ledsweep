@@ -8,12 +8,12 @@ function cleanup {
 }
 trap cleanup EXIT
 
-if [ -z "${SCRIPT_PATH+x}" ]; then
+if [ -z "${APP_HOME_PATH+x}" ]; then
 	chmod +x ../scripts-env/env-linux.sh
 	source ../scripts-env/env-linux.sh
 fi
 
-cd $SCRIPT_PATH
+cd $APP_HOME_PATH
 
 # Determine build from input argument
 if [ $1 = "debug" ]; then

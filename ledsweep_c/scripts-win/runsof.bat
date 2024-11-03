@@ -1,6 +1,6 @@
-@IF NOT DEFINED SCRIPT_PATH CALL ..\scripts-env\env-win.bat
+@IF NOT DEFINED APP_HOME_PATH CALL ..\scripts-env\env-win.bat
 
-@CD "%SCRIPT_PATH%"
+@CD "%APP_HOME_PATH%"
 
 :: Program .sof to the FPGA
 :: Parameters: -c 1 = selects J-TAG cable number 1, @2 is referring to device index on the J-TAG chain (1 = HPS SoC CPU, 2 = Cyclone V FPGA)

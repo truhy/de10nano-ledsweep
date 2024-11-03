@@ -17,6 +17,7 @@ SET APP_SRC_PATH1=source
 SET APP_PROGRAM_NAME1=ledsweep
 
 :: FPGA settings
+SET FPGA_SRC_PATH=ledsweep_verilog
 SET FPGA_PROGRAM_NAME=ledsweep
 
 :: Search path settings

@@ -17,6 +17,7 @@ export APP_SRC_PATH1=source
 export APP_PROGRAM_NAME1=ledsweep
 
 # FPGA settings
+export FPGA_SRC_PATH=ledsweep_verilog
 export FPGA_PROGRAM_NAME=ledsweep
 
 # U-Boot settings

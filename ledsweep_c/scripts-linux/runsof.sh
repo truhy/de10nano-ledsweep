@@ -8,12 +8,12 @@ function cleanup {
 }
 trap cleanup EXIT
 
-if [ -z "${SCRIPT_PATH+x}" ]; then
+if [ -z "${APP_HOME_PATH+x}" ]; then
 	chmod +x ../scripts-env/env-linux.sh
 	source ../scripts-env/env-linux.sh
 fi
 
-cd "$SCRIPT_PATH"
+cd "$APP_HOME_PATH"
 
 # Program .sof to the FPGA
 # Parameters: -c 1 = selects J-TAG cable number 1, @2 is referring to device index on the J-TAG chain (1 = HPS SoC CPU, 2 = Cyclone V FPGA)

@@ -9,11 +9,11 @@ function cleanup {
 trap cleanup EXIT
 
 if [ -z "${APP_HOME_PATH+x}" ]; then
-	chmod +x ../scripts-env/env-linux.sh
-	source ../scripts-env/env-linux.sh
+	chmod +x ../../scripts-env/env-linux.sh
+	source ../../scripts-env/env-linux.sh
 fi
 
 cd $APP_HOME_PATH
 
-chmod +x scripts-linux/runsof.sh
-scripts-linux/runsof.sh
+chmod +x scripts-linux/update-bsp-sof.sh
+scripts-linux/update-bsp-sof.sh

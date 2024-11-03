@@ -15,6 +15,7 @@ fi
 
 cd "$APP_HOME_PATH"
 
-# Convert .sof to .rbf
-quartus_cpf -c -o bitstream_compression=on "$APP_SRC_PATH1/bsp/$FPGA_PROGRAM_NAME.sof" scripts-linux/sdcard/Debug/c5_fpga.rbf
-cp -f scripts-linux/sdcard/Debug/c5_fpga.rbf scripts-linux/sdcard/Release/c5_fpga.rbf
+SOFFILE="../$FPGA_SRC_PATH/output_files/$FPGA_PROGRAM_NAME.sof"
+if [ -f $SOFFILE ]; then
+	cp -f $SOFFILE "$APP_SRC_PATH1/bsp/$FPGA_PROGRAM_NAME.sof"
+fi

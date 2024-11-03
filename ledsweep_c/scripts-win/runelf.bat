@@ -1,6 +1,6 @@
-@IF NOT DEFINED SCRIPT_PATH CALL ..\scripts-env\env-win.bat
+@IF NOT DEFINED APP_HOME_PATH CALL ..\scripts-env\env-win.bat
 
-@CD %SCRIPT_PATH%
+@CD %APP_HOME_PATH%
 
 @IF "%1"=="debug" GOTO debug
 
