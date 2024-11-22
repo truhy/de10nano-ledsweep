@@ -21,7 +21,7 @@
 	OUT OF OR IN CONNECTION WITH THE SOFTWARE OR THE USE OR OTHER DEALINGS IN THE
 	SOFTWARE.
 
-	Version: 20241027
+	Version: 20241122
 
 	Arm Cortex-A9 low level assembly codes.
 */
@@ -57,7 +57,7 @@
 #define __read_mpidr(mpidr)   __asm__ volatile("MRC p15, 0, %0, c0, c0, 5" : "=r" (mpidr) : : "memory")
 
 // MMU related
-#define __write_tlbimvaa(va)  __asm__ volatile("MRC p15, 0, %0, c8, c7, 3" : "r" (va) : : "memory")
+#define __write_tlbimvaa(va)  __asm__ volatile("MRC p15, 0, %0, c8, c7, 3" : : "r" (va) : "memory")
 
 // Global timer
 // ============
