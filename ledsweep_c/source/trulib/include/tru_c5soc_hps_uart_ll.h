@@ -97,9 +97,9 @@ typedef struct{
 }tru_hps_uart_t;
 
 // UART registers as type representation
-#define TRU_HPS_UART0_REG ((tru_hps_uart_t *)TRU_HPS_UART0_BASE)
-#define TRU_HPS_UART1_REG ((tru_hps_uart_t *)TRU_HPS_UART1_BASE)
-#define TRU_HPS_UART_REG(base_addr) ((tru_hps_uart_t *)base_addr)
+#define TRU_HPS_UART0_REG ((volatile tru_hps_uart_t *const)TRU_HPS_UART0_BASE)
+#define TRU_HPS_UART1_REG ((volatile tru_hps_uart_t *const)TRU_HPS_UART1_BASE)
+#define TRU_HPS_UART_REG(base_addr) ((volatile tru_hps_uart_t *const)base_addr)
 
 void tru_hps_uart_ll_wait_empty(TRU_TARGET_TYPE *uart_base);
 void tru_hps_uart_ll_write_str(TRU_TARGET_TYPE *uart_base, const char *str, uint32_t len);

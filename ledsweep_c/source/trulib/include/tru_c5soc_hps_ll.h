@@ -21,7 +21,7 @@
 	OUT OF OR IN CONNECTION WITH THE SOFTWARE OR THE USE OR OTHER DEALINGS IN THE
 	SOFTWARE.
 
-	Version: 20241020
+	Version: 20241223
 
 	Low-level code for Cyclone V SoC HPS.
 */
@@ -79,13 +79,13 @@ typedef union{
 	  volatile uint32_t gpio2:1;
 	  volatile uint32_t dma:1;
 	  volatile uint32_t sdr:1;
-	  uint32_t reserved:2;
+	  volatile uint32_t reserved:2;
   }bits;
   volatile uint32_t word;
 }tru_hps_rstmgr_permodrst_t;
 
 // Reset Manager register as type representation
-#define TRU_HPS_RSTMGR_PERMODRST_REG ((tru_hps_rstmgr_permodrst_t *)TRU_HPS_RSTMGR_PERMODRST)
+#define TRU_HPS_RSTMGR_PERMODRST_REG ((volatile tru_hps_rstmgr_permodrst_t *const)TRU_HPS_RSTMGR_PERMODRST)
 
 #define TRU_HPS_OCRAM_BASE   0xFFFF0000UL  // 64kB On-Chip RAM
 #define TRU_HPS_SCU_L2_BASE  0xFFFEC000UL

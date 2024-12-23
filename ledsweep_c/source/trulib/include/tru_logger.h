@@ -21,7 +21,7 @@
 	OUT OF OR IN CONNECTION WITH THE SOFTWARE OR THE USE OR OTHER DEALINGS IN THE
 	SOFTWARE.
 
-	Version: 20241021
+	Version: 20241124
 
 	Provides debug logging support for bare-metal program development.
 */
@@ -39,7 +39,7 @@
 		#define LOG(fmt, args...) fprintf(stderr, fmt, ##args)
 	#endif
 #else
-	#define LOG(fmt, args...)  // Do nothing
+	#define LOG(fmt, args...)  do {} while(0) // Do nothing
 #endif
 
 #endif

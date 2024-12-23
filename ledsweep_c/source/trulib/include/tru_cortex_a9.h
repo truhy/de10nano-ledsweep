@@ -21,7 +21,7 @@
 	OUT OF OR IN CONNECTION WITH THE SOFTWARE OR THE USE OR OTHER DEALINGS IN THE
 	SOFTWARE.
 
-	Version: 20241122
+	Version: 20241214
 
 	Arm Cortex-A9 low level assembly codes.
 */
@@ -71,17 +71,18 @@ typedef struct{
   volatile uint32_t counterh;
   volatile uint32_t control;
   volatile uint32_t isr;
-  volatile uint32_t compl;
-  volatile uint32_t comph;
+  volatile uint32_t comparel;
+  volatile uint32_t compareh;
   volatile uint32_t autoinc;
 }global_timer_type;
-#define GTIM ((global_timer_type *)TRU_GLOBAL_TIMER_BASE)
+
+#define GTIM_REG ((volatile global_timer_type *const)TRU_GLOBAL_TIMER_BASE)
 
 #define GTIM_CONTROL_ENABLE_POS 0U
 #define GTIM_CONTROL_ENABLE_MSK 0x1U
 
-#define GTIM_CONTROL_COMP_ENABLE_POS 1U
-#define GTIM_CONTROL_COMP_ENABLE_MSK (0x1U << GTIM_CONTROL_COMP_ENABLE_POS)
+#define GTIM_CONTROL_COMPARE_ENABLE_POS 1U
+#define GTIM_CONTROL_COMPARE_ENABLE_MSK (0x1U << GTIM_CONTROL_COMPARE_ENABLE_POS)
 
 #define GTIM_CONTROL_IRQ_ENABLE_POS 2U
 #define GTIM_CONTROL_IRQ_ENABLE_MSK (0x1U << GTIM_CONTROL_IRQ_ENABLE_POS)
@@ -97,26 +98,39 @@ typedef struct{
 
 // Basic plain running timer mode: timer stopped, no compare, no interrupt, no auto-reset counter, no prescaler
 static inline void gtim_setup_basic_mode(void){
-	GTIM->control &= ~(GTIM_CONTROL_ENABLE_MSK | GTIM_CONTROL_COMP_ENABLE_MSK | GTIM_CONTROL_IRQ_ENABLE_MSK | GTIM_CONTROL_AUTOINC_MSK | GTIM_CONTROL_PRESCALER_MSK);
+	GTIM_REG->control &= ~(GTIM_CONTROL_ENABLE_MSK | GTIM_CONTROL_COMPARE_ENABLE_MSK | GTIM_CONTROL_IRQ_ENABLE_MSK | GTIM_CONTROL_AUTOINC_MSK | GTIM_CONTROL_PRESCALER_MSK);
 }
 
 static inline void gtim_zero_counter(void){
-	GTIM->counterl = 0;
-	GTIM->counterh = 0;
+	GTIM_REG->counterl = 0U;
+	GTIM_REG->counterh = 0U;
 }
 
 // Start the timer (counting starts)
 static inline void gtim_enable(void){
-	GTIM->control |= GTIM_CONTROL_ENABLE_MSK;
+	GTIM_REG->control |= GTIM_CONTROL_ENABLE_MSK;
 }
 
 // Stop the timer (counting stopped)
 static inline void gtim_disable(void){
-	GTIM->control &= ~(uint32_t)GTIM_CONTROL_ENABLE_MSK;
+	GTIM_REG->control &= ~(uint32_t)GTIM_CONTROL_ENABLE_MSK;
 }
 
-static inline uint64_t gtim_counter(void){
-	return (uint64_t)GTIM->counterh << 32 | GTIM->counterl;
+static inline uint64_t gtim_get_counter(void){
+	volatile uint32_t upper = GTIM_REG->counterh;
+	volatile uint32_t lower = GTIM_REG->counterl;
+
+	while(GTIM_REG->counterh != upper){
+		lower = GTIM_REG->counterl;
+		upper = GTIM_REG->counterh;
+	}
+
+	return (uint64_t)upper << 32U | lower;
+}
+
+static inline void gtim_set_counter(uint64_t counter){
+	GTIM_REG->counterl = (uint32_t)counter;
+	GTIM_REG->counterh = (uint32_t)(counter >> 32U);
 }
 
 #endif

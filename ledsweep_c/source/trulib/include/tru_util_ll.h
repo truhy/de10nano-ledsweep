@@ -21,7 +21,7 @@
 	OUT OF OR IN CONNECTION WITH THE SOFTWARE OR THE USE OR OTHER DEALINGS IN THE
 	SOFTWARE.
 
-	Version: 20240317
+	Version: 20241223
 
 	Vendor specific low-level utility functions.
 */
@@ -30,6 +30,8 @@
 #define TRU_UTIL_LL_H
 
 #include "tru_config.h"
+
+#define DIV_CEIL(n, d) (((n) + (d) - 1) / (d))
 
 #if(TRU_TARGET == TRU_C5SOC)
 
