@@ -21,11 +21,13 @@
 	OUT OF OR IN CONNECTION WITH THE SOFTWARE OR THE USE OR OTHER DEALINGS IN THE
 	SOFTWARE.
 
-	Version: 20250315
+	Version: 20250405
 */
 
 #include "tru_mmu.h"
 #include "tru_cache.h"
+
+#if(TRU_TARGET == TRU_TARGET_C5SOC)
 
 #if defined(TRU_CMSIS) && TRU_CMSIS == 0U
 
@@ -137,5 +139,7 @@ void tru_mmu_set_noncacheable_section(void *start_addr, uint32_t mem_size){
 		__DSB();  // Ensure the new entry is visible
 	}
 }
+
+#endif
 
 #endif

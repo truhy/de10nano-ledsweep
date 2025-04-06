@@ -35,13 +35,11 @@
 	#include "RTE_Components.h"   // CMSIS
 	#include CMSIS_device_header  // CMSIS
 	#include "tru_cache_l2c310.h"
-	#include <stdbool.h>
 #else
 	#include "alt_cache.h"
 	#include "tru_cortex_a9.h"
 	#include "tru_util_ll.h"
 	#include "tru_cache_l2c310.h"
-	#include <stdbool.h>
 #endif
 
 #define CACHELINE_SIZE L2C310_CACHELINE_SIZE
@@ -247,6 +245,7 @@ static inline void tru_l2_data_cleaninv_range(void *buf, uint32_t len){
 #elif(TRU_TARGET == TRU_TARGET_STM32H7)
 
 #include "stm32h7xx_hal.h"
+#include <stdbool.h>
 
 #define CACHELINE_SIZE __SCB_DCACHE_LINE_SIZE
 

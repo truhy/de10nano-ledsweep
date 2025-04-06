@@ -88,8 +88,8 @@ static __inline uint32_t alt_mmu_va_space_gen_section(uintptr_t pa, const ALT_MM
 
 #endif
 
-#endif
-
 void tru_mmu_set_noncacheable_section(void *start_addr, uint32_t mem_size);
+
+#endif
 
 #endif
