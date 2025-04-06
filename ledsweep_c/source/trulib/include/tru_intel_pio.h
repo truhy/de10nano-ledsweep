@@ -21,14 +21,14 @@
 	OUT OF OR IN CONNECTION WITH THE SOFTWARE OR THE USE OR OTHER DEALINGS IN THE
 	SOFTWARE.
 
-	Version: 20241103
+	Version: 20250405
 
-	Supporting code for PIO Core Intel FPGA IP (Parallel IO).
+	Supporting code for PIO Core Intel FPGA IP (Parallel IO IP).
 
 	Notes
 	=====
 
-	PIO work very much like GPIO port registers you normally see in
+	Intel PIO work very much like GPIO port registers you normally use in
 	microcontrollers, e.g. PIC, STM32, etc.  The direction is in the viewpoint
 	of the HPS, i.e. in = FPGA to HPS, out = HPS to FPGA.
 
@@ -67,24 +67,24 @@
 	https://www.intel.com/content/www/us/en/docs/programmable/683130/23-4/pio-core.html
 */
 
-#ifndef FPGA_INTEL_PIO_H
-#define FPGA_INTEL_PIO_H
+#ifndef TRU_INTEL_PIO_H
+#define TRU_INTEL_PIO_H
 
 #include <stdint.h>
 
 // Generic address offsets
-#define INTEL_PIO_DATA_OFFSET    (0UL * 4UL)
-#define INTEL_PIO_DIR_OFFSET     (1UL * 4UL)
+#define TRU_INTEL_PIO_DATA_OFFSET    (0U * 4U)
+#define TRU_INTEL_PIO_DIR_OFFSET     (1U * 4U)
 // These two below is active when the "Interrupt/Generate IRQ" option is ticked in Platform Designer
-#define INTEL_PIO_IRQ_MSK_OFFSET (2UL * 4UL)
-#define INTEL_PIO_IRQ_CLR_OFFSET (3UL * 4UL)
+#define TRU_INTEL_PIO_IRQ_MSK_OFFSET (2U * 4U)
+#define TRU_INTEL_PIO_IRQ_CLR_OFFSET (3U * 4U)
 // These two below only exists in the memory register when the "Output Register/Enable individual bit setting/clearing" option is ticked in Platform Designer
-#define INTEL_PIO_OUT_SET_OFFSET (4UL * 4UL)
-#define INTEL_PIO_OUT_CLR_OFFSET (5UL * 4UL)
+#define TRU_INTEL_PIO_OUT_SET_OFFSET (4U * 4U)
+#define TRU_INTEL_PIO_OUT_CLR_OFFSET (5U * 4U)
 
 // Values for direction register in the viewpoint of the HPS.  Note: the direction register defaults to 0 = input
-#define INTEL_PIO_DIR_INPUT  0U
-#define INTEL_PIO_DIR_OUTPUT 1U
+#define TRU_INTEL_PIO_DIR_INPUT  0U
+#define TRU_INTEL_PIO_DIR_OUTPUT 1U
 
 typedef struct{
 	volatile uint32_t data;
@@ -93,6 +93,6 @@ typedef struct{
 	volatile uint32_t irq_clr;
 	volatile uint32_t out_set;
 	volatile uint32_t out_clr;
-}intel_pio_t;
+}tru_intel_pio_reg_t;
 
 #endif

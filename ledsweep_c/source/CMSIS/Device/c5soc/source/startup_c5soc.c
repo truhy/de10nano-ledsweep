@@ -25,9 +25,9 @@
 #include <c5soc.h>
 #include <core_ca.h>
 
-#if(TRU_STARTUP == 0U)
+#if defined(TRU_STARTUP) && TRU_STARTUP == 0U
 
-#if(TRU_EXIT_TO_UBOOT == 1U)
+#if defined(TRU_EXIT_TO_UBOOT) && TRU_EXIT_TO_UBOOT == 1U
   #define RESET_ARGS int argc, char *const argv[]
 #else
   #define RESET_ARGS void
@@ -90,7 +90,7 @@ void Reset_Handler(RESET_ARGS) {
   // Mask interrupts
   "CPSID   if                                      \n"
 
-#if(TRU_EXIT_TO_UBOOT == 1U)
+#if defined(TRU_EXIT_TO_UBOOT) && TRU_EXIT_TO_UBOOT == 1U
   // Save U-Boot argc
   "LDR r3, =uboot_argc                             \n"
   "STR r0, [r3]                                    \n"
@@ -141,7 +141,7 @@ void Reset_Handler(RESET_ARGS) {
   "WFINE                                           \n"
   "BNE     goToSleep                               \n"
 
-#if(TRU_CLEAN_CACHE == 1U)
+#if defined(TRU_CLEAN_CACHE) && TRU_CLEAN_CACHE == 1U
   // Clean D Cache if it is enabled
   // Since we are starting from U-Boot which may have the cache enabled,
   // loaded file(s) and some global variables may be cached and stay dirty.
@@ -157,12 +157,12 @@ void Reset_Handler(RESET_ARGS) {
 "_disable_l1:                                      \n"
   // Reset SCTLR Settings
   "MRC     p15, 0, R0, c1, c0, 0                   \n"  // Read CP15 System Control register
-#if(TRU_L1_CACHE != 2U)
+#if defined(TRU_L1_CACHE) && TRU_L1_CACHE != 2U
   "BIC     R0, R0, #(0x1 << 12)                    \n"  // Clear I bit 12 to disable I Cache
   "BIC     R0, R0, #(0x1 << 11)                    \n"  // Clear Z bit 11 to disable branch prediction
   "BIC     R0, R0, #(0x1 <<  2)                    \n"  // Clear C bit  2 to disable D Cache
 #endif
-#if(TRU_MMU != 2U)
+#if defined(TRU_MMU) && TRU_MMU != 2U
   "BIC     R0, R0, #0x1                            \n"  // Clear M bit  0 to disable MMU
 #endif
   "BIC     R0, R0, #(0x1 << 13)                    \n"  // Clear V bit 13 to disable hivecs
@@ -201,7 +201,7 @@ void Reset_Handler(RESET_ARGS) {
   // Call SystemInit
   "BL     SystemInit                               \n"
 
-#if(TRU_SCU == 1U)
+#if defined(TRU_SCU) && TRU_SCU == 1U
   // =======================================
   // Initialise the SCU (Snoop Control Unit)
   // =======================================
@@ -218,7 +218,7 @@ void Reset_Handler(RESET_ARGS) {
   "STR    r1, [r0, #0x0]                           \n"  // Write back modified value
 #endif
 
-#if(TRU_SMP_COHERENCY == 1U)
+#if defined(TRU_SMP_COHERENCY) && TRU_SMP_COHERENCY == 1U
   // Enable SMP cache coherency support
   "MRC    p15, 0, r0, c1, c0, 1                    \n"  // Read ACTLR
   "ORR    r0, r0, #(0x1 << 22)                     \n"  // Set bit 22 to enable shared attribute override. Recommended for ACP data coherency from Cyclone V HPS tech ref

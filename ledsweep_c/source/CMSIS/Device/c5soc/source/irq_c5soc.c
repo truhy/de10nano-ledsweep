@@ -39,7 +39,7 @@ int32_t IRQ_Initialize(void){
 	return (0U);
 }
 
-#if !TRU_CMSIS_WEAK_IRQH
+#if defined(TRU_CMSIS_WEAK_IRQH) && !TRU_CMSIS_WEAK_IRQH
 // Disable: warning: FP registers might be clobbered despite 'interrupt' attribute: compile with '-mgeneral-regs-only' [-Wattributes]
 // The warning is about some ARM CPUs, e.g. Cortex A series do not automatically save floating point registers on interrupt.
 // Code is added to save and restore the VFP registers, which covers this warning so is safe to silence it.
@@ -49,7 +49,7 @@ int32_t IRQ_Initialize(void){
 // Overrride CMSIS default weak prototype (see irq_ctrl_gic.h)
 void __attribute__((interrupt("IRQ"))) IRQ_Handler(void){
 	// Save floating point registers (VFP registers)
-#if((__FPU_PRESENT == 1) && (__FPU_USED == 1))
+#if defined(TRU_NEON) && TRU_NEON == 1U && __FPU_PRESENT == 1U && __FPU_USED == 1U
 	__ASM volatile(
 		"SUB    sp, sp, #4      \n"  // Correct SP early by pushing a dummy, which will make it even for the r0 push below (number of pushes must be even)
 		"VMRS   r0, fpscr       \n"  // Read FP status value
@@ -68,7 +68,7 @@ void __attribute__((interrupt("IRQ"))) IRQ_Handler(void){
 	int32_t status = IRQ_EndOfInterrupt(irq_id);  // Set interrupt is serviced
 
 	// Restore floating point registers (VFP registers)
-#if((__FPU_PRESENT == 1) && (__FPU_USED == 1))
+#if defined(TRU_NEON) && TRU_NEON == 1U && __FPU_PRESENT == 1U && __FPU_USED == 1U
 	__ASM volatile(
 		"VLDMIA sp!, {d16-d31}  \n"  // Pop into d16-d31 registers
 		"VLDMIA sp!, {d0-d15}   \n"  // Pop into d0-d15 registers

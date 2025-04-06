@@ -21,7 +21,7 @@
 	OUT OF OR IN CONNECTION WITH THE SOFTWARE OR THE USE OR OTHER DEALINGS IN THE
 	SOFTWARE.
 
-	Version: 20240505
+	Version: 20250405
 
 	Low-level code for Cyclone V SoC HPS UART controller.
 */
@@ -31,7 +31,7 @@
 
 #include "tru_config.h"
 
-#if(TRU_TARGET == TRU_C5SOC)
+#if(TRU_TARGET == TRU_TARGET_C5SOC)
 
 #include "tru_util_ll.h"
 #include <stdint.h>
@@ -94,18 +94,18 @@ typedef struct{
 	volatile uint32_t cpr;
 	volatile uint32_t ucv;
 	volatile uint32_t ctr;
-}tru_hps_uart_t;
+}tru_hps_uart_reg_t;
 
 // UART registers as type representation
-#define TRU_HPS_UART0_REG ((volatile tru_hps_uart_t *const)TRU_HPS_UART0_BASE)
-#define TRU_HPS_UART1_REG ((volatile tru_hps_uart_t *const)TRU_HPS_UART1_BASE)
-#define TRU_HPS_UART_REG(base_addr) ((volatile tru_hps_uart_t *const)base_addr)
+#define TRU_HPS_UART0_REG ((volatile tru_hps_uart_reg_t *const)TRU_HPS_UART0_BASE)
+#define TRU_HPS_UART1_REG ((volatile tru_hps_uart_reg_t *const)TRU_HPS_UART1_BASE)
+#define TRU_HPS_UART_REG(base_addr) ((volatile tru_hps_uart_reg_t *const)base_addr)
 
-void tru_hps_uart_ll_wait_empty(TRU_TARGET_TYPE *uart_base);
-void tru_hps_uart_ll_write_str(TRU_TARGET_TYPE *uart_base, const char *str, uint32_t len);
-void tru_hps_uart_ll_write_char(TRU_TARGET_TYPE *uart_base, const char c);
-void tru_hps_uart_ll_write_hex_nibble(TRU_TARGET_TYPE *uart_base, unsigned char nibble);
-void tru_hps_uart_ll_write_inthex(TRU_TARGET_TYPE *uart_base, int num, unsigned int bits);
+void tru_hps_uart_ll_wait_empty(void *uart_base);
+void tru_hps_uart_ll_write_str(void *uart_base, const char *str, uint32_t len);
+void tru_hps_uart_ll_write_char(void *uart_base, const char c);
+void tru_hps_uart_ll_write_hex_nibble(void *uart_base, unsigned char nibble);
+void tru_hps_uart_ll_write_inthex(void *uart_base, int num, unsigned int bits);
 
 #endif
 

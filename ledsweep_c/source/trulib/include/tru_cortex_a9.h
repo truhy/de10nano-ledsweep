@@ -21,13 +21,17 @@
 	OUT OF OR IN CONNECTION WITH THE SOFTWARE OR THE USE OR OTHER DEALINGS IN THE
 	SOFTWARE.
 
-	Version: 20241214
+	Version: 20250405
 
 	Arm Cortex-A9 low level assembly codes.
 */
 
 #ifndef TRU_CORTEX_A9_H
 #define TRU_CORTEX_A9_H
+
+#include "tru_config.h"
+
+#if(TRU_CPU_FAMILY == TRU_CPU_FAMILY_CORTEXA9)
 
 #include <stdint.h>
 
@@ -74,9 +78,9 @@ typedef struct{
   volatile uint32_t comparel;
   volatile uint32_t compareh;
   volatile uint32_t autoinc;
-}global_timer_type;
+}global_timer_reg_t;
 
-#define GTIM_REG ((volatile global_timer_type *const)TRU_GLOBAL_TIMER_BASE)
+#define GTIM_REG ((volatile global_timer_reg_t *const)TRU_GLOBAL_TIMER_BASE)
 
 #define GTIM_CONTROL_ENABLE_POS 0U
 #define GTIM_CONTROL_ENABLE_MSK 0x1U
@@ -132,5 +136,7 @@ static inline void gtim_set_counter(uint64_t counter){
 	GTIM_REG->counterl = (uint32_t)counter;
 	GTIM_REG->counterh = (uint32_t)(counter >> 32U);
 }
+
+#endif
 
 #endif

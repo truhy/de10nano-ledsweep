@@ -21,7 +21,7 @@
 	OUT OF OR IN CONNECTION WITH THE SOFTWARE OR THE USE OR OTHER DEALINGS IN THE
 	SOFTWARE.
 
-	Version: 20240514
+	Version: 20250404
 
 	Utility functions.
 */
@@ -29,7 +29,7 @@
 #include "tru_util.h"
 
 void unaligned_memcpy(void *dst, const void *src, uint32_t size){
-	if(*((uint32_t *)dst) % 4 || *((uint32_t *)src) % 4 || size % 4){  // The source or destination address is not 32 bits aligned?
+	if((uint32_t)dst & 0x3 || (uint32_t)src & 0x3 || size & 0x3){  // The source or destination address is not 32 bits aligned?
 		if(dst != src){  // Is not copying to itself?
 			unsigned char *dst8 = dst;
 			const unsigned char *src8 = src;

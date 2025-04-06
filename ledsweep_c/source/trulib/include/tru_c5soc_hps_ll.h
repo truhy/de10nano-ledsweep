@@ -21,7 +21,7 @@
 	OUT OF OR IN CONNECTION WITH THE SOFTWARE OR THE USE OR OTHER DEALINGS IN THE
 	SOFTWARE.
 
-	Version: 20241223
+	Version: 20250405
 
 	Low-level code for Cyclone V SoC HPS.
 */
@@ -31,7 +31,7 @@
 
 #include "tru_config.h"
 
-#if(TRU_TARGET == TRU_C5SOC)
+#if(TRU_TARGET == TRU_TARGET_C5SOC)
 
 #include <stdint.h>
 
@@ -82,10 +82,10 @@ typedef union{
 	  volatile uint32_t reserved:2;
   }bits;
   volatile uint32_t word;
-}tru_hps_rstmgr_permodrst_t;
+}tru_hps_rstmgr_permodrst_reg_t;
 
 // Reset Manager register as type representation
-#define TRU_HPS_RSTMGR_PERMODRST_REG ((volatile tru_hps_rstmgr_permodrst_t *const)TRU_HPS_RSTMGR_PERMODRST)
+#define TRU_HPS_RSTMGR_PERMODRST_REG ((volatile tru_hps_rstmgr_permodrst_reg_t *const)TRU_HPS_RSTMGR_PERMODRST)
 
 #define TRU_HPS_OCRAM_BASE   0xFFFF0000UL  // 64kB On-Chip RAM
 #define TRU_HPS_SCU_L2_BASE  0xFFFEC000UL

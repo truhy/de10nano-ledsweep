@@ -1,0 +1,10 @@
+#ifndef TRU_OPTIONS_H
+#define TRU_OPTIONS_H
+
+#define TRU_TARGET_C5SOC   0
+#define TRU_TARGET_STM32H7 1
+
+#define TRU_CPU_FAMILY_CORTEXA9 0
+#define TRU_CPU_FAMILY_CORTEXM7 1
+
+#endif

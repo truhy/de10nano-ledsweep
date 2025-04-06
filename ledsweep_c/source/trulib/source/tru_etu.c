@@ -21,15 +21,18 @@
 	OUT OF OR IN CONNECTION WITH THE SOFTWARE OR THE USE OR OTHER DEALINGS IN THE
 	SOFTWARE.
 
-	Version: 20241009
+	Version: 20250218
 
 	Exit to U-Boot support.
 */
 
 #include "tru_etu.h"
+
+#if(TRU_TARGET == TRU_TARGET_C5SOC)
+
 #include "tru_logger.h"
 
-#if(TRU_EXIT_TO_UBOOT == 1U)
+#if defined(TRU_EXIT_TO_UBOOT) && TRU_EXIT_TO_UBOOT == 1U
 
 // ===============================================
 // Global variables for returning back into U-Boot
@@ -110,5 +113,7 @@ void __attribute__((noreturn)) _exit(int status){
 	LOG("Starting infinity loop\n");
 	while(1);
 }
+
+#endif
 
 #endif

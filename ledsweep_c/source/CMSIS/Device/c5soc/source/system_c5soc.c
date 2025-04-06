@@ -51,12 +51,12 @@ void SystemInit(){
 /* do not use global variables because this function is called before
    reaching pre-main. RW section may be overwritten afterwards.          */
 
-#if(TRU_MMU == 1U)
+#if defined(TRU_MMU) && TRU_MMU == 1U
   // Invalidate entire Unified TLB
   __set_TLBIALL(0);
 #endif
 
-#if(TRU_L1_CACHE == 1U)
+#if defined(TRU_L1_CACHE) && TRU_L1_CACHE == 1U
   // Invalidate entire branch predictor array
   __set_BPIALL(0);
   __DSB();
@@ -71,22 +71,25 @@ void SystemInit(){
   L1C_InvalidateDCacheAll();
 #endif
 
-#if(TRU_NEON == 1U && __FPU_PRESENT == 1 && __FPU_USED == 1)
+#if defined(TRU_NEON) && TRU_NEON == 1U && __FPU_PRESENT == 1U && __FPU_USED == 1U
   __FPU_Enable();
 #endif
 
-#if(TRU_MMU == 1U)
+#if defined(TRU_MMU) && TRU_MMU == 1U
   MMU_CreateTranslationTable();
+#if defined(TRU_DMA_BUFFER_NONCACHEABLE) && TRU_DMA_BUFFER_NONCACHEABLE == 1U
+  mmu_create_dma_buffer_table_entries();
+#endif
   MMU_Enable();
 #endif
 
-#if(TRU_L1_CACHE == 1U)
+#if defined(TRU_L1_CACHE) && TRU_L1_CACHE == 1U
   // Enable L1 caches
   L1C_EnableCaches();
   L1C_EnableBTAC();
 #endif
 
-#if(TRU_L2_CACHE == 1U && __L2C_PRESENT == 1)
+#if defined(TRU_L2_CACHE) && TRU_L2_CACHE == 1U && __L2C_PRESENT == 1U
   //L2C_310->AUX_CNT = L2C_310->AUX_CNT & ~(1U << 29U | 1U << 28U);  // Disable L2 instruction and data prefetch
   //L2C_310->AUX_CNT = L2C_310->AUX_CNT & ~(1U << 21U);  // Disable L2 parity
 

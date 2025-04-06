@@ -21,34 +21,31 @@
 	OUT OF OR IN CONNECTION WITH THE SOFTWARE OR THE USE OR OTHER DEALINGS IN THE
 	SOFTWARE.
 
-	Version: 20250311
+	Version: 20250405
 
-	Exit to U-Boot support.
+	Trulib user configuration
 */
 
-#ifndef TRU_ETU_H
-#define TRU_ETU_H
+#ifndef TRU_USER_CONFIG_H
+#define TRU_USER_CONFIG_H
 
-#include "tru_config.h"
+#include "tru_options.h"
 
-#if(TRU_TARGET == TRU_TARGET_C5SOC)
+// ====================
+// User config settings
+// ====================
 
-#if defined(TRU_EXIT_TO_UBOOT) && TRU_EXIT_TO_UBOOT == 1U
-
-extern int uboot_argc;
-extern char **uboot_argv;
-extern long unsigned int uboot_lr;
-extern long unsigned int uboot_cpsr;
-extern long unsigned int uboot_sys_sp;  // This is also for the user mode, because they use the same stack pointer
-extern long unsigned int uboot_und_sp;
-extern long unsigned int uboot_abt_sp;
-extern long unsigned int uboot_svc_sp;
-extern long unsigned int uboot_irq_sp;
-extern long unsigned int uboot_fiq_sp;
-extern long unsigned int uboot_vbar;
-
-#endif
-
-#endif
+#define TRU_CFG_TARGET                  TRU_TARGET_C5SOC
+#define TRU_CFG_CMSIS                   1U
+#define TRU_CFG_CMSIS_WEAK_IRQH         0U  // This is to support FreeRTOS with CMSIS, set to 1 when using FreeRTOS, else set to 0
+#define TRU_CFG_STARTUP                 0U
+#define TRU_CFG_EXIT_TO_UBOOT           0U
+#define TRU_CFG_NEON                    1U
+#define TRU_CFG_UNALIGNED_ACCESS        1U
+#define TRU_CFG_PRINT_UART0             1U
+#define TRU_CFG_LOG                     1U
+#define TRU_CFG_LOG_RN                  1U
+#define TRU_CFG_LOG_LOC                 0U
+#define TRU_CFG_DMA_BUFFER_NONCACHEABLE 1U
 
 #endif

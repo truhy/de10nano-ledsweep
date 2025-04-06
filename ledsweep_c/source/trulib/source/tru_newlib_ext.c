@@ -21,15 +21,19 @@
 	OUT OF OR IN CONNECTION WITH THE SOFTWARE OR THE USE OR OTHER DEALINGS IN THE
 	SOFTWARE.
 
-	Version: 20240505
+	Version: 20250405
 
 	Minimal implementation of required newlib function stubs.
 */
 
 #include "tru_config.h"
-#if defined(TRU_PRINT_UART) && TRU_PRINT_UART == 1U
+
+#if(TRU_TARGET == TRU_TARGET_C5SOC)
+
+#if (defined(TRU_PRINT_UART0) && TRU_PRINT_UART0 == 1U) || (defined(TRU_PRINT_UART1) && TRU_PRINT_UART1 == 1U)
 	#include "tru_c5soc_hps_uart_ll.h"
 #endif
+
 #include <errno.h>
 #include <sys/stat.h>
 #include <sys/unistd.h>
@@ -47,7 +51,7 @@
 	// Process ID
 	#define __MYPID 1U
 
-	#if defined(TRU_PRINT_UART) && TRU_PRINT_UART == 1U
+	#if (defined(TRU_PRINT_UART0) && TRU_PRINT_UART0 == 1U) || (defined(TRU_PRINT_UART1) && TRU_PRINT_UART1 == 1U)
 		// ==========================================================================================
 		// Minimal implementation for a serial terminal (TTY) device based on newlib/libgloss sources
 		// ==========================================================================================
@@ -77,7 +81,12 @@
 		}
 
 		int _write(int fd, char *ptr, int len){
-			tru_hps_uart_ll_write_str((TRU_TARGET_TYPE *)TRU_HPS_UART0_BASE, ptr, len);  // Re-target to UART controller
+			#if TRU_PRINT_UART0 == 1U
+				tru_hps_uart_ll_write_str((void *)TRU_HPS_UART0_BASE, ptr, len);  // Re-target to UART controller
+			#elif TRU_PRINT_UART1 == 1U
+				tru_hps_uart_ll_write_str((void *)TRU_HPS_UART1_BASE, ptr, len);  // Re-target to UART controller
+			#endif
+
 			return len;
 		}
 	#else
@@ -124,4 +133,6 @@
 		if(pid == __MYPID) _exit(sig);
 		return 0;
 	}
+#endif
+
 #endif

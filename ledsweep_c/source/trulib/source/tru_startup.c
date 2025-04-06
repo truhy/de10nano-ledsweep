@@ -21,7 +21,7 @@
 	OUT OF OR IN CONNECTION WITH THE SOFTWARE OR THE USE OR OTHER DEALINGS IN THE
 	SOFTWARE.
 
-	Version: 20241021
+	Version: 20250405
 
 	Bare-metal C startup initialisations for the Intel Cyclone V SoC (HPS), ARM Cortex-A9.
 	My own standalone init functions.
@@ -36,13 +36,14 @@
 
 #include "tru_config.h"
 
-#if(TRU_STARTUP)
+#if defined(TRU_STARTUP) && TRU_STARTUP == 1U
 
 #include "tru_cortex_a9.h"
 #include "alt_interrupt.h"
+#include "tru_mmu.h"
 #include <stdint.h>
 
-#if(ALT_INT_PROVISION_VECTOR_SUPPORT == 0U)
+#if defined(ALT_INT_PROVISION_VECTOR_SUPPORT) && ALT_INT_PROVISION_VECTOR_SUPPORT == 0U
 	// Exception & interrupt handler supporting CMSIS
 	void Default_Handler(void);
 	void Undef_Handler(void) __attribute__ ((weak, alias("Default_Handler")));
@@ -72,7 +73,7 @@
 	}
 #endif
 
-#if(TRU_EXIT_TO_UBOOT)
+#if defined(TRU_EXIT_TO_UBOOT) && TRU_EXIT_TO_UBOOT == 1U
 	#define RESET_ARGS int argc, char *const argv[]
 #else
 	#define RESET_ARGS void
@@ -88,7 +89,7 @@
 // - In Altera's HWLib their vector table sets _socfpga_main as the reset handler, see alt_interrupt.c
 void __attribute__((naked)) Reset_Handler(RESET_ARGS){
 	__asm__ volatile(
-#if(ALT_INT_PROVISION_VECTOR_SUPPORT == 0U)
+#if defined(ALT_INT_PROVISION_VECTOR_SUPPORT) && ALT_INT_PROVISION_VECTOR_SUPPORT == 0U
 		// Reference our vector and startup
 		".set VBAR_TBL, Vectors                             \n"
 #else
@@ -124,7 +125,7 @@ void __attribute__((naked)) Reset_Handler(RESET_ARGS){
 
 		"CPSID if                                           \n"  // Mask interrupts
 
-#if(TRU_EXIT_TO_UBOOT)
+#if defined(TRU_EXIT_TO_UBOOT) && TRU_EXIT_TO_UBOOT == 1U
 		// Save U-Boot argc
 		"LDR r3, =uboot_argc                                \n"
 		"STR r0, [r3]                                       \n"
@@ -169,11 +170,13 @@ void __attribute__((naked)) Reset_Handler(RESET_ARGS){
 #endif
 
 		// Put any cores other than 0 to sleep
+		/*
 		"MRC p15, 0, r0, c0, c0, 5                          \n"  // Read MPIDR
 		"ANDS r0, r0, #3                                    \n"
 		"goToSleep:                                         \n"
 		"WFINE                                              \n"
 		"BNE goToSleep                                      \n"
+		*/
 
 		// Switch into secure access mode
 		"MRC p15, 0, r0, c1, c1, 2                          \n"  // Read NSACR (Non-secure Access Control Register)
@@ -181,7 +184,7 @@ void __attribute__((naked)) Reset_Handler(RESET_ARGS){
 		"MCR p15, 0, r0, c1, c1, 2                          \n"  // Write NSACR
 		"ISB                                                \n"
 
-#if(TRU_CLEAN_CACHE == 1U)
+#if defined(TRU_CLEAN_CACHE) && TRU_CLEAN_CACHE == 1U
 		// Since we are starting from U-Boot which may have the cache enabled,
 		// loaded file(s) and some global variables may be cached and stay dirty.
 		// Let's make sure that all dirty lines are written back into memory - in
@@ -192,12 +195,12 @@ void __attribute__((naked)) Reset_Handler(RESET_ARGS){
 		// Turn off caches and MMU
 		"MRC p15, 0, r0, c1, c0, 0                          \n"  // Read SCTLR
 		"BIC r0, r0, #(0x1 << 13)                           \n"  // Clear V bit 13 to disable hivecs
-#if(TRU_L1_CACHE != 2U)
+#if defined(TRU_L1_CACHE) && TRU_L1_CACHE != 2U
 		"BIC r0, r0, #(0x1 << 12)                           \n"  // Clear I bit 12 to disable L1 I-cache
 		"BIC r0, r0, #(0x1 << 11)                           \n"  // Clear Z bit 11 to disable branch prediction
 		"BIC r0, r0, #(0x1 << 2)                            \n"  // Clear C bit 2 to disable L1 D-cache
 #endif
-#if(TRU_MMU != 2U)
+#if defined(TRU_MMU) && TRU_MMU != 2U
 		"BIC r0, r0, #(0x1 << 0)                            \n"  // Clear M bit 0 to disable MMU
 #endif
 		"MCR p15, 0, r0, c1, c0, 0                          \n"  // Write SCTLR
@@ -205,7 +208,7 @@ void __attribute__((naked)) Reset_Handler(RESET_ARGS){
 
 		// ACTLR
 		"MRC p15, 0, r0, c1, c0, 1                          \n"  // Read ACTLR
-#if(TRU_SMP_COHERENCY != 2U)
+#if defined(TRU_SMP_COHERENCY) && TRU_SMP_COHERENCY != 2U
 		"BIC r0, r0, #(0x1 << 6)                            \n"  // Disable participate in SMP coherency
 		"BIC r0, r0, #(0x1 << 0)                            \n"  // Disable maintenance broadcast
 #endif
@@ -214,7 +217,7 @@ void __attribute__((naked)) Reset_Handler(RESET_ARGS){
 		"MCR p15, 0, r0, c1, c0, 1                          \n"  // Write ACTLR
 		"ISB                                                \n"
 
-#if(TRU_SCU != 2U)
+#if defined(TRU_SCU) && TRU_SCU != 2U
 		// Disable SCU
 		"LDR r0, =SCU_BASE                                  \n"  // Load SCU base register
 		"LDR r1, [r0, #0x0]                                 \n"  // Read SCU register
@@ -222,7 +225,7 @@ void __attribute__((naked)) Reset_Handler(RESET_ARGS){
 		"STR r1, [r0, #0x0]                                 \n"  // Write back modified value
 #endif
 
-#if(TRU_L2_CACHE != 2U)
+#if defined(TRU_L2_CACHE) && TRU_L2_CACHE != 2U
 		// Disable L2 cache
 		"LDR r0, =L2_REG1_CTRL                              \n"  // Load L2 control register (reg1_control)
 		"MOV r1, #0                                         \n"  // Value with bit cleared on the L2 cache enable bit
@@ -265,13 +268,13 @@ void __attribute__((naked)) Reset_Handler(RESET_ARGS){
 		// Invalidate.  We must invalidate MMU and L1 cache first before we enable them
 		// ============================================================================
 
-#if(TRU_MMU == 1U)
+#if defined(TRU_MMU) && TRU_MMU == 1U
 		// Invalidate MMU
 		"MOV r0, #0                                         \n"
 		"MCR p15, 0, r0, c8, c7, 0                          \n"  // Invalidate MMU TLBs all (Translation Lookaside Buffers) (TLBIALL)
 #endif
 
-#if(TRU_L1_CACHE == 1U)
+#if defined(TRU_L1_CACHE) && TRU_L1_CACHE == 1U
 		// Invalidate L1 branch predictor all (BPIALL)
 		"MOV r0, #0                                         \n"
 		"MCR p15, 0, r0, c7, c5, 6                          \n"
@@ -289,7 +292,7 @@ void __attribute__((naked)) Reset_Handler(RESET_ARGS){
 		"ISB                                                \n"
 #endif
 
-#if(TRU_NEON == 1U)
+#if defined(TRU_NEON) && TRU_NEON == 1U
 		// Enable permission and turn on NEON/VFP (FPU)
 		"MRC p15, 0, r0, c1, c0, 2                          \n"  // Read CPACR (Coprocessor Access Control Register)
 		"ORR r0, r0, #0x00F00000                            \n"  // Setup bits to enable access to NEON/VFP (Coprocessors 10 and 11)
@@ -331,7 +334,7 @@ void __attribute__((naked)) Reset_Handler(RESET_ARGS){
 		// Setup and enable MMU
 		// ====================
 
-#if(TRU_MMU == 1U)
+#if defined(TRU_MMU) && TRU_MMU == 1U
 		// Register MMU table
 		"LDR r0, =c5soc_mmu_tbl                             \n"  // Load MMU translation table base address
 		"ORR r0, r0, #0x5b                                  \n"  // MMU attributes
@@ -357,7 +360,7 @@ void __attribute__((naked)) Reset_Handler(RESET_ARGS){
 		// Enable L1 cache
 		// ===============
 
-#if(TRU_L1_CACHE == 1U)
+#if defined(TRU_L1_CACHE) && TRU_L1_CACHE == 1U
 		// Enable L1 caches
 		"MRC p15, 0, r0, c1, c0, 0                          \n"  // Read SCTLR
 		"ORR r0, r0, #(0x1 << 12)                           \n"  // Set I bit 12 to enable L1 I-cache
@@ -376,7 +379,7 @@ void __attribute__((naked)) Reset_Handler(RESET_ARGS){
 		// Initialise L2 cache via the controller L2C-310
 		// ==============================================
 
-#if(TRU_L2_CACHE == 1U)
+#if defined(TRU_L2_CACHE) && TRU_L2_CACHE == 1U
 		// Write L2 cache tag latency
 		"LDR r0, =L2_REG1_TAGRAM_CTRL                       \n"
 		"LDR r1, =L2_TAG_LATENCY                            \n"
@@ -447,7 +450,7 @@ void __attribute__((naked)) Reset_Handler(RESET_ARGS){
 		// Initialise the SCU (Snoop Control Unit)
 		// =======================================
 
-#if(TRU_SCU == 1U)
+#if defined(TRU_SCU) && TRU_SCU == 1U
 		// Invalidate SCU
 		"LDR r0, =SCU_BASE                                  \n"  // Load SCU base register
 		"LDR r1, =0xffff                                    \n"  // Value to write
@@ -464,7 +467,7 @@ void __attribute__((naked)) Reset_Handler(RESET_ARGS){
 		// Enable SMP coherency for this CPU
 		// =================================
 
-#if(TRU_SMP_COHERENCY == 1U)
+#if defined(TRU_SMP_COHERENCY) && TRU_SMP_COHERENCY == 1U
 		// Enable SMP cache coherency support
 		"MRC p15, 0, r0, c1, c0, 1                          \n"  // Read ACTLR
 		"ORR r0, r0, #(0x1 << 22)                           \n"  // Set bit 22 to enable shared attribute override. Recommended for ACP data coherency from Cyclone V HPS tech ref
@@ -472,6 +475,10 @@ void __attribute__((naked)) Reset_Handler(RESET_ARGS){
 		//"ORR r0, r0, #(0x1 << 2)                            \n"  // Set bit 2 to enable L1 dside prefetch
 		"ORR r0, r0, #(0x1 << 0)                            \n"  // Set bit 0 to enable maintenance broadcast
 		"MCR p15, 0, r0, c1, c0, 1                          \n"  // Write ACTLR
+#endif
+
+#if defined(TRU_DMA_BUFFER_NONCACHEABLE) && TRU_DMA_BUFFER_NONCACHEABLE == 1U && defined(TRU_MMU) && TRU_MMU == 1U
+		"BL tru_mmu_create_dma_buffer_table_entries         \n"
 #endif
 
 		"CPSIE if                                           \n"  // Unmask interrupts

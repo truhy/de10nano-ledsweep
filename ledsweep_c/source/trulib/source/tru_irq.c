@@ -21,14 +21,15 @@
 	OUT OF OR IN CONNECTION WITH THE SOFTWARE OR THE USE OR OTHER DEALINGS IN THE
 	SOFTWARE.
 
-	Version: 20241021
+	Version: 20250311
 
 	GIC (PrimeCell Generic Interrupt Controller (PL390)) interrupt functions.
 */
 
 #include "tru_irq.h"
 
-#if(TRU_CMSIS == 1U)
+#if defined(TRU_CMSIS) && TRU_CMSIS == 1U
+#if(TRU_CPU_FAMILY == TRU_CPU_FAMILY_CORTEXA9)
 
 // ===================
 // Use CMSIS functions
@@ -37,7 +38,7 @@
 #include "irq_ctrl.h"
 
 void tru_irq_init(void){
-#if(TRU_STARTUP == 1U && ALT_INT_PROVISION_VECTOR_SUPPORT == 0U)
+#if defined(TRU_STARTUP) && TRU_STARTUP == 1U && defined(ALT_INT_PROVISION_VECTOR_SUPPORT) && ALT_INT_PROVISION_VECTOR_SUPPORT == 0U
 	IRQ_Initialize();  // For CMSIS
 #endif
 	irq_mask(0);  // Enable IRQ mode interrupts for this CPU
@@ -59,80 +60,31 @@ void tru_irq_unregister(IRQn_ID_t intr_id){
 	IRQ_SetHandler(intr_id, (IRQHandler_t)0);  // Unregister user interrupt handler
 }
 
-#else
+#endif
+
+#elif(TRU_TARGET == TRU_TARGET_C5SOC)
 
 // ==========================
 // Use Altera HWLib functions
 // ==========================
 
-ALT_STATUS_CODE tru_irq_init(void){
-	ALT_STATUS_CODE status;
-
-	// Initialise global interrupt system
-	status = alt_int_global_init();
-	if(status != ALT_E_SUCCESS){
-		//printf("Error: alt_int_global_init() failed, status: %li\n", status);
-		return status;
-	}
-
-	// Initialise processor interrupt system
-	status = alt_int_cpu_init();
-	if(status != ALT_E_SUCCESS){
-		//printf("Error: alt_int_cpu_init() failed, status: %li\n", status);
-		return status;
-	}
-
-	// Enable processor interrupt
-	status = alt_int_cpu_enable();
-	if (status != ALT_E_SUCCESS){
-		//printf("ERROR: alt_int_cpu_enable() failed, status: %li\n", status);
-		return status;
-	}
-
-	// Enable global interrupt
-	status = alt_int_global_enable();
-	if (status != ALT_E_SUCCESS){
-		//printf("ERROR: alt_int_global_enable() failed, status: %li\n", status);
-		return status;
-	}
-
-	return ALT_E_SUCCESS;
+void tru_irq_init(void){
+	alt_int_global_init();    // Initialise global interrupt system
+	alt_int_cpu_init();       // Initialise processor interrupt system
+	alt_int_cpu_enable();     // Enable processor interrupt
+	alt_int_global_enable();  // Enable global interrupt
 }
 
-ALT_STATUS_CODE tru_irq_deinit(void){
-	ALT_STATUS_CODE status_outcome = ALT_E_SUCCESS;
-	ALT_STATUS_CODE status;
-
-	status = alt_int_global_disable();
-	if(status != ALT_E_SUCCESS){
-		//printf("ERROR: alt_int_global_disable() failed, status: %li\n", status);
-		if(status_outcome == ALT_E_SUCCESS) status_outcome = status;
-	}
-
-	status = alt_int_cpu_disable();
-	if(status != ALT_E_SUCCESS){
-		//printf("ERROR: alt_int_cpu_disable() failed, status: %li\n", status);
-		if(status_outcome == ALT_E_SUCCESS) status_outcome = status;
-	}
-
-	status = alt_int_cpu_uninit();
-	if(status != ALT_E_SUCCESS){
-		//printf("ERROR: alt_int_cpu_uninit() failed, status: %li\n", status);
-		if(status_outcome == ALT_E_SUCCESS) status_outcome = status;
-	}
-
-	status = alt_int_global_uninit();
-	if(status != ALT_E_SUCCESS){
-		//printf("ERROR: alt_int_global_uninit() failed, status: %li\n", status);
-		if(status_outcome == ALT_E_SUCCESS) status_outcome = status;
-	}
-
-	return status_outcome;
+void tru_irq_deinit(void){
+	alt_int_global_disable();
+	alt_int_cpu_disable();
+	alt_int_cpu_uninit();
+	alt_int_global_uninit();
 }
 
 // Register and enable specified IRQ handler
-void tru_irq_register(ALT_INT_INTERRUPT_t intr_id, uint32_t intr_target, uint32_t intr_priority, alt_int_callback_t callback, void *context){
-	alt_int_isr_register(intr_id, callback, context);   // Register user interrupt handler
+void tru_irq_register(ALT_INT_INTERRUPT_t intr_id, uint32_t intr_target, uint32_t intr_priority, alt_int_callback_t handler){
+	alt_int_isr_register(intr_id, handler, NULL);   // Register user interrupt handler
 	alt_int_dist_target_set(intr_id, intr_target);      // Enable forwarding of the interrupt ID to the specified processor target
 	alt_int_dist_priority_set(intr_id, intr_priority);  // Set priority
 	alt_int_dist_enable(intr_id);                       // Enable the interrupt

@@ -21,33 +21,37 @@
 	OUT OF OR IN CONNECTION WITH THE SOFTWARE OR THE USE OR OTHER DEALINGS IN THE
 	SOFTWARE.
 
-	Version: 20250311
+	Version: 20250119
 
-	Exit to U-Boot support.
+	Arm CoreLink™ Level 2 Cache Controller L2C-310.
 */
 
-#ifndef TRU_ETU_H
-#define TRU_ETU_H
+#ifndef TRU_CAHCE_L2C310_H
+#define TRU_CAHCE_L2C310_H
 
 #include "tru_config.h"
 
 #if(TRU_TARGET == TRU_TARGET_C5SOC)
 
-#if defined(TRU_EXIT_TO_UBOOT) && TRU_EXIT_TO_UBOOT == 1U
+#define L2C310_BASE                 0xfffef000UL
+#define L2C310_CTRL_OFFSET          0x100U
+#define L2C310_AUX_CTRL_OFFSET      0x104U
+#define L2C310_TAGRAM_OFFSET        0x108U
+#define L2C310_DATARAM_OFFSET       0x10cU
+#define L2C310_INT_CLR_OFFSET       0x220U
+#define L2C310_CACHE_SYNC_OFFSET    0x730U
+#define L2C310_INV_PA_OFFSET        0x770U
+#define L2C310_CLEAN_PA_OFFSET      0x7b0U
+#define L2C310_CLEANINV_PA_OFFSET   0x7f0U
+#define L2C310_D_LOCKDN0_OFFSET     0x900U
+#define L2C310_DBG_CTRL_OFFSET      0xf40U
+#define L2C310_PREFETCH_CTRL_OFFSET 0xf60U
 
-extern int uboot_argc;
-extern char **uboot_argv;
-extern long unsigned int uboot_lr;
-extern long unsigned int uboot_cpsr;
-extern long unsigned int uboot_sys_sp;  // This is also for the user mode, because they use the same stack pointer
-extern long unsigned int uboot_und_sp;
-extern long unsigned int uboot_abt_sp;
-extern long unsigned int uboot_svc_sp;
-extern long unsigned int uboot_irq_sp;
-extern long unsigned int uboot_fiq_sp;
-extern long unsigned int uboot_vbar;
+#define L2C310_CACHELINE_SIZE 32U
 
-#endif
+// Cyclone V SoC latency (vendor specific)
+#define L2C310_TAGRAM_LATENCY  0x0U
+#define L2C310_DATARAM_LATENCY 0x10U
 
 #endif
 

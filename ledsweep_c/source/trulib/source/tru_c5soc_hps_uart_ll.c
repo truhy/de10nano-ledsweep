@@ -21,25 +21,23 @@
 	OUT OF OR IN CONNECTION WITH THE SOFTWARE OR THE USE OR OTHER DEALINGS IN THE
 	SOFTWARE.
 
-	Version: 20241009
+	Version: 20250218
 */
 
-#include "tru_config.h"
-
-#if(TRU_TARGET == TRU_C5SOC)
-
 #include "tru_c5soc_hps_uart_ll.h"
+
+#if(TRU_TARGET == TRU_TARGET_C5SOC)
 
 /*
 	Blocking wait on the transmit empty register to become empty.  It becomes
 	empty when all pending data in the FIFO (FIFO mode) or holding register
 	(non-FIFO mode) is transmitted.  This ensures all pending data has gone out.
 */
-void tru_hps_uart_ll_wait_empty(TRU_TARGET_TYPE *uart_base){
+void tru_hps_uart_ll_wait_empty(void *uart_base){
 	while((TRU_HPS_UART_REG(uart_base)->lsr & TRU_HPS_UART_LSR_TEMT_SET_MSK) == 0U);  // Flush UART and wait
 }
 
-void tru_hps_uart_ll_wait_ready(TRU_TARGET_TYPE *uart_base, char fifo_th_en){
+void tru_hps_uart_ll_wait_ready(void *uart_base, char fifo_th_en){
 	// Wait until the UART controller is ready to accept a byte in its transmit buffer, i.e. there is free space?
 	// They are masochists - using the same bit but with the opposite logic depending on the mode set!
 	if(fifo_th_en){
@@ -49,7 +47,7 @@ void tru_hps_uart_ll_wait_ready(TRU_TARGET_TYPE *uart_base, char fifo_th_en){
 	}
 }
 
-void tru_hps_uart_ll_write_str(TRU_TARGET_TYPE *uart_base, const char *str, uint32_t len){
+void tru_hps_uart_ll_write_str(void *uart_base, const char *str, uint32_t len){
 	// FIFO & threshold mode enabled?
 	char fifo_th_en = (TRU_HPS_UART_REG(uart_base)->sfe && TRU_HPS_UART_REG(uart_base)->stet) ? 1U : 0U;
 
@@ -69,7 +67,7 @@ void tru_hps_uart_ll_write_str(TRU_TARGET_TYPE *uart_base, const char *str, uint
 	}
 }
 
-void tru_hps_uart_ll_write_char(TRU_TARGET_TYPE *uart_base, const char c){
+void tru_hps_uart_ll_write_char(void *uart_base, const char c){
 	// FIFO & threshold mode enabled?
 	char fifo_th_en = (TRU_HPS_UART_REG(uart_base)->sfe && TRU_HPS_UART_REG(uart_base)->stet) ? 1U : 0U;
 
@@ -86,7 +84,7 @@ void tru_hps_uart_ll_write_char(TRU_TARGET_TYPE *uart_base, const char c){
 	TRU_HPS_UART_REG(uart_base)->rbr_thr_dll = c;  // Write a single character to UART controller transmit holding register
 }
 
-void tru_hps_uart_ll_write_hex_nibble(TRU_TARGET_TYPE *uart_base, unsigned char nibble){
+void tru_hps_uart_ll_write_hex_nibble(void *uart_base, unsigned char nibble){
 	if(nibble > 9){
 		tru_hps_uart_ll_write_char(uart_base, (char)(nibble + 87U));  // Convert to ASCII character
 	}else{
@@ -94,7 +92,7 @@ void tru_hps_uart_ll_write_hex_nibble(TRU_TARGET_TYPE *uart_base, unsigned char 
 	}
 }
 
-void tru_hps_uart_ll_write_inthex(TRU_TARGET_TYPE *uart_base, int num, unsigned int bits){
+void tru_hps_uart_ll_write_inthex(void *uart_base, int num, unsigned int bits){
 	for(unsigned int i = bits; i; i -= 4U){
 		tru_hps_uart_ll_write_hex_nibble(uart_base, (unsigned char)(num >> (i - 4U) & 0xfU));
 	}
