@@ -35,11 +35,13 @@
 	#include "RTE_Components.h"   // CMSIS
 	#include CMSIS_device_header  // CMSIS
 	#include "tru_cache_l2c310.h"
+	#include <stdbool.h>
 #else
 	#include "alt_cache.h"
 	#include "tru_cortex_a9.h"
 	#include "tru_util_ll.h"
 	#include "tru_cache_l2c310.h"
+	#include <stdbool.h>
 #endif
 
 #define CACHELINE_SIZE L2C310_CACHELINE_SIZE
