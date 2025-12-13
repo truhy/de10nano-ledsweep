@@ -31,4 +31,4 @@ user_entry=$(arm-none-eabi-readelf -h $app1_elf | grep "Entry point" | cut -d : 
 #user_entry=0x00100040
 
 # Reset SoC HPS, load and execute U-Boot SPL elf
-openocd -f interface/altera-usb-blaster2.cfg -f target/altera_fpgasoc_de.cfg -c "init; halt; c5_reset; halt; c5_spl $ubootspl; sleep 200; halt; arm core_state arm; load_image $app1_elf; resume $user_entry; shutdown"
+openocd -f interface/altera-usb-blaster2.cfg -f target/altera_fpgasoc_de.cfg -c "init; halt; reset init; c5_spl $ubootspl; sleep 200; halt; arm core_state arm; load_image $app1_elf; resume $user_entry; shutdown"

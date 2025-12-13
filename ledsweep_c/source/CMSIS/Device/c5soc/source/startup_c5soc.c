@@ -25,8 +25,6 @@
 #include <c5soc.h>
 #include <core_ca.h>
 
-#if defined(TRU_STARTUP) && TRU_STARTUP == 0U
-
 #if defined(TRU_EXIT_TO_UBOOT) && TRU_EXIT_TO_UBOOT == 1U
   #define RESET_ARGS int argc, char *const argv[]
 #else
@@ -61,10 +59,6 @@ void DAbt_Handler  (void) __attribute__ ((weak, alias("Default_Handler")));
 void IRQ_Handler   (void) __attribute__ ((weak, alias("Default_Handler")));
 void FIQ_Handler   (void) __attribute__ ((weak, alias("Default_Handler")));
 
-void CleanCache(void){
-	L1C_CleanDCacheAll();
-}
-
 /*----------------------------------------------------------------------------
   Exception / Interrupt Vector Table
  *----------------------------------------------------------------------------*/
@@ -79,6 +73,10 @@ void Vectors(void) {
   "LDR    PC, =IRQ_Handler                          \n"
   "LDR    PC, =FIQ_Handler                          \n"
   );
+}
+
+void CleanCache(void){
+	L1C_CleanDCacheAll();
 }
 
 /*----------------------------------------------------------------------------
@@ -135,11 +133,13 @@ void Reset_Handler(RESET_ARGS) {
 #endif
 
   // Put any cores other than 0 to sleep
+	/*
   "MRC     p15, 0, R0, c0, c0, 5                   \n"  // Read MPIDR
   "ANDS    R0, R0, #3                              \n"
   "goToSleep:                                      \n"
   "WFINE                                           \n"
   "BNE     goToSleep                               \n"
+	*/
 
 #if defined(TRU_CLEAN_CACHE) && TRU_CLEAN_CACHE == 1U
   // Clean D Cache if it is enabled
@@ -252,5 +252,3 @@ void Reset_Handler(RESET_ARGS) {
 void Default_Handler(void) {
   while(1);
 }
-
-#endif

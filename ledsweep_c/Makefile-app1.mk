@@ -55,26 +55,18 @@ endif
 # ============
 
 # List of source folders and files to exclude from the build
-EXCLUDE_SRCS := \
-	$(APP_SRC_PATH1)/hwlib/src/hwmgr/soc_a10 \
-	$(APP_SRC_PATH1)/hwlib/src/hwmgr/alt_eth_phy_ksz9031.c \
-	$(APP_SRC_PATH1)/hwlib/src/hwmgr/alt_ethernet.c \
-	$(APP_SRC_PATH1)/hwlib/src/utils/alt_base.S \
-	$(APP_SRC_PATH1)/hwlib/src/utils/alt_base.c \
-	$(APP_SRC_PATH1)/hwlib/src/utils/alt_p2uart.c \
-	$(APP_SRC_PATH1)/hwlib/src/utils/alt_printf.c
+EXCLUDE_SRCS :=
 
 # Get and build a list of source file names from the file system with these locations and pattern
 SRCS := \
 	$(wildcard $(APP_SRC_PATH1)/*.c) \
-	$(wildcard $(APP_SRC_PATH1)/hwlib/src/hwmgr/*.c) \
-	$(wildcard $(APP_SRC_PATH1)/hwlib/src/hwmgr/soc_cv_av/*.c) \
-	$(wildcard $(APP_SRC_PATH1)/hwlib/src/utils/*.c) \
-	$(wildcard $(APP_SRC_PATH1)/hwlib/src/utils/*.S) \
-	$(wildcard $(APP_SRC_PATH1)/trulib/source/*.c) \
-	$(wildcard $(APP_SRC_PATH1)/sweeper/source/*.c) \
+	$(wildcard $(APP_SRC_PATH1)/bsp/*.c) \
+	$(wildcard $(APP_SRC_PATH1)/trulib/*.c) \
+	$(wildcard $(APP_SRC_PATH1)/trulib/arm/*.c) \
+	$(wildcard $(APP_SRC_PATH1)/trulib/c5soc/*.c) \
 	$(wildcard $(APP_SRC_PATH1)/CMSIS/Core/Source/*.c) \
-	$(wildcard $(APP_SRC_PATH1)/CMSIS/Device/c5soc/source/*.c)
+	$(wildcard $(APP_SRC_PATH1)/CMSIS/Device/c5soc/source/*.c) \
+	$(wildcard $(APP_SRC_PATH1)/sweeper/*.c)
 
 # Remove exclude files
 SRCS := $(filter-out $(EXCLUDE_SRCS),$(SRCS))
@@ -83,19 +75,17 @@ SRCS := $(filter-out $(EXCLUDE_SRCS),$(SRCS))
 INCS := \
 	-I$(APP_SRC_PATH1) \
 	-I$(APP_SRC_PATH1)/bsp \
-	-I$(APP_SRC_PATH1)/hwlib/include \
-	-I$(APP_SRC_PATH1)/hwlib/include/soc_cv_av \
-	-I$(APP_SRC_PATH1)/trulib/include \
-	-I$(APP_SRC_PATH1)/sweeper/include \
+	-I$(APP_SRC_PATH1)/trulib \
 	-I$(APP_SRC_PATH1)/CMSIS/Core/Include \
 	-I$(APP_SRC_PATH1)/CMSIS/Core/Include/a-profile \
-	-I$(APP_SRC_PATH1)/CMSIS/Device/c5soc/include
+	-I$(APP_SRC_PATH1)/CMSIS/Device/c5soc/include \
+	-I$(APP_SRC_PATH1)/sweeper
 
 # The linker script to use
 ifeq ($(etu),1)
-LINKER_SCRIPT := $(APP_SRC_PATH1)/ldscript/tru_c5_ddr.ld
+LINKER_SCRIPT := $(APP_SRC_PATH1)/bsp/tru_c5soc_ddr.ld
 else
-LINKER_SCRIPT := $(APP_SRC_PATH1)/ldscript/tru_c5_ddr.ld
+LINKER_SCRIPT := $(APP_SRC_PATH1)/bsp/tru_c5soc_ddr.ld
 endif
 
 # =========================================
@@ -106,7 +96,7 @@ CFLAGS := -mcpu=cortex-a9 -marm -mfloat-abi=hard -mfpu=neon -mno-unaligned-acces
 LDFLAGS := -Xlinker --gc-sections --specs=nosys.specs
 
 # Compiler user symbols (defines)
-CFLAGS_SYMBOL_HWLIB := -Dsoc_cv_av -DCYCLONEV
+CFLAGS_SYMBOL_COMMON := -D_RTE_
 CFLAGS_SYMBOL_DEBUG_SEMI := -DSEMIHOSTING
 CFLAGS_SYMBOL_ETU := -DTRU_EXIT_TO_UBOOT=1
 
@@ -122,7 +112,7 @@ REL_CFLAGS_OD := -O2
 # =====================================
 
 # Common debug compiler flags
-DBG_CFLAGS := $(DBG_CFLAGS_OD) $(CFLAGS) -DDEBUG $(CFLAGS_SYMBOL_HWLIB)
+DBG_CFLAGS := $(DBG_CFLAGS_OD) $(CFLAGS) -DDEBUG $(CFLAGS_SYMBOL_COMMON)
 # Conditional debug compiler flags
 ifeq ($(semi),1)
 DBG_CFLAGS := $(DBG_CFLAGS) $(CFLAGS_SYMBOL_DEBUG_SEMI)
@@ -156,7 +146,7 @@ DBG_LDFLAGS := $(DBG_LDFLAGS) -T$(LINKER_SCRIPT)
 # =======================================
 
 # Common release compiler flags
-REL_CFLAGS := $(REL_CFLAGS_OD) $(CFLAGS) $(CFLAGS_SYMBOL_HWLIB)
+REL_CFLAGS := $(REL_CFLAGS_OD) $(CFLAGS) $(CFLAGS_SYMBOL_COMMON)
 # Conditional release compiler flags
 ifeq ($(semi),1)
 REL_CFLAGS := $(REL_CFLAGS) $(CFLAGS_SYMBOL_DEBUG_SEMI)

@@ -21,22 +21,23 @@
 	OUT OF OR IN CONNECTION WITH THE SOFTWARE OR THE USE OR OTHER DEALINGS IN THE
 	SOFTWARE.
 
-	Version: 20250405
-	Target : ARM Cortex-A9 on the DE10-Nano development board (Intel Cyclone V
-			 SoC FPGA)
-	Type   : Standalone C
+	Version: 20251209
+	Target : ARM Cortex-A9 on the DE10-Nano Kit development board (Altera
+	         Cyclone V SoC FPGA)
+	Type   : Stand-alone C application
 
-	A bare-metal C program that demonstrates the processor system (HPS) working
-	with FPGA logic.
+	A program that demonstrates the processor system (HPS) working with FPGA
+	logic.
 
-	This is the software part of the ledsweep, programmed to work with the
-	FPGA logic design.  It animates the 8x FPGA LEDs (0 to 7) by sweeping
-	them from side to side.  Pressing the FPGA tactile keys (0 and 1) will
-	increase and decrease the animation speed.
+	This is the software part of the ledsweep project, designed to work with
+	the FPGA logic design.  The 8x FPGA LEDs (0 to 7) are animated by sweeping
+	them side to side.  The FPGA tactile keys (0 and 1) can increase and
+	decrease the animation speed.
 
-	The FPGA logic design sets up the L2F bridge so that the HPS can control the
-	LEDs by using the L2F memory map registers, and also sets up the FPGA keys
-	so they will trigger a GIC interrupt and is forwarded to the HPS side.
+	The FPGA logic design sets up the L2F bridge so that the HPS is able to
+	control the LEDs using registers created in the L2F memory map, and also the
+	FPGA keys are setup to trigger a GIC interrupt which is forwarded to the HPS
+	side.
 
 	Learning objectives:
 		- To capture FPGA input pins (tactile keys) and send to FPGA-to-HPS
@@ -50,7 +51,7 @@
 		  triggered interrupt)
 
 	This software is designed to work with the FPGA logic design (Verilog) so
-	must run in this order:
+	it must run in this order:
 		1. configure the FPGA first using the bitstream file ledsweep.sof or
 		   ledsweep.rbf
 		2. and then execute this program

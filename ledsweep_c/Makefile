@@ -1,5 +1,5 @@
 # This is free script released into the public domain.
-# GNU make file v20241107 created by Truong Hy.
+# GNU make file v20251212 created by Truong Hy.
 #
 # Builds bare-metal source for the Intel Cyclone V SoC FPGA.
 # Depending on the options it will output the following application files:
@@ -34,6 +34,7 @@
 #   - flex
 #   - libssl-dev
 #   - bc
+#   - libgnutls28-dev
 #
 # This makefile is already complicated, but to keep things a bit more simple:
 #   - We assume the required global variables are already set
@@ -149,11 +150,18 @@ DBG_UBOOT_OUT_PATH := $(UBOOT_OUT_PATH)/Debug
 DBG_UBOOT_SRC_PATH := $(DBG_UBOOT_OUT_PATH)/u-boot
 DBG_UBOOT_SUB_PATH := $(DBG_UBOOT_OUT_PATH)/ub-out
 
+DBG_UBOOT_SFP := $(DBG_UBOOT_IN_PATH)/u-boot-with-spl.sfp
+DBG_UBOOT_PROPER := $(DBG_UBOOT_IN_PATH)/u-boot.img
 DBG_UBOOT_SCRTXT_HDR := $(DBG_UBOOT_IN_PATH)/u-boot.scr.hdr.txt
 DBG_UBOOT_SCRTXT_FTR := $(DBG_UBOOT_IN_PATH)/u-boot.scr.ftr.txt
-DBG_UBOOT_SFP := $(DBG_UBOOT_IN_PATH)/u-boot-with-spl.sfp
 DBG_UBOOT_SCRTXT := $(DBG_UBOOT_SUB_PATH)/u-boot.scr.txt
 DBG_UBOOT_SCR := $(DBG_UBOOT_SUB_PATH)/u-boot.scr
+
+# Read U-Boot defconfig file and extract setting
+UBOOT_DEFCONFIG_DATA := $(strip $(file <$(DBG_UBOOT_IN_PATH)/$(UBOOT_PATCH_FOLDER)/$(UBOOT_DEFCONFIG)))
+UBOOT_DEFCONFIG_DATA := $(filter-out #%,$(UBOOT_DEFCONFIG_DATA))
+DBG_CONFIG_SPL_FS_FAT := $(filter-out CONFIG_SPL_FS_FAT,$(subst =,$(SPACE),$(filter CONFIG_SPL_FS_FAT=%,$(UBOOT_DEFCONFIG_DATA))))
+undefine UBOOT_DEFCONFIG_DATA
 
 # Append U-boot script with these lines
 ifneq (,$(filter 1,$(sd) $(ub)))
@@ -189,11 +197,18 @@ REL_UBOOT_OUT_PATH := $(UBOOT_OUT_PATH)/Release
 REL_UBOOT_SRC_PATH := $(REL_UBOOT_OUT_PATH)/u-boot
 REL_UBOOT_SUB_PATH := $(REL_UBOOT_OUT_PATH)/ub-out
 
+REL_UBOOT_SFP := $(REL_UBOOT_IN_PATH)/u-boot-with-spl.sfp
+REL_UBOOT_PROPER := $(REL_UBOOT_IN_PATH)/u-boot.img
 REL_UBOOT_SCRTXT_HDR := $(REL_UBOOT_IN_PATH)/u-boot.scr.hdr.txt
 REL_UBOOT_SCRTXT_FTR := $(REL_UBOOT_IN_PATH)/u-boot.scr.ftr.txt
-REL_UBOOT_SFP := $(REL_UBOOT_IN_PATH)/u-boot-with-spl.sfp
 REL_UBOOT_SCRTXT := $(REL_UBOOT_SUB_PATH)/u-boot.scr.txt
 REL_UBOOT_SCR := $(REL_UBOOT_SUB_PATH)/u-boot.scr
+
+# Read U-Boot defconfig file and extract setting
+UBOOT_DEFCONFIG_DATA := $(strip $(file <$(REL_UBOOT_IN_PATH)/$(UBOOT_PATCH_FOLDER)/$(UBOOT_DEFCONFIG)))
+UBOOT_DEFCONFIG_DATA := $(filter-out #%,$(UBOOT_DEFCONFIG_DATA))
+REL_CONFIG_SPL_FS_FAT := $(filter-out CONFIG_SPL_FS_FAT,$(subst =,$(SPACE),$(filter CONFIG_SPL_FS_FAT=%,$(UBOOT_DEFCONFIG_DATA))))
+undefine UBOOT_DEFCONFIG_DATA
 
 # Append U-boot script with these lines
 ifneq (,$(filter 1,$(sd) $(ub)))
@@ -237,6 +252,9 @@ DBG_SD_SCR := $(addprefix $(DBG_SD_OUT_SUB_PATH)/$(SDFATFOLDER)/,$(notdir $(DBG_
 DBG_SD_UIMG := $(addprefix $(DBG_SD_OUT_SUB_PATH)/$(SDFATFOLDER)/,$(notdir $(DBG_UIMG1)))
 DBG_SD_BIN :=  $(addprefix $(DBG_SD_OUT_SUB_PATH)/$(SDFATFOLDER)/,$(notdir $(DBG_BIN1)))
 DBG_SD_SFP := $(addprefix $(DBG_SD_OUT_SUB_PATH)/$(SDA2FOLDER)/,$(notdir $(DBG_UBOOT_SFP)))
+ifeq ($(DBG_CONFIG_SPL_FS_FAT),y)
+DBG_SD_PROPER := $(addprefix $(DBG_SD_OUT_SUB_PATH)/$(SDFATFOLDER)/,$(notdir $(DBG_UBOOT_PROPER)))
+endif
 DBG_SD_APP_FMT := $(DBG_SD_OUT_SUB_PATH)/sd_app_fmt.txt
 DBG_SD_FPGA_SRC := $(SD_IN_PATH)/Debug/c5_fpga.rbf
 DBG_SD_FPGA := $(addprefix $(DBG_SD_OUT_SUB_PATH)/$(SDFATFOLDER)/,$(notdir $(DBG_SD_FPGA_SRC)))
@@ -280,6 +298,9 @@ REL_SD_SCR := $(addprefix $(REL_SD_OUT_SUB_PATH)/$(SDFATFOLDER)/,$(notdir $(REL_
 REL_SD_UIMG := $(addprefix $(REL_SD_OUT_SUB_PATH)/$(SDFATFOLDER)/,$(notdir $(REL_UIMG1)))
 REL_SD_BIN :=  $(addprefix $(REL_SD_OUT_SUB_PATH)/$(SDFATFOLDER)/,$(notdir $(REL_BIN1)))
 REL_SD_SFP := $(addprefix $(REL_SD_OUT_SUB_PATH)/$(SDA2FOLDER)/,$(notdir $(REL_UBOOT_SFP)))
+ifeq ($(REL_CONFIG_SPL_FS_FAT),y)
+REL_SD_PROPER := $(addprefix $(REL_SD_OUT_SUB_PATH)/$(SDFATFOLDER)/,$(notdir $(REL_UBOOT_PROPER)))
+endif
 REL_SD_APP_FMT := $(REL_SD_OUT_SUB_PATH)/sd_app_fmt.txt
 REL_SD_FPGA_SRC := $(SD_IN_PATH)/Release/c5_fpga.rbf
 REL_SD_FPGA := $(addprefix $(REL_SD_OUT_SUB_PATH)/$(SDFATFOLDER)/,$(notdir $(REL_SD_FPGA_SRC)))
@@ -688,6 +709,7 @@ dbg_update_uboot:
 	@make -C "$(DBG_UBOOT_SRC_PATH)" --no-print-directory $(UBOOT_DEFCONFIG)
 	@make -C "$(DBG_UBOOT_SRC_PATH)" --no-print-directory -j 8
 	@cp -f -u "$(DBG_UBOOT_SRC_PATH)/u-boot-with-spl.sfp" "$(DBG_UBOOT_IN_PATH)"
+	@cp -f -u "$(DBG_UBOOT_SRC_PATH)/u-boot.img" "$(DBG_UBOOT_IN_PATH)"
 
 rel_update_uboot:
 	@echo "Running make to prepare U-Boot"
@@ -697,6 +719,7 @@ rel_update_uboot:
 	@make -C "$(REL_UBOOT_SRC_PATH)" --no-print-directory $(UBOOT_DEFCONFIG)
 	@make -C "$(REL_UBOOT_SRC_PATH)" --no-print-directory -j 8
 	@cp -f -u "$(REL_UBOOT_SRC_PATH)/u-boot-with-spl.sfp" "$(REL_UBOOT_IN_PATH)"
+	@cp -f -u "$(REL_UBOOT_SRC_PATH)/u-boot.img" "$(REL_UBOOT_IN_PATH)"
 
 # =====================================================
 # Build a list of prerequisites for SD card image rules
@@ -724,8 +747,8 @@ REL_SD_IMG_PRE := $(REL_SD_IMG_PRE) rel_update_uboot
 endif
 
 # Add to prerequisite list
-DBG_SD_IMG_PRE := $(DBG_SD_IMG_PRE) $(DBG_SD_APP_FMT) $(DBG_SD_FUND_PRE) $(DBG_SD_SFP) $(DBG_SD_SCR) $(DBG_SD_P1UF) $(DBG_SD_P2UF) $(DBG_SD_P3UF) $(DBG_SD_P4UF)
-REL_SD_IMG_PRE := $(REL_SD_IMG_PRE) $(REL_SD_APP_FMT) $(REL_SD_FUND_PRE) $(REL_SD_SFP) $(REL_SD_SCR) $(REL_SD_P1UF) $(REL_SD_P2UF) $(REL_SD_P3UF) $(REL_SD_P4UF)
+DBG_SD_IMG_PRE := $(DBG_SD_IMG_PRE) $(DBG_SD_APP_FMT) $(DBG_SD_FUND_PRE) $(DBG_SD_SFP) $(DBG_SD_PROPER) $(DBG_SD_SCR) $(DBG_SD_P1UF) $(DBG_SD_P2UF) $(DBG_SD_P3UF) $(DBG_SD_P4UF)
+REL_SD_IMG_PRE := $(REL_SD_IMG_PRE) $(REL_SD_APP_FMT) $(REL_SD_FUND_PRE) $(REL_SD_SFP) $(REL_SD_PROPER) $(REL_SD_SCR) $(REL_SD_P1UF) $(REL_SD_P2UF) $(REL_SD_P3UF) $(REL_SD_P4UF)
 
 # Add to prerequisite list
 ifneq (,$(wildcard $(DBG_SD_FPGA_SRC)))
@@ -772,6 +795,10 @@ endif
 $(DBG_SD_SFP): $(DBG_UBOOT_SFP)
 	@mkdir -p "$(@D)"
 	@cp -f "$(DBG_UBOOT_SFP)" "$@"
+
+$(DBG_SD_PROPER): $(DBG_UBOOT_PROPER)
+	@mkdir -p "$(@D)"
+	@cp -f "$(DBG_UBOOT_PROPER)" "$@"
 
 $(DBG_SD_SCR): $(DBG_UBOOT_SCR)
 	@mkdir -p "$(@D)"
@@ -851,6 +878,10 @@ endif
 $(REL_SD_SFP): $(REL_UBOOT_SFP)
 	@mkdir -p "$(@D)"
 	@cp -f "$(REL_UBOOT_SFP)" "$@"
+	
+$(REL_SD_PROPER): $(REL_UBOOT_PROPER)
+	@mkdir -p "$(@D)"
+	@cp -f "$(REL_UBOOT_PROPER)" "$@"
 
 $(REL_SD_SCR): $(REL_UBOOT_SCR)
 	@mkdir -p "$(@D)"

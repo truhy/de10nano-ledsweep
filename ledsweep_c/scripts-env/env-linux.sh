@@ -6,8 +6,8 @@ SCRIPT_PATH=$(cd -- "$(dirname -- "${BASH_SOURCE[0]}")" &> /dev/null && pwd)
 SCRIPT_PATH="$(dirname "$SCRIPT_PATH")"
 
 # Tools settings
-TOOLCHAIN_PATH=~/devtools/xpack-arm-none-eabi-gcc-13.2.1-1.1/bin
-OPENOCD_PATH=~/devtools/xpack-openocd-0.12.0-2/bin
+TOOLCHAIN_PATH=~/devtools/xpack-arm-none-eabi-gcc-14.2.1-1.1/bin
+OPENOCD_PATH=~/devtools/xpack-openocd-0.12.0-7/bin
 if [ -z "${QUARTUS_ROOTDIR+x}" ]; then QUARTUS_ROOTDIR=~/intelFPGA_lite/22.1std/quartus/bin; fi
 
 # Application settings
@@ -22,10 +22,10 @@ export FPGA_PROGRAM_NAME=ledsweep
 
 # U-Boot settings
 export UBOOT_OUT_PATH=$SCRIPT_PATH
-export UBOOT_ZIP=~/devtools/u-boot-2024.04.zip
-export UBOOT_PATCH_FOLDER=u-boot-2024.04-patch
+export UBOOT_ZIP=~/devtools/u-boot-socfpga-socfpga_v2025.07.zip
+export UBOOT_PATCH_FOLDER=u-boot-socfpga-socfpga_v2025.07-patch
 export UBOOT_BSP_GEN_FOLDER=cv_bsp_generator_202301
-export UBOOT_HPS_HANDOFF_FOLDER=../../../$FPGA_SRC_PATH/hps_isw_handoff/soc_system_hps_0
+export UBOOT_HPS_HANDOFF_FOLDER=../../../$FPGA_SRC_PATH/bsp/hps_isw_handoff/soc_system_hps_0
 export UBOOT_DEFCONFIG=socfpga_de10_nano_defconfig
 # Note: the QTS location depends on the selected xxx_defconfig file and the parameter CONFIG_TARGET_xxx=y,
 # which is processed by arch\arm\mach-socfpga\Kconfig file, for the conditions, see section "config SYS_BOARD" and "config SYS_VENDOR"
