@@ -33,7 +33,7 @@
 
 #if(TRU_TARGET == TRU_TARGET_C5SOC)
 
-#include "tru_util_ll.h"
+#include "tru_iom.h"
 #include <stdint.h>
 
 // ======================================================================

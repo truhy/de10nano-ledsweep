@@ -21,7 +21,7 @@
 	OUT OF OR IN CONNECTION WITH THE SOFTWARE OR THE USE OR OTHER DEALINGS IN THE
 	SOFTWARE.
 
-	Version: 20251206
+	Version: 20251223
 
 	Low-level code for Cyclone V SoC HPS.
 */
@@ -34,10 +34,10 @@
 #if(TRU_TARGET == TRU_TARGET_C5SOC)
 
 #define TRU_HPS_OCRAM_BASE   0xffff0000UL  // 64kB On-Chip RAM
-#define TRU_HPS_PERI_BASE    0xfffec000UL
+#define TRU_HPS_PERI_BASE    0xfffec000UL  // Arm peripheral base
 #define TRU_HPS_L2C310_BASE  0xfffef000UL
 #define TRU_HPS_BOOTROM_BASE 0xfffd0000UL
-#define TRU_HPS_PERI_L3_BASE 0xff400000UL
+#define TRU_HPS_PERI_L3_BASE 0xff400000UL  // Cyclone V SoC peripheral base
 #define TRU_HPS_L2F_BASE     0xff200000UL
 #define TRU_HPS_DAP_BASE     0xff000000UL
 #define TRU_HPS_STM_BASE     0xfc000000UL
@@ -47,6 +47,12 @@
 // Cyclone V SoC L2 cache latency (vendor specific)
 #define TRU_HPS_L2C310_TAGRAM_LATENCY  0x0U
 #define TRU_HPS_L2C310_DATARAM_LATENCY 0x10U
+
+// Map HPS to Arm defines
+#define TRU_PERIPH_BASE            TRU_HPS_PERI_BASE
+#define TRU_L2C310_BASE            TRU_HPS_L2C310_BASE
+#define TRU_L2C310_TAGRAM_LATENCY  TRU_HPS_L2C310_TAGRAM_LATENCY
+#define TRU_L2C310_DATARAM_LATENCY TRU_HPS_L2C310_DATARAM_LATENCY
 
 #endif
 

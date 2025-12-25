@@ -21,7 +21,7 @@
 	OUT OF OR IN CONNECTION WITH THE SOFTWARE OR THE USE OR OTHER DEALINGS IN THE
 	SOFTWARE.
 
-	Version: 20251206
+	Version: 20251223
 
 	Board support for Terasic DE10-Nano Kit development board (Altera FPGA
 	Cyclone V SoC).
@@ -34,6 +34,7 @@
 
 #if(TRU_BOARD == TRU_BOARD_DE10NANO)
 
+#include "tru_c5soc_hps_ll.h"
 #include "tru_c5soc_hps_uart_ll.h"
 
 #define TRU_HPS_INPUT_CLK_HZ 25000000

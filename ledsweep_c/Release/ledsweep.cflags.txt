@@ -1,1 +1,0 @@
--O2 -mcpu=cortex-a9 -marm -mfloat-abi=hard -mfpu=neon -mno-unaligned-access -fmessage-length=0 -fsigned-char -ffunction-sections -fdata-sections -std=gnu11 -D_RTE_ -Isource -Isource/bsp -Isource/trulib -Isource/CMSIS/Core/Include -Isource/CMSIS/Core/Include/a-profile -Isource/CMSIS/Device/c5soc/include -Isource/sweeper

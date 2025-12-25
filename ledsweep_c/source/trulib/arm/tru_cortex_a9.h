@@ -21,7 +21,7 @@
 	OUT OF OR IN CONNECTION WITH THE SOFTWARE OR THE USE OR OTHER DEALINGS IN THE
 	SOFTWARE.
 
-	Version: 20251206
+	Version: 20251223
 
 	Arm Cortex-A9 low level assembly & MPCore registers.
 */
@@ -32,12 +32,6 @@
 #include "tru_config.h"
 
 #if(TRU_CPU_FAMILY == TRU_CPU_FAMILY_CORTEXA9)
-
-#if(TRU_TARGET == TRU_TARGET_C5SOC)
-#include "c5soc/tru_c5soc_hps_ll.h"
-
-#define TRU_PERIPH_BASE TRU_HPS_PERI_BASE
-#endif
 
 #include <stdint.h>
 
@@ -56,19 +50,19 @@
 #define __isb() __asm__ volatile("isb 0xF":::"memory");
 
 // Cache related
-#define __write_dcisw(index)  __asm__ volatile("MCR p15, 0, %0, c7, c6, 2" : : "r" (index) : "memory")
-#define __write_dccsw(index)  __asm__ volatile("MCR p15, 0, %0, c7, c10, 2" : : "r" (index) : "memory")
-#define __write_csselr(level) __asm__ volatile("MCR p15, 2, %0, c0, c0, 0" : : "r" (level) : "memory")
-#define __write_dccmvac(va)   __asm__ volatile("MCR p15, 0, %0, c7, c10, 1" : : "r" (va) : "memory")
-#define __write_dcimvac(va)   __asm__ volatile("MCR p15, 0, %0, c7, c6, 1" : : "r" (va) : "memory")
-#define __write_dccimvac(va)  __asm__ volatile("MCR p15, 0, %0, c7, c14, 1" : : "r" (va) : "memory")
-#define __read_sctlr(result)  __asm__ volatile("MRC p15, 0, %0, c1, c0, 0" : "=r" (result) : : "memory")
-#define __read_ccsidr(result) __asm__ volatile("MRC p15, 1, %0, c0, c0, 0" : "=r" (result) : : "memory")
-#define __read_clidr(result)  __asm__ volatile("MRC p15, 1, %0, c0, c0, 1" : "=r" (result) : : "memory")
-#define __read_mpidr(mpidr)   __asm__ volatile("MRC p15, 0, %0, c0, c0, 5" : "=r" (mpidr) : : "memory")
+#define __write_dcisw(index)  __asm__ volatile("MCR p15, 0, %0, c7, c6, 2" : : "r"(index) : "memory")
+#define __write_dccsw(index)  __asm__ volatile("MCR p15, 0, %0, c7, c10, 2" : : "r"(index) : "memory")
+#define __write_csselr(level) __asm__ volatile("MCR p15, 2, %0, c0, c0, 0" : : "r"(level) : "memory")
+#define __write_dccmvac(va)   __asm__ volatile("MCR p15, 0, %0, c7, c10, 1" : : "r"(va) : "memory")
+#define __write_dcimvac(va)   __asm__ volatile("MCR p15, 0, %0, c7, c6, 1" : : "r"(va) : "memory")
+#define __write_dccimvac(va)  __asm__ volatile("MCR p15, 0, %0, c7, c14, 1" : : "r"(va) : "memory")
+#define __read_sctlr(result)  __asm__ volatile("MRC p15, 0, %0, c1, c0, 0" : "=r"(result) : : "memory")
+#define __read_ccsidr(result) __asm__ volatile("MRC p15, 1, %0, c0, c0, 0" : "=r"(result) : : "memory")
+#define __read_clidr(result)  __asm__ volatile("MRC p15, 1, %0, c0, c0, 1" : "=r"(result) : : "memory")
+#define __read_mpidr(mpidr)   __asm__ volatile("MRC p15, 0, %0, c0, c0, 5" : "=r"(mpidr) : : "memory")
 
 // MMU related
-#define __write_tlbimvaa(va)  __asm__ volatile("MRC p15, 0, %0, c8, c7, 3" : : "r" (va) : "memory")
+#define __write_tlbimvaa(va)  __asm__ volatile("MRC p15, 0, %0, c8, c7, 3" : : "r"(va) : "memory")
 
 // ============
 // Global timer

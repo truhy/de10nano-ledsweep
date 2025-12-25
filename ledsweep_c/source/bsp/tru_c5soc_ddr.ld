@@ -1,9 +1,7 @@
 /*
 	Linker script for Cyclone V SoC
-	Version: 20251206
+	Version: 20251223
 */
-OUTPUT_FORMAT("elf32-littlearm", "elf32-bigarm", "elf32-littlearm")
-OUTPUT_ARCH(arm)
 
 ENTRY(Reset_Handler)
 
@@ -172,13 +170,13 @@ SECTIONS {
     } > __RAM : __LOAD_RW
 
     .dma_buffer (NOLOAD) : {
-      . = ALIGN(1048576);
-      __dma_buffer_start = .;
+      . = ALIGN(1048576);      /* Align for 1MB MMU section */
+      __dma_buffer_start = .;  /* User defined symbol */
       
       *(.dma_buffer)
       
       . = ALIGN(1048576);
-      __dma_buffer_end = .;
+      __dma_buffer_end = .;  /* User defined symbol */
     } > __RAM : __LOAD_RW
 
     .bss (NOLOAD) : {

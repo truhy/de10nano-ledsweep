@@ -158,10 +158,12 @@ DBG_UBOOT_SCRTXT := $(DBG_UBOOT_SUB_PATH)/u-boot.scr.txt
 DBG_UBOOT_SCR := $(DBG_UBOOT_SUB_PATH)/u-boot.scr
 
 # Read U-Boot defconfig file and extract setting
+ifeq ($(ub),1)
 UBOOT_DEFCONFIG_DATA := $(strip $(file <$(DBG_UBOOT_IN_PATH)/$(UBOOT_PATCH_FOLDER)/$(UBOOT_DEFCONFIG)))
 UBOOT_DEFCONFIG_DATA := $(filter-out #%,$(UBOOT_DEFCONFIG_DATA))
 DBG_CONFIG_SPL_FS_FAT := $(filter-out CONFIG_SPL_FS_FAT,$(subst =,$(SPACE),$(filter CONFIG_SPL_FS_FAT=%,$(UBOOT_DEFCONFIG_DATA))))
 undefine UBOOT_DEFCONFIG_DATA
+endif
 
 # Append U-boot script with these lines
 ifneq (,$(filter 1,$(sd) $(ub)))
@@ -205,10 +207,12 @@ REL_UBOOT_SCRTXT := $(REL_UBOOT_SUB_PATH)/u-boot.scr.txt
 REL_UBOOT_SCR := $(REL_UBOOT_SUB_PATH)/u-boot.scr
 
 # Read U-Boot defconfig file and extract setting
+ifeq ($(ub),1)
 UBOOT_DEFCONFIG_DATA := $(strip $(file <$(REL_UBOOT_IN_PATH)/$(UBOOT_PATCH_FOLDER)/$(UBOOT_DEFCONFIG)))
 UBOOT_DEFCONFIG_DATA := $(filter-out #%,$(UBOOT_DEFCONFIG_DATA))
 REL_CONFIG_SPL_FS_FAT := $(filter-out CONFIG_SPL_FS_FAT,$(subst =,$(SPACE),$(filter CONFIG_SPL_FS_FAT=%,$(UBOOT_DEFCONFIG_DATA))))
 undefine UBOOT_DEFCONFIG_DATA
+endif
 
 # Append U-boot script with these lines
 ifneq (,$(filter 1,$(sd) $(ub)))

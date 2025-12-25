@@ -21,7 +21,7 @@
 	OUT OF OR IN CONNECTION WITH THE SOFTWARE OR THE USE OR OTHER DEALINGS IN THE
 	SOFTWARE.
 
-	Version: 20250405
+	Version: 20251223
 
 	FPGA IRQ handler.
 */
@@ -29,7 +29,7 @@
 #include "fpga_irqh.h"
 
 // Trulib includes
-#include "tru_util_ll.h"
+#include "tru_iom.h"
 #include "tru_logger.h"
 
 // CMSIS includes
@@ -40,7 +40,7 @@ static pio_ledsw_t *fpga_pio = NULL;
 
 // User IRQ handler for interrupt triggered from FPGA IRQ0
 static void fpga_72_irqhandler(void){
-	uint32_t fpga_inputs = tru_iom_rd32((TRU_TARGET_TYPE *)PIO0_DATA);  // Read FPGA input keys from memory mapped L2H bridge
+	uint32_t fpga_inputs = iom_rd32((TRU_TARGET_TYPE *)PIO0_DATA);  // Read FPGA input keys from memory mapped L2H bridge
 
 	// Check which key was pressed
 	switch(fpga_inputs){
@@ -68,7 +68,7 @@ static void fpga_72_irqhandler(void){
 		default: LOG("Unknown!\n");
 	}
 
-	tru_iom_wr32((TRU_TARGET_TYPE *)PIO0_IRQ_CLR, PIO0_INPUT_F2H_KEYX);  // Clear (re-arm) interrupt triggered flag for selected pins
+	iom_wr32((TRU_TARGET_TYPE *)PIO0_IRQ_CLR, PIO0_INPUT_F2H_KEYX);  // Clear (re-arm) interrupt triggered flag for selected pins
 }
 
 void fpga_init(pio_ledsw_t *pio){
@@ -82,8 +82,8 @@ void fpga_init(pio_ledsw_t *pio){
 	IRQ_Enable(C5SOC_F2H0_IRQn);  // Enable the interrupt
 
 	// Initialise memory mapped registers of Quartus Prime PIOs (Parallel Port IO IP)
-	tru_iom_wr32((TRU_TARGET_TYPE *)PIO0_DIR, 0);  // Set data direction to input
-	tru_iom_wr32((TRU_TARGET_TYPE *)PIO0_IRQ_MSK, PIO0_INPUT_F2H_KEYX);  // Unmask (enable triggerable) interrupt for selected pins
+	iom_wr32((TRU_TARGET_TYPE *)PIO0_DIR, 0);  // Set data direction to input
+	iom_wr32((TRU_TARGET_TYPE *)PIO0_IRQ_MSK, PIO0_INPUT_F2H_KEYX);  // Unmask (enable triggerable) interrupt for selected pins
 }
 
 void fpga_deinit(void){
