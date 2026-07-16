@@ -21,7 +21,7 @@
 	OUT OF OR IN CONNECTION WITH THE SOFTWARE OR THE USE OR OTHER DEALINGS IN THE
 	SOFTWARE.
 
-	Version: 20251209
+	Version: 20260707
 	Target : ARM Cortex-A9 on the DE10-Nano Kit development board (Altera
 	         Cyclone V SoC FPGA)
 	Type   : Stand-alone C application
@@ -71,10 +71,6 @@
 	#include <stdlib.h>
 #endif
 
-#ifdef SEMIHOSTING
-	extern void initialise_monitor_handles(void);  // Reference function header from the external Semihosting library
-#endif
-
 // PIO LED variable
 pio_ledsw_t pio0 = {
 	.leds     = PIO0_OUTPUT_LED_0_ON,
@@ -86,7 +82,6 @@ pio_ledsw_t pio0 = {
 void init(void){
 	LOG("Initialising\n");
 
-	irq_mask(0);        // Enable IRQ mode interrupts for this CPU
 	priv_timer_init();  // Initialise private timer IRQ
 	fpga_init(&pio0);   // Init FPGA to HPS IRQ
 }
@@ -121,10 +116,7 @@ void led_tasks_n(uint32_t n){
 }
 
 int main(int argc, char **argv){
-	#ifdef SEMIHOSTING
-		initialise_monitor_handles();  // Initialise Semihosting
-	#endif
-
+	tru_bsp_init();
 	init();
 
 #if(TRU_EXIT_TO_UBOOT == 1U)

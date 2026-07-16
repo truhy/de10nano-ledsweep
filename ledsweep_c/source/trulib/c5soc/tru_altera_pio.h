@@ -21,7 +21,7 @@
 	OUT OF OR IN CONNECTION WITH THE SOFTWARE OR THE USE OR OTHER DEALINGS IN THE
 	SOFTWARE.
 
-	Version: 20251208
+	Version: 20260707
 
 	Supporting code for PIO Core Altera FPGA IP (Parallel IO IP).
 
@@ -70,25 +70,29 @@
 #ifndef TRU_ALTERA_PIO_H
 #define TRU_ALTERA_PIO_H
 
+#ifdef __cplusplus
+extern "C" {
+#endif
+
 #include "tru_config.h"
 
-#if(TRU_TARGET == TRU_TARGET_C5SOC)
+#if defined(TRU_CFG_CHIPSET) && TRU_CFG_CHIPSET == TRU_OPT_CHIPSET_C5SOC
 
 #include <stdint.h>
 
 // Generic address offsets
-#define TRU_ALTERA_PIO_DATA_OFFSET    (0U * 4U)
-#define TRU_ALTERA_PIO_DIR_OFFSET     (1U * 4U)
+#define TRU_ALTERA_PIO_DATA_OFFSET    (0 * 4)
+#define TRU_ALTERA_PIO_DIR_OFFSET     (1 * 4)
 // These two below is active when the "Interrupt/Generate IRQ" option is ticked in Platform Designer
-#define TRU_ALTERA_PIO_IRQ_MSK_OFFSET (2U * 4U)
-#define TRU_ALTERA_PIO_IRQ_CLR_OFFSET (3U * 4U)
+#define TRU_ALTERA_PIO_IRQ_MSK_OFFSET (2 * 4)
+#define TRU_ALTERA_PIO_IRQ_CLR_OFFSET (3 * 4)
 // These two below only exists in the memory register when the "Output Register/Enable individual bit setting/clearing" option is ticked in Platform Designer
-#define TRU_ALTERA_PIO_OUT_SET_OFFSET (4U * 4U)
-#define TRU_ALTERA_PIO_OUT_CLR_OFFSET (5U * 4U)
+#define TRU_ALTERA_PIO_OUT_SET_OFFSET (4 * 4)
+#define TRU_ALTERA_PIO_OUT_CLR_OFFSET (5 * 4)
 
 // Values for direction register in the viewpoint of the HPS.  Note: the direction register defaults to 0 = input
-#define TRU_ALTERA_PIO_DIR_INPUT  0U
-#define TRU_ALTERA_PIO_DIR_OUTPUT 1U
+#define TRU_ALTERA_PIO_DIR_INPUT  0
+#define TRU_ALTERA_PIO_DIR_OUTPUT 1
 
 typedef struct{
 	volatile uint32_t data;
@@ -99,6 +103,10 @@ typedef struct{
 	volatile uint32_t out_clr;
 }tru_altera_pio_reg_t;
 
+#endif
+
+#ifdef __cplusplus
+}
 #endif
 
 #endif

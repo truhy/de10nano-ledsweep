@@ -21,7 +21,7 @@
 	OUT OF OR IN CONNECTION WITH THE SOFTWARE OR THE USE OR OTHER DEALINGS IN THE
 	SOFTWARE.
 
-	Version: 20251209
+	Version: 20260707
 
 	Trulib user configuration
 */
@@ -35,18 +35,17 @@
 // User config settings
 // ====================
 
-#define TRU_CFG_TARGET                  TRU_TARGET_C5SOC
-#define TRU_CFG_BOARD                   TRU_BOARD_DE10NANO
-#define TRU_CFG_BOARD_HEADER            "c5soc/tru_bsp_de10nano.h"
-#define TRU_CFG_CMSIS_WEAK_IRQH         0U  // This is to support FreeRTOS with CMSIS, set to 1 when using FreeRTOS, else set to 0
-#define TRU_CFG_EXIT_TO_UBOOT           0U
-#define TRU_CFG_NEON                    1U
-#define TRU_CFG_UNALIGNED_ACCESS        1U
-#define TRU_CFG_PRINT_UART0             1U
-#define TRU_CFG_PRINT_UART1             0U
-#define TRU_CFG_LOG                     1U
-#define TRU_CFG_LOG_RN                  1U
-#define TRU_CFG_LOG_LOC                 0U
-#define TRU_CFG_DMA_BUFFER_NONCACHEABLE 1U
+#define TRU_UCFG_BOARD                TRU_OPT_BOARD_DE10NANO
+#define TRU_UCFG_BOARD_HEADER         "c5soc/tru_bsp_de10nano.h"
+#define TRU_UCFG_FREERTOS             0  // Set this to 1 when using FreeRTOS, else set to 0
+#define TRU_UCFG_EXIT_TO_UBOOT        0
+#define TRU_UCFG_UNALIGNED_ACCESS     1
+#define TRU_UCFG_SYSCALL_IO           TRU_OPT_SYSCALL_IO_UART0
+//#define TRU_UCFG_SYSCALL_IO           TRU_OPT_SYSCALL_IO_UART1
+//#define TRU_UCFG_SYSCALL_IO           TRU_OPT_SYSCALL_IO_SEMIHOSTING
+#define TRU_UCFG_LOG                  1
+#define TRU_UCFG_LOG_RN               1
+#define TRU_UCFG_LOG_LOC              0
+#define TRU_UCFG_NONCACHEABLE_SECTION 1
 
 #endif

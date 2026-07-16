@@ -21,7 +21,7 @@
 	OUT OF OR IN CONNECTION WITH THE SOFTWARE OR THE USE OR OTHER DEALINGS IN THE
 	SOFTWARE.
 
-	Version: 20251209
+	Version: 20260707
 
 	FPGA PIO LEDs.
 */
@@ -30,7 +30,7 @@
 #define PIO_LED_H
 
 #include "c5soc/tru_altera_pio.h"
-#include "c5soc/tru_c5soc_hps_ll.h"
+#include "c5soc/tru_hps_c5soc.h"
 #include <stdint.h>
 
 // PIO0 must match with Platform Designer in the hardware design

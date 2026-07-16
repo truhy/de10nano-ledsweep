@@ -21,7 +21,7 @@
 	OUT OF OR IN CONNECTION WITH THE SOFTWARE OR THE USE OR OTHER DEALINGS IN THE
 	SOFTWARE.
 
-	Version: 20251223
+	Version: 20260208
 
 	Arm Cortex-A9 low level assembly & MPCore registers.
 */
@@ -29,14 +29,18 @@
 #ifndef TRU_CORTEX_A9_H
 #define TRU_CORTEX_A9_H
 
+#ifdef __cplusplus
+extern "C" {
+#endif
+
 #include "tru_config.h"
 
-#if(TRU_CPU_FAMILY == TRU_CPU_FAMILY_CORTEXA9)
+#if defined(TRU_CFG_CPU) && TRU_CFG_CPU == TRU_OPT_CPU_CORTEXA9
 
 #include <stdint.h>
 
-#define TRU_GLOBAL_TIMER_BASE  (TRU_PERIPH_BASE + 0x200U)
-#define TRU_PRIVATE_TIMER_BASE (TRU_PERIPH_BASE + 0x600U)
+#define TRU_GLOBAL_TIMER_BASE  (TRU_PERIPH_BASE + 0x200)
+#define TRU_PRIVATE_TIMER_BASE (TRU_PERIPH_BASE + 0x600)
 
 //===========================
 // GCC inline assembly macros
@@ -105,23 +109,23 @@ typedef struct{
 
 #define GTIM_REG ((volatile gtim_reg_t *const)TRU_GLOBAL_TIMER_BASE)
 
-#define GTIM_CONTROL_TIMER_ENABLE_POS 0U
-#define GTIM_CONTROL_TIMER_ENABLE_MSK 0x1U
+#define GTIM_CONTROL_TIMER_ENABLE_POS 0
+#define GTIM_CONTROL_TIMER_ENABLE_MSK 0x1
 
-#define GTIM_CONTROL_COMPARE_ENABLE_POS 1U
-#define GTIM_CONTROL_COMPARE_ENABLE_MSK (0x1U << GTIM_CONTROL_COMPARE_ENABLE_POS)
+#define GTIM_CONTROL_COMPARE_ENABLE_POS 1
+#define GTIM_CONTROL_COMPARE_ENABLE_MSK (0x1 << GTIM_CONTROL_COMPARE_ENABLE_POS)
 
-#define GTIM_CONTROL_IRQ_ENABLE_POS 2U
-#define GTIM_CONTROL_IRQ_ENABLE_MSK (0x1U << GTIM_CONTROL_IRQ_ENABLE_POS)
+#define GTIM_CONTROL_IRQ_ENABLE_POS 2
+#define GTIM_CONTROL_IRQ_ENABLE_MSK (0x1 << GTIM_CONTROL_IRQ_ENABLE_POS)
 
-#define GTIM_CONTROL_AUTOINC_POS 3U
-#define GTIM_CONTROL_AUTOINC_MSK (0x1U << GTIM_CONTROL_AUTOINC_POS)
+#define GTIM_CONTROL_AUTOINC_POS 3
+#define GTIM_CONTROL_AUTOINC_MSK (0x1 << GTIM_CONTROL_AUTOINC_POS)
 
-#define GTIM_CONTROL_PRESCALER_POS 8U
-#define GTIM_CONTROL_PRESCALER_MSK (0xffU << GTIM_CONTROL_PRESCALER_POS)
+#define GTIM_CONTROL_PRESCALER_POS 8
+#define GTIM_CONTROL_PRESCALER_MSK (0xff << GTIM_CONTROL_PRESCALER_POS)
 
-#define GTIM_ISR_EVENTFLAG_POS 1U
-#define GTIM_ISR_EVENTFLAG_MSK 0x1U
+#define GTIM_ISR_EVENTFLAG_POS 1
+#define GTIM_ISR_EVENTFLAG_MSK 0x1
 
 // Basic plain running timer mode: timer stopped, no compare, no interrupt, no auto-reset counter, no prescaler
 static inline void gtim_setup_basic_mode(void){
@@ -133,8 +137,8 @@ static inline void gtim_start(void){
 }
 
 static inline void gtim_zero_counter(void){
-	GTIM_REG->counterl = 0U;
-	GTIM_REG->counterh = 0U;
+	GTIM_REG->counterl = 0;
+	GTIM_REG->counterh = 0;
 }
 
 // Start the timer (counting starts)
@@ -156,12 +160,12 @@ static inline uint64_t gtim_get_counter(void){
 		upper = GTIM_REG->counterh;
 	}
 
-	return (uint64_t)upper << 32U | lower;
+	return (uint64_t)upper << 32 | lower;
 }
 
 static inline void gtim_set_counter(uint64_t counter){
 	GTIM_REG->counterl = (uint32_t)counter;
-	GTIM_REG->counterh = (uint32_t)(counter >> 32U);
+	GTIM_REG->counterh = (uint32_t)(counter >> 32);
 }
 
 // Clear interrupt event
@@ -237,20 +241,20 @@ typedef struct{
 
 #define PTIM_REG ((volatile ptim_reg_t *const)TRU_PRIVATE_TIMER_BASE)
 
-#define PTIM_CONTROL_TIMER_ENABLE_POS 0U
-#define PTIM_CONTROL_TIMER_ENABLE_MSK 0x1U
+#define PTIM_CONTROL_TIMER_ENABLE_POS 0
+#define PTIM_CONTROL_TIMER_ENABLE_MSK 0x1
 
-#define PTIM_CONTROL_AUTORELOAD_POS 1U
-#define PTIM_CONTROL_AUTORELOAD_MSK (0x1U << PTIM_CONTROL_AUTORELOAD_POS)
+#define PTIM_CONTROL_AUTORELOAD_POS 1
+#define PTIM_CONTROL_AUTORELOAD_MSK (0x1 << PTIM_CONTROL_AUTORELOAD_POS)
 
-#define PTIM_CONTROL_IRQ_ENABLE_POS 2U
-#define PTIM_CONTROL_IRQ_ENABLE_MSK (0x1U << PTIM_CONTROL_IRQ_ENABLE_POS)
+#define PTIM_CONTROL_IRQ_ENABLE_POS 2
+#define PTIM_CONTROL_IRQ_ENABLE_MSK (0x1 << PTIM_CONTROL_IRQ_ENABLE_POS)
 
-#define PTIM_CONTROL_PRESCALER_POS 8U
-#define PTIM_CONTROL_PRESCALER_MSK (0xffU << PTIM_CONTROL_PRESCALER_POS)
+#define PTIM_CONTROL_PRESCALER_POS 8
+#define PTIM_CONTROL_PRESCALER_MSK (0xff << PTIM_CONTROL_PRESCALER_POS)
 
-#define PTIM_ISR_EVENTFLAG_POS 1U
-#define PTIM_ISR_EVENTFLAG_MSK 0x1U
+#define PTIM_ISR_EVENTFLAG_POS 1
+#define PTIM_ISR_EVENTFLAG_MSK 0x1
 
 // Basic plain running timer mode: timer stopped, no autoreload, no interrupt, no prescaler
 static inline void ptim_setup_basic_mode(void){
@@ -272,6 +276,10 @@ static inline void ptim_clear_event(void){
 	PTIM_REG->intrstatus.bits.eventflag = 1;
 }
 
+#endif
+
+#ifdef __cplusplus
+}
 #endif
 
 #endif

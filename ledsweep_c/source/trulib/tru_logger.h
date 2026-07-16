@@ -21,7 +21,7 @@
 	OUT OF OR IN CONNECTION WITH THE SOFTWARE OR THE USE OR OTHER DEALINGS IN THE
 	SOFTWARE.
 
-	Version: 20241124
+	Version: 20260208
 
 	Provides debug logging support for bare-metal program development.
 */
@@ -29,17 +29,25 @@
 #ifndef TRU_LOGGER_H
 #define TRU_LOGGER_H
 
+#ifdef __cplusplus
+extern "C" {
+#endif
+
 #include "tru_config.h"
 #include <stdio.h>
 
-#if defined(TRU_LOG) && TRU_LOG == 1U
-	#if defined(TRU_LOG_LOC) && TRU_LOG_LOC == 1U
+#if defined(TRU_CFG_LOG) && TRU_CFG_LOG == 1
+	#if defined(TRU_CFG_LOG_LOC) && TRU_CFG_LOG_LOC == 1
 		#define LOG(fmt, args...) fprintf(stderr, "%s, %d, %s(), " fmt, __FILE__, __LINE__, __func__, ##args)
 	#else
 		#define LOG(fmt, args...) fprintf(stderr, fmt, ##args)
 	#endif
 #else
 	#define LOG(fmt, args...)  do {} while(0) // Do nothing
+#endif
+
+#ifdef __cplusplus
+}
 #endif
 
 #endif

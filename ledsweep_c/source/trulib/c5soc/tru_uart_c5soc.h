@@ -21,42 +21,55 @@
 	OUT OF OR IN CONNECTION WITH THE SOFTWARE OR THE USE OR OTHER DEALINGS IN THE
 	SOFTWARE.
 
-	Version: 20250405
+	Version: 20260208
 
-	Low-level code for Cyclone V SoC HPS UART controller.
+	UART controller (Synopsys UART controller) low-level support for Cyclone V
+	SoC HPS.
 */
 
-#ifndef TRU_C5SOC_HPS_UART_LL_H
-#define TRU_C5SOC_HPS_UART_LL_H
+#ifndef TRU_UART_C5SOC_H
+#define TRU_UART_C5SOC_H
+
+#ifdef __cplusplus
+extern "C" {
+#endif
 
 #include "tru_config.h"
 
-#if(TRU_TARGET == TRU_TARGET_C5SOC)
+#if defined(TRU_CFG_CHIPSET) && TRU_CFG_CHIPSET == TRU_OPT_CHIPSET_C5SOC
 
-#include "tru_iom.h"
 #include <stdint.h>
 
-// ======================================================================
-// Intel Cyclone V SoC FPGA (Synopsys UART controller) specific registers
-// ======================================================================
+#define TRU_HPS_UART_RBR_THR_DLL_OFFSET 0x0
+#define TRU_HPS_UART_LSR_OFFSET         0x14
+#define TRU_HPS_UART_SFE_OFFSET         0x98
+#define TRU_HPS_UART_STET_OFFSET        0xa0
 
-// HPS UART generic
-#define TRU_HPS_UART_RBR_THR_DLL_OFFSET 0x0U
-#define TRU_HPS_UART_LSR_OFFSET         0x14U
-#define TRU_HPS_UART_SFE_OFFSET         0x98U
-#define TRU_HPS_UART_STET_OFFSET        0xa0U
-#define TRU_HPS_UART_LSR_TEMT_SET_MSK   0x00000040UL
-#define TRU_HPS_UART_LSR_THRE_SET_MSK   0x00000020UL
+#define TRU_HPS_UART_LSR_DR_SETMSK      (1 << 0)
+#define TRU_HPS_UART_LSR_TE_SETMSK      (1 << 6)
+#define TRU_HPS_UART_LSR_THRE_SETMSK    (1 << 5)
+
+#define TRU_HPS_UART_LCR_DLS_SETMSK 0x03  // Data Length Select mask
+#define TRU_HPS_UART_LCR_DLS_5      0x00  // 5 bit character length
+#define TRU_HPS_UART_LCR_DLS_6      0x01  // 6 bit character length
+#define TRU_HPS_UART_LCR_DLS_7      0x02  // 7 bit character length
+#define TRU_HPS_UART_LCR_DLS_8      0x03  // 8 bit character length
+#define TRU_HPS_UART_LCR_STB        0x04  // Number of STop Bits, off=1, on=1.5 or 2)
+#define TRU_HPS_UART_LCR_PEN        0x08  // Parity ENeble
+#define TRU_HPS_UART_LCR_EPS        0x10  // Even Parity Select
+#define TRU_HPS_UART_LCR_STKP       0x20  // STicK Parity
+#define TRU_HPS_UART_LCR_BCB        0x40  // Break Control Bit
+#define TRU_HPS_UART_LCR_DLAB       0x80  // Divisor Latch Access Bit
 
 // HPS UART0 registers
-#define TRU_HPS_UART0_BASE              0xffc02000UL
+#define TRU_HPS_UART0_BASE              0xffc02000
 #define TRU_HPS_UART0_RBR_THR_DLL_ADDR  (TRU_HPS_UART0_BASE + TRU_HPS_UART_RBR_THR_DLL_OFFSET)
 #define TRU_HPS_UART0_LSR_ADDR          (TRU_HPS_UART0_BASE + TRU_HPS_UART_LSR_OFFSET)
 #define TRU_HPS_UART0_SFE_ADDR          (TRU_HPS_UART0_BASE + TRU_HPS_UART_SFE_OFFSET)
 #define TRU_HPS_UART0_STET_ADDR         (TRU_HPS_UART0_BASE + TRU_HPS_UART_STET_OFFSET)
 
 // HPS UART1 registers
-#define TRU_HPS_UART1_BASE              0xffc03000UL
+#define TRU_HPS_UART1_BASE              0xffc03000
 #define TRU_HPS_UART1_RBR_THR_DLL_ADDR  (TRU_HPS_UART1_BASE + TRU_HPS_UART_RBR_THR_DLL_OFFSET)
 #define TRU_HPS_UART1_LSR_ADDR          (TRU_HPS_UART1_BASE + TRU_HPS_UART_LSR_OFFSET)
 #define TRU_HPS_UART1_SFE_ADDR          (TRU_HPS_UART1_BASE + TRU_HPS_UART_SFE_OFFSET)
@@ -101,12 +114,21 @@ typedef struct{
 #define TRU_HPS_UART1_REG ((volatile tru_hps_uart_reg_t *const)TRU_HPS_UART1_BASE)
 #define TRU_HPS_UART_REG(base_addr) ((volatile tru_hps_uart_reg_t *const)base_addr)
 
-void tru_hps_uart_ll_wait_empty(void *uart_base);
-void tru_hps_uart_ll_write_str(void *uart_base, const char *str, uint32_t len);
-void tru_hps_uart_ll_write_char(void *uart_base, const char c);
-void tru_hps_uart_ll_write_hex_nibble(void *uart_base, unsigned char nibble);
-void tru_hps_uart_ll_write_inthex(void *uart_base, int num, unsigned int bits);
+void tru_hps_uart_init(uintptr_t uart_base, uint32_t baudrate);
+void tru_hps_uart_wait_empty(uintptr_t uart_base);
+void tru_hps_uart_wait_ready(uintptr_t uart_base, char fifo_th_en);
+void tru_hps_uart_wait_data_avail(uintptr_t uart_base);
+int tru_hps_uart_getc(uintptr_t uart_base);
+void tru_hps_uart_putc(uintptr_t uart_base, uint8_t ch);
+void tru_hps_uart_puts(uintptr_t uart_base, char *str);
+void tru_hps_uart_putns(uintptr_t uart_base, const char *str, uint32_t len);
+void tru_hps_uart_put_nibhex(uintptr_t uart_base, unsigned char nibble);
+void tru_hps_uart_put_inthex(uintptr_t uart_base, int num, unsigned int bits);
 
+#endif
+
+#ifdef __cplusplus
+}
 #endif
 
 #endif

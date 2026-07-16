@@ -21,7 +21,7 @@
 	OUT OF OR IN CONNECTION WITH THE SOFTWARE OR THE USE OR OTHER DEALINGS IN THE
 	SOFTWARE.
 
-	Version: 20251209
+	Version: 20260707
 
 	Private timer IRQ handler.
 
@@ -55,9 +55,12 @@
 #include "priv_timer_irqh.h"
 
 // Trulib includes
-#include "tru_irq.h"
 #include "arm/tru_cortex_a9.h"
-#include "c5soc/tru_c5soc_hps_clkmgr_ll.h"
+#include "c5soc/tru_clkmgr_c5soc.h"
+
+// CMSIS includes
+#include "RTE_Components.h"
+#include CMSIS_device_header
 
 // Systick interval = 1/SYSTICK_INTERVAL_FREQ
 // In this case, systick interval = 1ms = 1/1000, therefore:
@@ -77,7 +80,7 @@ void priv_timer_init(void){
 
 	// Register and enable the specified IRQ
 	IRQ_SetHandler(SecurePhyTimer_IRQn, systick_irqhandler);  // Register user interrupt handler
-	IRQ_SetPriority(SecurePhyTimer_IRQn, GIC_IRQ_PRIORITY_LEVEL30_7);  // Set lowest usable priority
+	IRQ_SetPriority(SecurePhyTimer_IRQn, GIC_IRQ_PRIORITY_LEVEL29_7);  // Set low priority
 	IRQ_SetMode(SecurePhyTimer_IRQn, IRQ_MODE_TYPE_IRQ | IRQ_MODE_CPU_0 | IRQ_MODE_TRIG_LEVEL | IRQ_MODE_TRIG_LEVEL_HIGH);
 	//IRQ_SetMode(SecurePhyTimer_IRQn, IRQ_MODE_TYPE_IRQ | IRQ_MODE_CPU_0 | IRQ_MODE_TRIG_EDGE | IRQ_MODE_TRIG_EDGE_RISING);  // F2H IRQ and GIC edge doesn't work on Cyclone V SoC, it behaves as trigger level
 	IRQ_Enable(SecurePhyTimer_IRQn);  // Enable the interrupt
@@ -94,13 +97,14 @@ void priv_timer_init(void){
 }
 
 void priv_timer_deinit(void){
-	tru_irq_unregister(SecurePhyTimer_IRQn);
+	IRQ_Disable(SecurePhyTimer_IRQn);                      // Disable user interrupt handler
+	IRQ_SetHandler(SecurePhyTimer_IRQn, (IRQHandler_t)0);  // Unregister user interrupt handler
 }
 
 void priv_timer_delay_ms(uint32_t wait_ms){
 	uint32_t target_ticks = systicks + wait_ms;
 
 	while (systicks < target_ticks){
-	  __wfe();  // Power-down until next event (wait for event)
+		__wfe();  // Power-down until next event (wait for event)
 	}
 }

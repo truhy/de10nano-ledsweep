@@ -21,13 +21,17 @@
 	OUT OF OR IN CONNECTION WITH THE SOFTWARE OR THE USE OR OTHER DEALINGS IN THE
 	SOFTWARE.
 
-	Version: 20251208
+	Version: 20260707
 
-	Trulib configuration
+	Trulib final configuration.
 */
 
 #ifndef TRU_CONFIG_H
 #define TRU_CONFIG_H
+
+#ifdef __cplusplus
+extern "C" {
+#endif
 
 #include "tru_options.h"
 #include "tru_user_config.h"
@@ -36,140 +40,214 @@
 // Apply final config settings if not already defined
 // ==================================================
 
-#ifndef TRU_TARGET
-	#if defined(TRU_CFG_TARGET)
-		#define TRU_TARGET TRU_CFG_TARGET
+#ifndef TRU_CFG_BOARD
+	#if defined(TRU_UCFG_BOARD)
+		#define TRU_CFG_BOARD TRU_UCFG_BOARD
+	#else
+		#define TRU_CFG_BOARD TRU_OPT_BOARD_CUSTOM
+	#endif
+#endif
+
+#if TRU_CFG_BOARD == TRU_OPT_BOARD_C5SOC_CUSTOM
+	#if !defined(TRU_CFG_CHIPSET)
+		#define TRU_CFG_CHIPSET TRU_OPT_CHIPSET_C5SOC
+	#endif
+	#if !defined(TRU_CFG_CPU)
+		#define TRU_CFG_CPU TRU_OPT_CPU_CORTEXA9
+	#endif
+#elif TRU_CFG_BOARD == TRU_OPT_BOARD_DE10NANO
+	#if !defined(TRU_CFG_CHIPSET)
+		#define TRU_CFG_CHIPSET TRU_OPT_CHIPSET_C5SOC
+	#endif
+	#if !defined(TRU_CFG_CPU)
+		#define TRU_CFG_CPU TRU_OPT_CPU_CORTEXA9
+	#endif
+#elif TRU_CFG_BOARD == TRU_OPT_BOARD_STM32H7_CUSTOM
+	#if !defined(TRU_CFG_CHIPSET)
+		#define TRU_CFG_CHIPSET TRU_OPT_CHIPSET_STM32H7
+	#endif
+#elif TRU_CFG_BOARD == TRU_OPT_BOARD_NUCLEO144_753ZI
+	#if !defined(TRU_CFG_CHIPSET)
+		#define TRU_CFG_CHIPSET TRU_OPT_CHIPSET_STM32H7
+	#endif
+	#if !defined(TRU_CFG_CPU)
+		#define TRU_CFG_CPU TRU_OPT_CPU_CORTEXM7
+	#endif
+#elif TRU_CFG_BOARD == TRU_OPT_BOARD_MILKV_DUO256M
+	#if !defined(TRU_CFG_CHIPSET)
+		#define TRU_CFG_CHIPSET TRU_OPT_CHIPSET_SG2002
+	#endif
+#endif
+
+#ifndef TRU_CFG_CHIPSET
+	#if defined(TRU_UCFG_CHIPSET)
+		#define TRU_CFG_CHIPSET TRU_UCFG_CHIPSET
 	#elif defined(soc_cv_av)
-		#define TRU_TARGET TRU_TARGET_C5SOC
+		#define TRU_CFG_CHIPSET TRU_OPT_CHIPSET_C5SOC
 	#elif defined(STM32H753xx)
-		#define TRU_TARGET TRU_TARGET_STM32H7
+		#define TRU_CFG_CHIPSET TRU_OPT_CHIPSET_STM32H7
 	#else
-		#error "TRU_CFG_TARGET or TRU_TARGET define not set!"
+		#error "TRU_UCFG_CHIPSET or TRU_CFG_CHIPSET define not set!"
 	#endif
 #endif
 
-#ifndef TRU_BOARD
-	#if defined(TRU_CFG_BOARD)
-		#define TRU_BOARD TRU_CFG_BOARD
+#ifndef TRU_CFG_CPU
+	#if defined(TRU_UCFG_CPU)
+		#define TRU_CFG_CPU TRU_UCFG_CPU
 	#else
-		#define TRU_BOARD TRU_BOARD_CUSTOM
+		#error "TRU_UCFG_CPU or TRU_CFG_CPU define not set!"
 	#endif
 #endif
 
-#ifndef TRU_BOARD_HEADER
-	#if defined(TRU_CFG_BOARD_HEADER)
-		#define TRU_BOARD_HEADER TRU_CFG_BOARD_HEADER
-	#else
-		#define TRU_BOARD_HEADER ""
+#if TRU_CFG_CHIPSET == TRU_OPT_CHIPSET_C5SOC
+	#define TRU_CFG_L1C_PRESENT           1
+	#define TRU_CFG_L2C_PRESENT           1
+	#define TRU_CFG_MMU_PRESENT           1
+	#define TRU_CFG_SMP_COHERENCY_PRESENT 1
+	#define TRU_CFG_SCU_PRESENT           1
+#elif TRU_CFG_CHIPSET == TRU_OPT_CHIPSET_STM32H7
+	#define TRU_CFG_L1C_PRESENT 1
+#elif TRU_CFG_CHIPSET == TRU_OPT_CHIPSET_SG2002
+	#if TRU_CFG_CPU == TRU_OPT_CPU_RISCV_C906
+		#define TRU_CFG_L1C_PRESENT 1
+		#define TRU_CFG_MMU_PRESENT 1
+	#elif TRU_CFG_CPU == TRU_OPT_CPU_CORTEX_A53
+		#define TRU_CFG_L1C_PRESENT 1
+		#define TRU_CFG_MMU_PRESENT 1
 	#endif
 #endif
 
-#include TRU_BOARD_HEADER
-
-#if TRU_TARGET == TRU_TARGET_C5SOC
-	#define TRU_TARGET_TYPE uint32_t
-	#define TRU_L1_CACHE_PRESENT      1U
-	#define TRU_L2_CACHE_PRESENT      1U
-	#define TRU_MMU_PRESENT           1U
-	#define TRU_SMP_COHERENCY_PRESENT 1U
-	#define TRU_SCU_PRESENT           1U
-	#define TRU_NEON_PRESENT          1U
-#elif TRU_TARGET == TRU_TARGET_STM32H7
-	#define TRU_TARGET_TYPE uint32_t
-	#define TRU_L1_CACHE_PRESENT 1U
+#if !defined(TRU_CFG_FPU) && defined(TRU_UCFG_FPU)
+	#define TRU_CFG_FPU TRU_UCFG_FPU
 #else
-	#error "TRU_TARGET define has an unsupported value!"
-#endif
-
-#ifndef TRU_CPU_FAMILY
-	#if defined(TRU_CFG_CPU_FAMILY)
-		#define TRU_CPU_FAMILY TRU_CFG_CPU_FAMILY
-	#elif(TRU_TARGET == TRU_TARGET_C5SOC)
-		#define TRU_CPU_FAMILY TRU_CPU_FAMILY_CORTEXA9
-	#elif(TRU_TARGET == TRU_TARGET_STM32H7)
-		#define TRU_CPU_FAMILY TRU_CPU_FAMILY_CORTEXM7
+	#if TRU_CFG_CHIPSET == TRU_OPT_CHIPSET_C5SOC && ((defined(__VFP_FP__) && !defined(__SOFTFP__)) || defined(__TARGET_FPU_VFP) || defined(__ARMVFP__))
+		#define TRU_CFG_FPU 1
+	#elif TRU_CFG_CHIPSET == TRU_OPT_CHIPSET_SG2002 && defined(__riscv_d)
+		#define TRU_CFG_FPU 1
+	#elif TRU_CFG_CHIPSET == TRU_OPT_CHIPSET_STM32H7 && ((defined(__VFP_FP__) && !defined(__SOFTFP__)) || defined(__TARGET_FPU_VFP) || defined(__ARMVFP__))
+		#define TRU_CFG_FPU 1
 	#else
-		#error "TRU_CFG_CPU_FAMILY or TRU_CPU_FAMILY define not set!"
+		#define TRU_CFG_FPU 0
 	#endif
 #endif
 
-// Use CMSIS for startup and CPU stuff
-#if !defined(TRU_CMSIS) && defined(TRU_CFG_CMSIS)
-	#define TRU_CMSIS TRU_CFG_CMSIS
+#if !defined(TRU_CFG_VPU) && defined(TRU_UCFG_VPU)
+	#define TRU_CFG_VPU TRU_UCFG_VPU
+#else
+	#if TRU_CFG_CHIPSET == TRU_OPT_CHIPSET_SG2002 && defined(__riscv_xtheadvector)
+		#define TRU_CFG_VPU 1
+	#else
+		#define TRU_CFG_VPU 0
+	#endif
+#endif
+
+#ifndef TRU_CFG_COMPILER_C906THEAD
+	#if defined(TRU_UCFG_COMPILER_C906THEAD)
+		#define TRU_CFG_COMPILER_C906THEAD TRU_UCFG_COMPILER_C906THEAD
+	#endif
+#endif
+
+#ifndef TRU_CFG_COMPILER_C906CSR
+	#if defined(TRU_UCFG_COMPILER_C906CSR)
+		#define TRU_CFG_COMPILER_C906CSR TRU_UCFG_COMPILER_C906CSR
+	#endif
+#endif
+
+#if !defined(TRU_CFG_VECT_DIRECT) && defined(TRU_UCFG_VECT_DIRECT)
+	#define TRU_CFG_VECT_DIRECT TRU_UCFG_VECT_DIRECT
+#else
+	#define TRU_CFG_VECT_DIRECT 0
+#endif
+
+#ifndef TRU_CFG_ZEROFILL_BSS
+	#if defined(TRU_UCFG_ZEROFILL_BSS)
+		#define TRU_CFG_ZEROFILL_BSS TRU_UCFG_ZEROFILL_BSS
+	#endif
+#endif
+
+#ifndef TRU_CFG_FLASH_PRESENT
+	#if defined(TRU_UCFG_FLASH_PRESENT)
+		#define TRU_CFG_FLASH_PRESENT TRU_UCFG_FLASH_PRESENT
+	#endif
+#endif
+
+#if !defined(TRU_CFG_FREERTOS)
+	#if defined(TRU_UCFG_FREERTOS)
+		#define TRU_CFG_FREERTOS TRU_UCFG_FREERTOS
+	#else
+		#define TRU_CFG_FREERTOS 0
+	#endif
+#endif
+
+#if defined(TRU_CFG_FREERTOS) && TRU_CFG_FREERTOS == 1
+	#define TRU_CFG_CMSIS_WEAK_IRQH 1
 #endif
 
 // This is to support FreeRTOS with CMSIS, set to 1 when using FreeRTOS, else set to 0
-#if !defined(TRU_CMSIS_WEAK_IRQH) && defined(TRU_CFG_CMSIS_WEAK_IRQH)
-	#define TRU_CMSIS_WEAK_IRQH TRU_CFG_CMSIS_WEAK_IRQH
+#if !defined(TRU_CFG_CMSIS_WEAK_IRQH)
+	#if defined(TRU_UCFG_CMSIS_WEAK_IRQH)
+		#define TRU_CFG_CMSIS_WEAK_IRQH TRU_UCFG_CMSIS_WEAK_IRQH
+	#else
+		#define TRU_CFG_CMSIS_WEAK_IRQH 0
+	#endif
 #endif
 
-// Use my replacement startup for HWLIB
-#if !defined(TRU_STARTUP) && defined(TRU_CFG_STARTUP)
-	#define TRU_STARTUP TRU_CFG_STARTUP
-#endif
-
-#if !defined(TRU_EXIT_TO_UBOOT) && defined(TRU_CFG_EXIT_TO_UBOOT)
-	#define TRU_EXIT_TO_UBOOT TRU_CFG_EXIT_TO_UBOOT
+#if !defined(TRU_CFG_EXIT_TO_UBOOT) && defined(TRU_UCFG_EXIT_TO_UBOOT)
+	#define TRU_CFG_EXIT_TO_UBOOT TRU_UCFG_EXIT_TO_UBOOT
 #endif
 
 #ifdef SEMIHOSTING
-	#define TRU_PRINT_UART0 0U
-	#define TRU_PRINT_UART1 0U
+	TRU_CFG_SYSCALL_IO TRU_OPT_SYSCALL_IO_SEMIHOSTING
+#elif !defined(TRU_CFG_SYSCALL_IO) && defined(TRU_UCFG_SYSCALL_IO)
+	#define TRU_CFG_SYSCALL_IO TRU_UCFG_SYSCALL_IO
 #endif
 
-#if !defined(TRU_PRINT_UART0) && defined(TRU_CFG_PRINT_UART0)
-	#define TRU_PRINT_UART0 TRU_CFG_PRINT_UART0
-#elif  !defined(TRU_PRINT_UART1) && defined(TRU_CFG_PRINT_UART1)
-	#define TRU_PRINT_UART1 TRU_CFG_PRINT_UART1
+#if !defined(TRU_CFG_LOG) && defined(TRU_UCFG_LOG)
+	#define TRU_CFG_LOG TRU_UCFG_LOG
 #endif
 
-#if !defined(TRU_LOG) && defined(TRU_CFG_LOG)
-	#define TRU_LOG TRU_CFG_LOG
+#if !defined(TRU_CFG_LOG_RN) && defined(TRU_UCFG_LOG_RN)
+	// 1 == Enables insertion of '\r' for each '\n' character
+	#define TRU_CFG_LOG_RN TRU_UCFG_LOG_RN
 #endif
 
-#if !defined(TRU_LOG_RN) && defined(TRU_CFG_LOG_RN)
-	// 1U == Enables insertion of '\r' for each '\n' character
-	#define TRU_LOG_RN TRU_CFG_LOG_RN
+#if !defined(TRU_CFG_LOG_LOC) && defined(TRU_UCFG_LOG_LOC)
+	#define TRU_CFG_LOG_LOC TRU_UCFG_LOG_LOC
 #endif
 
-#if !defined(TRU_LOG_LOC) && defined(TRU_CFG_LOG_LOC)
-	#define TRU_LOG_LOC TRU_CFG_LOG_LOC
+#if !defined(TRU_CFG_NONCACHEABLE_SECTION) && defined(TRU_UCFG_NONCACHEABLE_SECTION)
+	#define TRU_CFG_NONCACHEABLE_SECTION TRU_UCFG_NONCACHEABLE_SECTION
 #endif
 
-// Tells this library to use non-cacheable memory region for DMA buffers
-#if !defined(TRU_DMA_BUFFER_NONCACHEABLE) && defined(TRU_CFG_DMA_BUFFER_NONCACHEABLE)
-	#define TRU_DMA_BUFFER_NONCACHEABLE TRU_CFG_DMA_BUFFER_NONCACHEABLE
+#if !defined(TRU_CFG_USB_LOG_INIT) && defined(TRU_UCFG_USB_LOG_INIT)
+	#define TRU_CFG_USB_LOG_INIT TRU_UCFG_USB_LOG_INIT
 #endif
-
-#if !defined(TRU_USB_LOG_INIT) && defined(TRU_CFG_USB_LOG_INIT)
-	#define TRU_USB_LOG_INIT TRU_CFG_USB_LOG_INIT
+#if !defined(TRU_CFG_USB_LOG_EPENA) && defined(TRU_UCFG_USB_LOG_EPENA)
+	#define TRU_CFG_USB_LOG_EPENA TRU_UCFG_USB_LOG_EPENA
 #endif
-#if !defined(TRU_USB_LOG_EPENA) && defined(TRU_CFG_USB_LOG_EPENA)
-	#define TRU_USB_LOG_EPENA TRU_CFG_USB_LOG_EPENA
+#if !defined(TRU_CFG_USB_LOG_INTR) && defined(TRU_UCFG_USB_LOG_INTR)
+	#define TRU_CFG_USB_LOG_INTR TRU_UCFG_USB_LOG_INTR
 #endif
-#if !defined(TRU_USB_LOG_INTR) && defined(TRU_CFG_USB_LOG_INTR)
-	#define TRU_USB_LOG_INTR TRU_CFG_USB_LOG_INTR
+#if !defined(TRU_CFG_USB_LOG_SETUP_BYTES) && defined(TRU_UCFG_USB_LOG_SETUP_BYTES)
+	#define TRU_CFG_USB_LOG_SETUP_BYTES TRU_UCFG_USB_LOG_SETUP_BYTES
 #endif
-#if !defined(TRU_USB_LOG_SETUP_BYTES) && defined(TRU_CFG_USB_LOG_SETUP_BYTES)
-	#define TRU_USB_LOG_SETUP_BYTES TRU_CFG_USB_LOG_SETUP_BYTES
+#if !defined(TRU_CFG_USB_LOG_SETUP_TEXT) && defined(TRU_UCFG_USB_LOG_SETUP_TEXT)
+	#define TRU_CFG_USB_LOG_SETUP_TEXT TRU_UCFG_USB_LOG_SETUP_TEXT
 #endif
-#if !defined(TRU_USB_LOG_SETUP_TEXT) && defined(TRU_CFG_USB_LOG_SETUP_TEXT)
-	#define TRU_USB_LOG_SETUP_TEXT TRU_CFG_USB_LOG_SETUP_TEXT
+#if !defined(TRU_CFG_USB_LOG_XPROGRESS) && defined(TRU_UCFG_USB_LOG_XPROGRESS)
+	#define TRU_CFG_USB_LOG_XPROGRESS TRU_UCFG_USB_LOG_XPROGRESS
 #endif
-#if !defined(TRU_USB_LOG_XPROGRESS) && defined(TRU_CFG_USB_LOG_XPROGRESS)
-	#define TRU_USB_LOG_XPROGRESS TRU_CFG_USB_LOG_XPROGRESS
+#if !defined(TRU_CFG_USB_LOG_DIEPTSIZ) && defined(TRU_UCFG_USB_LOG_DIEPTSIZ)
+	#define TRU_CFG_USB_LOG_DIEPTSIZ TRU_UCFG_USB_LOG_DIEPTSIZ
 #endif
-#if !defined(TRU_USB_LOG_DIEPTSIZ) && defined(TRU_CFG_USB_LOG_DIEPTSIZ)
-	#define TRU_USB_LOG_DIEPTSIZ TRU_CFG_USB_LOG_DIEPTSIZ
+#if !defined(TRU_CFG_USB_LOG_DOEPTSIZ) && defined(TRU_UCFG_USB_LOG_DOEPTSIZ)
+	#define TRU_CFG_USB_LOG_DOEPTSIZ TRU_UCFG_USB_LOG_DOEPTSIZ
 #endif
-#if !defined(TRU_USB_LOG_DOEPTSIZ) && defined(TRU_CFG_USB_LOG_DOEPTSIZ)
-	#define TRU_USB_LOG_DOEPTSIZ TRU_CFG_USB_LOG_DOEPTSIZ
+#if !defined(TRU_CFG_USB_LOG_CALLBACK) && defined(TRU_UCFG_USB_LOG_CALLBACK)
+	#define TRU_CFG_USB_LOG_CALLBACK TRU_UCFG_USB_LOG_CALLBACK
 #endif
-#if !defined(TRU_USB_LOG_CALLBACK) && defined(TRU_CFG_USB_LOG_CALLBACK)
-	#define TRU_USB_LOG_CALLBACK TRU_CFG_USB_LOG_CALLBACK
-#endif
-#if !defined(TRU_USB_LOG_UAC_FB) && defined(TRU_CFG_USB_LOG_UAC_FB)
-	#define TRU_USB_LOG_UAC_FB TRU_CFG_USB_LOG_UAC_FB
+#if !defined(TRU_CFG_USB_LOG_UAC_FB) && defined(TRU_UCFG_USB_LOG_UAC_FB)
+	#define TRU_CFG_USB_LOG_UAC_FB TRU_UCFG_USB_LOG_UAC_FB
 #endif
 
 // ======================
@@ -180,196 +258,217 @@
 //   L1_CACHE_ENABLE: 0 = disable L1 cache, 1 = disable, invalidate and enable L1 cache, 2 = do nothing
 //   L2_CACHE_ENABLE: 0 = disable L2 cache, 1 = disable, invalidate and enable L2 cache, 2 = do nothing
 
-#if defined(TRU_EXIT_TO_UBOOT) && TRU_EXIT_TO_UBOOT == 1U
+#if defined(TRU_CFG_EXIT_TO_UBOOT) && TRU_CFG_EXIT_TO_UBOOT == 1
 	// We do not want cache in DEBUG mode
 	#ifdef DEBUG
-		#if (defined(TRU_L1_CACHE_PRESENT) && TRU_L1_CACHE_PRESENT == 1U) || (defined(TRU_L2_CACHE_PRESENT) && TRU_L2_CACHE_PRESENT == 1U)
-			#if !defined(TRU_CLEAN_CACHE) && defined(TRU_CFG_CLEAN_CACHE)
-				#define TRU_CLEAN_CACHE TRU_CFG_CLEAN_CACHE
+		#if (defined(TRU_CFG_L1C_PRESENT) && TRU_CFG_L1C_PRESENT == 1) || (defined(TRU_CFG_L2C_PRESENT) && TRU_CFG_L2C_PRESENT == 1)
+			#if !defined(TRU_CFG_CLEAN_CACHE) && defined(TRU_UCFG_CLEAN_CACHE)
+				#define TRU_CFG_CLEAN_CACHE TRU_UCFG_CLEAN_CACHE
 			#else
-				#define TRU_CLEAN_CACHE 0U
+				#define TRU_CFG_CLEAN_CACHE 0
 			#endif
 		#endif
-		#if defined(TRU_MMU_PRESENT) && TRU_MMU_PRESENT == 1U
-			#if !defined(TRU_MMU) && defined(TRU_CFG_MMU)
-				#define TRU_MMU TRU_CFG_MMU
+		#if defined(TRU_CFG_MMU_PRESENT) && TRU_CFG_MMU_PRESENT == 1
+			#if !defined(TRU_CFG_MMU) && defined(TRU_UCFG_MMU)
+				#define TRU_CFG_MMU TRU_UCFG_MMU
 			#else
-				#define TRU_MMU 2U
+				#define TRU_CFG_MMU 2
 			#endif
 		#endif
-		#if defined(TRU_SMP_COHERENCY_PRESENT) && TRU_SMP_COHERENCY_PRESENT == 1U
-			#if !defined(TRU_SMP_COHERENCY) && defined(TRU_CFG_SMP_COHERENCY)
-				#define TRU_SMP_COHERENCY TRU_CFG_SMP_COHERENCY
+		#if defined(TRU_CFG_SMP_COHERENCY_PRESENT) && TRU_CFG_SMP_COHERENCY_PRESENT == 1
+			#if !defined(TRU_CFG_SMP_COHERENCY) && defined(TRU_UCFG_SMP_COHERENCY)
+				#define TRU_CFG_SMP_COHERENCY TRU_UCFG_SMP_COHERENCY
 			#else
-				#define TRU_SMP_COHERENCY 2U
+				#define TRU_CFG_SMP_COHERENCY 2
 			#endif
 		#endif
-		#if defined(TRU_L1_CACHE_PRESENT) && TRU_L1_CACHE_PRESENT == 1U
-			#if !defined(TRU_L1_CACHE) && defined(TRU_CFG_L1_CACHE)
-				#define TRU_L1_CACHE TRU_CFG_L1_CACHE
+		#if defined(TRU_CFG_L1C_PRESENT) && TRU_CFG_L1C_PRESENT == 1
+			#if !defined(TRU_CFG_L1C) && defined(TRU_UCFG_L1C)
+				#define TRU_CFG_L1C TRU_UCFG_L1C
 			#else
-				#define TRU_L1_CACHE 2U
+				#define TRU_CFG_L1C 2
 			#endif
 		#endif
-		#if defined(TRU_L2_CACHE_PRESENT) && TRU_L2_CACHE_PRESENT == 1U
-			#if !defined(TRU_L2_CACHE) && defined(TRU_CFG_L2_CACHE)
-				#define TRU_L2_CACHE TRU_CFG_L2_CACHE
+		#if defined(TRU_CFG_L2C_PRESENT) && TRU_CFG_L2C_PRESENT == 1
+			#if !defined(TRU_CFG_L2C) && defined(TRU_UCFG_L2_CACHE)
+				#define TRU_CFG_L2C TRU_UCFG_L2_CACHE
 			#else
-				#define TRU_L2_CACHE 2U
+				#define TRU_CFG_L2C 2
 			#endif
 		#endif
-		#if defined(TRU_SCU_PRESENT) && TRU_SCU_PRESENT == 1U
-			#if !defined(TRU_SCU) && defined(TRU_CFG_SCU)
-				#define TRU_SCU TRU_CFG_SCU
+		#if defined(TRU_CFG_SCU_PRESENT) && TRU_CFG_SCU_PRESENT == 1
+			#if !defined(TRU_CFG_SCU) && defined(TRU_UCFG_SCU)
+				#define TRU_CFG_SCU TRU_UCFG_SCU
 			#else
-				#define TRU_SCU 2U
+				#define TRU_CFG_SCU 2
 			#endif
 		#endif
 	#else
-		#if (defined(TRU_L1_CACHE_PRESENT) && TRU_L1_CACHE_PRESENT == 1U) || (defined(TRU_L2_CACHE_PRESENT) && TRU_L2_CACHE_PRESENT == 1U)
-			#if !defined(TRU_CLEAN_CACHE) && defined(TRU_CFG_CLEAN_CACHE)
-				#define TRU_CLEAN_CACHE TRU_CFG_CLEAN_CACHE
+		#if (defined(TRU_CFG_L1C_PRESENT) && TRU_CFG_L1C_PRESENT == 1) || (defined(TRU_CFG_L2C_PRESENT) && TRU_CFG_L2C_PRESENT == 1)
+			#if !defined(TRU_CFG_CLEAN_CACHE) && defined(TRU_UCFG_CLEAN_CACHE)
+				#define TRU_CFG_CLEAN_CACHE TRU_UCFG_CLEAN_CACHE
 			#else
-				#define TRU_CLEAN_CACHE 0U
+				#define TRU_CFG_CLEAN_CACHE 0
 			#endif
 		#endif
-		#if defined(TRU_MMU_PRESENT) && TRU_MMU_PRESENT == 1U
-			#if !defined(TRU_MMU) && defined(TRU_CFG_MMU)
-				#define TRU_MMU TRU_CFG_MMU
+		#if defined(TRU_CFG_MMU_PRESENT) && TRU_CFG_MMU_PRESENT == 1
+			#if !defined(TRU_CFG_MMU) && defined(TRU_UCFG_MMU)
+				#define TRU_CFG_MMU TRU_UCFG_MMU
 			#else
-				#define TRU_MMU 2U
+				#define TRU_CFG_MMU 2
 			#endif
 		#endif
-		#if defined(TRU_SMP_COHERENCY_PRESENT) && TRU_SMP_COHERENCY_PRESENT == 1U
-			#if !defined(TRU_SMP_COHERENCY) && defined(TRU_CFG_SMP_COHERENCY)
-				#define TRU_SMP_COHERENCY TRU_CFG_SMP_COHERENCY
+		#if defined(TRU_CFG_SMP_COHERENCY_PRESENT) && TRU_CFG_SMP_COHERENCY_PRESENT == 1
+			#if !defined(TRU_CFG_SMP_COHERENCY) && defined(TRU_UCFG_SMP_COHERENCY)
+				#define TRU_CFG_SMP_COHERENCY TRU_UCFG_SMP_COHERENCY
 			#else
-				#define TRU_SMP_COHERENCY 2U
+				#define TRU_CFG_SMP_COHERENCY 2
 			#endif
 		#endif
-		#if defined(TRU_L1_CACHE_PRESENT) && TRU_L1_CACHE_PRESENT == 1U
-			#if !defined(TRU_L1_CACHE) && defined(TRU_CFG_L1_CACHE)
-				#define TRU_L1_CACHE TRU_CFG_L1_CACHE
+		#if defined(TRU_CFG_L1C_PRESENT) && TRU_CFG_L1C_PRESENT == 1
+			#if !defined(TRU_CFG_L1C) && defined(TRU_UCFG_L1C)
+				#define TRU_CFG_L1C TRU_UCFG_L1C
 			#else
-				#define TRU_L1_CACHE 2U
+				#define TRU_CFG_L1C 2
 			#endif
 		#endif
-		#if defined(TRU_L2_CACHE_PRESENT) && TRU_L2_CACHE_PRESENT == 1U
-			#if !defined(TRU_L2_CACHE) && defined(TRU_CFG_L2_CACHE)
-				#define TRU_L2_CACHE TRU_CFG_L2_CACHE
+		#if defined(TRU_CFG_L2C_PRESENT) && TRU_CFG_L2C_PRESENT == 1
+			#if !defined(TRU_CFG_L2C) && defined(TRU_UCFG_L2_CACHE)
+				#define TRU_CFG_L2C TRU_UCFG_L2_CACHE
 			#else
-				#define TRU_L2_CACHE 2U
+				#define TRU_CFG_L2C 2
 			#endif
 		#endif
-		#if defined(TRU_SCU_PRESENT) && TRU_SCU_PRESENT == 1U
-			#if !defined(TRU_SCU) && defined(TRU_CFG_SCU)
-				#define TRU_SCU TRU_CFG_SCU
+		#if defined(TRU_CFG_SCU_PRESENT) && TRU_CFG_SCU_PRESENT == 1
+			#if !defined(TRU_CFG_SCU) && defined(TRU_UCFG_SCU)
+				#define TRU_CFG_SCU TRU_UCFG_SCU
 			#else
-				#define TRU_SCU 2U
+				#define TRU_CFG_SCU 2
 			#endif
 		#endif
 	#endif
 #else
 	// We do not want cache in DEBUG mode
 	#ifdef DEBUG
-		#if (defined(TRU_L1_CACHE_PRESENT) && TRU_L1_CACHE_PRESENT == 1U) || (defined(TRU_L2_CACHE_PRESENT) && TRU_L2_CACHE_PRESENT == 1U)
-			#if !defined(TRU_CLEAN_CACHE) && defined(TRU_CFG_CLEAN_CACHE)
-				#define TRU_CLEAN_CACHE TRU_CFG_CLEAN_CACHE
+		#if (defined(TRU_CFG_L1C_PRESENT) && TRU_CFG_L1C_PRESENT == 1) || (defined(TRU_CFG_L2C_PRESENT) && TRU_CFG_L2C_PRESENT == 1)
+			#if !defined(TRU_CFG_CLEAN_CACHE) && defined(TRU_UCFG_CLEAN_CACHE)
+				#define TRU_CFG_CLEAN_CACHE TRU_UCFG_CLEAN_CACHE
 			#else
-				#define TRU_CLEAN_CACHE 0U
+				#define TRU_CFG_CLEAN_CACHE 0
 			#endif
 		#endif
-		#if defined(TRU_MMU_PRESENT) && TRU_MMU_PRESENT == 1U
-			#if !defined(TRU_MMU) && defined(TRU_CFG_MMU)
-				#define TRU_MMU TRU_CFG_MMU
+		#if defined(TRU_CFG_MMU_PRESENT) && TRU_CFG_MMU_PRESENT == 1
+			#if !defined(TRU_CFG_MMU) && defined(TRU_UCFG_MMU)
+				#define TRU_CFG_MMU TRU_UCFG_MMU
 			#else
-				#define TRU_MMU 1U
+				#define TRU_CFG_MMU 1
 			#endif
 		#endif
-		#if defined(TRU_SMP_COHERENCY_PRESENT) && TRU_SMP_COHERENCY_PRESENT == 1U
-			#if !defined(TRU_SMP_COHERENCY) && defined(TRU_CFG_SMP_COHERENCY)
-				#define TRU_SMP_COHERENCY TRU_CFG_SMP_COHERENCY
+		#if defined(TRU_CFG_SMP_COHERENCY_PRESENT) && TRU_CFG_SMP_COHERENCY_PRESENT == 1
+			#if !defined(TRU_CFG_SMP_COHERENCY) && defined(TRU_UCFG_SMP_COHERENCY)
+				#define TRU_CFG_SMP_COHERENCY TRU_UCFG_SMP_COHERENCY
 			#else
-				#define TRU_SMP_COHERENCY 0U
+				#define TRU_CFG_SMP_COHERENCY 0
 			#endif
 		#endif
-		#if defined(TRU_L1_CACHE_PRESENT) && TRU_L1_CACHE_PRESENT == 1U
-			#if !defined(TRU_L1_CACHE) && defined(TRU_CFG_L1_CACHE)
-				#define TRU_L1_CACHE TRU_CFG_L1_CACHE
+		#if defined(TRU_CFG_L1C_PRESENT) && TRU_CFG_L1C_PRESENT == 1
+			#if !defined(TRU_CFG_L1C) && defined(TRU_UCFG_L1C)
+				#define TRU_CFG_L1C TRU_UCFG_L1C
 			#else
-				#define TRU_L1_CACHE 0U
+				#define TRU_CFG_L1C 0
 			#endif
 		#endif
-		#if defined(TRU_L2_CACHE_PRESENT) && TRU_L2_CACHE_PRESENT == 1U
-			#if !defined(TRU_L2_CACHE) && defined(TRU_CFG_L2_CACHE)
-				#define TRU_L2_CACHE TRU_CFG_L2_CACHE
+		#if defined(TRU_CFG_L2C_PRESENT) && TRU_CFG_L2C_PRESENT == 1
+			#if !defined(TRU_CFG_L2C) && defined(TRU_UCFG_L2_CACHE)
+				#define TRU_CFG_L2C TRU_UCFG_L2_CACHE
 			#else
-				#define TRU_L2_CACHE 0U
+				#define TRU_CFG_L2C 0
 			#endif
 		#endif
-		#if defined(TRU_SCU_PRESENT) && TRU_SCU_PRESENT == 1U
-			#if !defined(TRU_SCU) && defined(TRU_CFG_SCU)
-				#define TRU_SCU TRU_CFG_SCU
+		#if defined(TRU_CFG_SCU_PRESENT) && TRU_CFG_SCU_PRESENT == 1
+			#if !defined(TRU_CFG_SCU) && defined(TRU_UCFG_SCU)
+				#define TRU_CFG_SCU TRU_UCFG_SCU
 			#else
-				#define TRU_SCU 0U
+				#define TRU_CFG_SCU 0
 			#endif
 		#endif
 	#else
-		#if (defined(TRU_L1_CACHE_PRESENT) && TRU_L1_CACHE_PRESENT == 1U) || (defined(TRU_L2_CACHE_PRESENT) && TRU_L2_CACHE_PRESENT == 1U)
-			#if !defined(TRU_CLEAN_CACHE) && defined(TRU_CFG_CLEAN_CACHE)
-				#define TRU_CLEAN_CACHE TRU_CFG_CLEAN_CACHE
+		#if (defined(TRU_CFG_L1C_PRESENT) && TRU_CFG_L1C_PRESENT == 1) || (defined(TRU_CFG_L2C_PRESENT) && TRU_CFG_L2C_PRESENT == 1)
+			#if !defined(TRU_CFG_CLEAN_CACHE) && defined(TRU_UCFG_CLEAN_CACHE)
+				#define TRU_CFG_CLEAN_CACHE TRU_UCFG_CLEAN_CACHE
 			#else
-				#define TRU_CLEAN_CACHE 0U
+				#define TRU_CFG_CLEAN_CACHE 0
 			#endif
 		#endif
-		#if defined(TRU_MMU_PRESENT) && TRU_MMU_PRESENT == 1U
-			#if !defined(TRU_MMU) && defined(TRU_CFG_MMU)
-				#define TRU_MMU TRU_CFG_MMU
+		#if defined(TRU_CFG_MMU_PRESENT) && TRU_CFG_MMU_PRESENT == 1
+			#if !defined(TRU_CFG_MMU) && defined(TRU_UCFG_MMU)
+				#define TRU_CFG_MMU TRU_UCFG_MMU
 			#else
-				#define TRU_MMU 1U
+				#define TRU_CFG_MMU 1
 			#endif
 		#endif
-		#if defined(TRU_SMP_COHERENCY_PRESENT) && TRU_SMP_COHERENCY_PRESENT == 1U
-			#if !defined(TRU_SMP_COHERENCY) && defined(TRU_CFG_SMP_COHERENCY)
-				#define TRU_SMP_COHERENCY TRU_CFG_SMP_COHERENCY
+		#if defined(TRU_CFG_SMP_COHERENCY_PRESENT) && TRU_CFG_SMP_COHERENCY_PRESENT == 1
+			#if !defined(TRU_CFG_SMP_COHERENCY) && defined(TRU_UCFG_SMP_COHERENCY)
+				#define TRU_CFG_SMP_COHERENCY TRU_UCFG_SMP_COHERENCY
 			#else
-				#define TRU_SMP_COHERENCY 1U
+				#define TRU_CFG_SMP_COHERENCY 1
 			#endif
 		#endif
-		#if defined(TRU_L1_CACHE_PRESENT) && TRU_L1_CACHE_PRESENT == 1U
-			#if !defined(TRU_L1_CACHE) && defined(TRU_CFG_L1_CACHE)
-				#define TRU_L1_CACHE TRU_CFG_L1_CACHE
+		#if defined(TRU_CFG_L1C_PRESENT) && TRU_CFG_L1C_PRESENT == 1
+			#if !defined(TRU_CFG_L1C) && defined(TRU_UCFG_L1C)
+				#define TRU_CFG_L1C TRU_UCFG_L1C
 			#else
-				#define TRU_L1_CACHE 1U
+				#define TRU_CFG_L1C 1
 			#endif
 		#endif
-		#if defined(TRU_L2_CACHE_PRESENT) && TRU_L2_CACHE_PRESENT == 1U
-			#if !defined(TRU_L2_CACHE) && defined(TRU_CFG_L2_CACHE)
-				#define TRU_L2_CACHE TRU_CFG_L2_CACHE
+		#if defined(TRU_CFG_L2C_PRESENT) && TRU_CFG_L2C_PRESENT == 1
+			#if !defined(TRU_CFG_L2C) && defined(TRU_UCFG_L2_CACHE)
+				#define TRU_CFG_L2C TRU_UCFG_L2_CACHE
 			#else
-				#define TRU_L2_CACHE 1U
+				#define TRU_CFG_L2C 1
 			#endif
 		#endif
-		#if defined(TRU_SCU_PRESENT) && TRU_SCU_PRESENT == 1U
-			#if !defined(TRU_SCU) && defined(TRU_CFG_SCU)
-				#define TRU_SCU TRU_CFG_SCU
+		#if defined(TRU_CFG_SCU_PRESENT) && TRU_CFG_SCU_PRESENT == 1
+			#if !defined(TRU_CFG_SCU) && defined(TRU_UCFG_SCU)
+				#define TRU_CFG_SCU TRU_UCFG_SCU
 			#else
-				#define TRU_SCU 1U
+				#define TRU_CFG_SCU 1
 			#endif
 		#endif
-	#endif
-#endif
-
-// This should match with your compiler/linker flag
-#if defined(TRU_NEON_PRESENT) && TRU_NEON_PRESENT == 1U
-	#if !defined(TRU_NEON) && defined(TRU_CFG_NEON)
-		#define TRU_NEON TRU_CFG_NEON
 	#endif
 #endif
 
 // Indicates unaligned byte access is supported
-#if !defined(TRU_UNALIGNED_ACCESS) && defined(TRU_CFG_UNALIGNED_ACCESS)
-	#define TRU_UNALIGNED_ACCESS TRU_CFG_UNALIGNED_ACCESS
+#if !defined(TRU_CFG_UNALIGNED_ACCESS) && defined(TRU_UCFG_UNALIGNED_ACCESS)
+	#define TRU_CFG_UNALIGNED_ACCESS TRU_UCFG_UNALIGNED_ACCESS
+#endif
+
+#if defined(TRU_CFG_NONCACHEABLE_SECTION) && TRU_CFG_NONCACHEABLE_SECTION == 1
+	#if defined(__ICCARM__)
+		#define NONCACHEABLE_SECTION \
+			_Pragma("location=\".noncacheable_section\"")
+	#else
+		#define NONCACHEABLE_SECTION \
+			__attribute__((section(".noncacheable_section")))
+	#endif
+#else
+	#define NONCACHEABLE_SECTION
+#endif
+
+#ifndef TRU_CFG_BOARD_HEADER
+	#if defined(TRU_UCFG_BOARD_HEADER)
+		#define TRU_CFG_BOARD_HEADER TRU_UCFG_BOARD_HEADER
+	#else
+		#define TRU_CFG_BOARD_HEADER ""
+	#endif
+#endif
+
+#ifndef __ASSEMBLER__
+#include TRU_CFG_BOARD_HEADER
+#endif
+
+#ifdef __cplusplus
+}
 #endif
 
 #endif

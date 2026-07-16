@@ -18,10 +18,16 @@
 	LIABILITY, WHETHER IN AN ACTION OF CONTRACT, TORT OR OTHERWISE, ARISING FROM,
 	OUT OF OR IN CONNECTION WITH THE SOFTWARE OR THE USE OR OTHER DEALINGS IN THE
 	SOFTWARE.
+
+	Version: 20260208
 */
 
 #ifndef IRQ_C5SOC_H
 #define IRQ_C5SOC_H
+
+#ifdef __cplusplus
+extern "C" {
+#endif
 
 #include <stdint.h>
 
@@ -330,5 +336,9 @@ typedef void (*IRQHandler_t) (void);
 
 void irq_set_group_priority(IRQn_ID_t irqn, uint8_t grp_priority, uint8_t sub_priority);
 void irq_mask(uint8_t mask);
+
+#ifdef __cplusplus
+}
+#endif
 
 #endif

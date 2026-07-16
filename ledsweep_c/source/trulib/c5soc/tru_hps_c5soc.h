@@ -21,32 +21,36 @@
 	OUT OF OR IN CONNECTION WITH THE SOFTWARE OR THE USE OR OTHER DEALINGS IN THE
 	SOFTWARE.
 
-	Version: 20251223
+	Version: 20260208
 
-	Low-level code for Cyclone V SoC HPS.
+	System low-level support for Cyclone V SoC HPS.
 */
 
-#ifndef TRU_C5SOC_HPS_LL_H
-#define TRU_C5SOC_HPS_LL_H
+#ifndef TRU_HPS_C5SOC_H
+#define TRU_HPS_C5SOC_H
+
+#ifdef __cplusplus
+extern "C" {
+#endif
 
 #include "tru_config.h"
 
-#if(TRU_TARGET == TRU_TARGET_C5SOC)
+#if defined(TRU_CFG_CHIPSET) && TRU_CFG_CHIPSET == TRU_OPT_CHIPSET_C5SOC
 
-#define TRU_HPS_OCRAM_BASE   0xffff0000UL  // 64kB On-Chip RAM
-#define TRU_HPS_PERI_BASE    0xfffec000UL  // Arm peripheral base
-#define TRU_HPS_L2C310_BASE  0xfffef000UL
-#define TRU_HPS_BOOTROM_BASE 0xfffd0000UL
-#define TRU_HPS_PERI_L3_BASE 0xff400000UL  // Cyclone V SoC peripheral base
-#define TRU_HPS_L2F_BASE     0xff200000UL
-#define TRU_HPS_DAP_BASE     0xff000000UL
-#define TRU_HPS_STM_BASE     0xfc000000UL
-#define TRU_HPS_H2F_BASE     0xc0000000UL
-#define TRU_HPS_RAM_BASE     0x00000000UL
+#define TRU_HPS_OCRAM_BASE   0xffff0000  // 64kB On-Chip RAM
+#define TRU_HPS_PERI_BASE    0xfffec000  // Arm peripheral base
+#define TRU_HPS_L2C310_BASE  0xfffef000
+#define TRU_HPS_BOOTROM_BASE 0xfffd0000
+#define TRU_HPS_PERI_L3_BASE 0xff400000  // Cyclone V SoC peripheral base
+#define TRU_HPS_L2F_BASE     0xff200000
+#define TRU_HPS_DAP_BASE     0xff000000
+#define TRU_HPS_STM_BASE     0xfc000000
+#define TRU_HPS_H2F_BASE     0xc0000000
+#define TRU_HPS_RAM_BASE     0x00000000
 
 // Cyclone V SoC L2 cache latency (vendor specific)
-#define TRU_HPS_L2C310_TAGRAM_LATENCY  0x0U
-#define TRU_HPS_L2C310_DATARAM_LATENCY 0x10U
+#define TRU_HPS_L2C310_TAGRAM_LATENCY  0x0
+#define TRU_HPS_L2C310_DATARAM_LATENCY 0x10
 
 // Map HPS to Arm defines
 #define TRU_PERIPH_BASE            TRU_HPS_PERI_BASE
@@ -54,6 +58,10 @@
 #define TRU_L2C310_TAGRAM_LATENCY  TRU_HPS_L2C310_TAGRAM_LATENCY
 #define TRU_L2C310_DATARAM_LATENCY TRU_HPS_L2C310_DATARAM_LATENCY
 
+#endif
+
+#ifdef __cplusplus
+}
 #endif
 
 #endif

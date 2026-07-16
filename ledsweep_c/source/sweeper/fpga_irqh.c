@@ -21,7 +21,7 @@
 	OUT OF OR IN CONNECTION WITH THE SOFTWARE OR THE USE OR OTHER DEALINGS IN THE
 	SOFTWARE.
 
-	Version: 20251223
+	Version: 20260707
 
 	FPGA IRQ handler.
 */
@@ -40,7 +40,7 @@ static pio_ledsw_t *fpga_pio = NULL;
 
 // User IRQ handler for interrupt triggered from FPGA IRQ0
 static void fpga_72_irqhandler(void){
-	uint32_t fpga_inputs = iom_rd32((TRU_TARGET_TYPE *)PIO0_DATA);  // Read FPGA input keys from memory mapped L2H bridge
+	uint32_t fpga_inputs = iom_rd32(PIO0_DATA);  // Read FPGA input keys from memory mapped L2H bridge
 
 	// Check which key was pressed
 	switch(fpga_inputs){
@@ -68,7 +68,7 @@ static void fpga_72_irqhandler(void){
 		default: LOG("Unknown!\n");
 	}
 
-	iom_wr32((TRU_TARGET_TYPE *)PIO0_IRQ_CLR, PIO0_INPUT_F2H_KEYX);  // Clear (re-arm) interrupt triggered flag for selected pins
+	iom_wr32(PIO0_IRQ_CLR, PIO0_INPUT_F2H_KEYX);  // Clear (re-arm) interrupt triggered flag for selected pins
 }
 
 void fpga_init(pio_ledsw_t *pio){
@@ -76,14 +76,14 @@ void fpga_init(pio_ledsw_t *pio){
 
 	// Register and enable the specified IRQ
 	IRQ_SetHandler(C5SOC_F2H0_IRQn, fpga_72_irqhandler);  // Register user interrupt handler
-	IRQ_SetPriority(C5SOC_F2H0_IRQn, GIC_IRQ_PRIORITY_LEVEL30_7);  // Set lowest usable priority
+	IRQ_SetPriority(C5SOC_F2H0_IRQn, GIC_IRQ_PRIORITY_LEVEL29_7);  // Set low priority
 	IRQ_SetMode(C5SOC_F2H0_IRQn, IRQ_MODE_TYPE_IRQ | IRQ_MODE_CPU_0 | IRQ_MODE_TRIG_LEVEL | IRQ_MODE_TRIG_LEVEL_HIGH);
 	//IRQ_SetMode(C5SOC_F2H0_IRQn, IRQ_MODE_TYPE_IRQ | IRQ_MODE_CPU_0 | IRQ_MODE_TRIG_EDGE | IRQ_MODE_TRIG_EDGE_RISING);  // F2H IRQ and GIC edge doesn't work on Cyclone V SoC, it behaves as trigger level
 	IRQ_Enable(C5SOC_F2H0_IRQn);  // Enable the interrupt
 
 	// Initialise memory mapped registers of Quartus Prime PIOs (Parallel Port IO IP)
-	iom_wr32((TRU_TARGET_TYPE *)PIO0_DIR, 0);  // Set data direction to input
-	iom_wr32((TRU_TARGET_TYPE *)PIO0_IRQ_MSK, PIO0_INPUT_F2H_KEYX);  // Unmask (enable triggerable) interrupt for selected pins
+	iom_wr32(PIO0_DIR, 0);  // Set data direction to input
+	iom_wr32(PIO0_IRQ_MSK, PIO0_INPUT_F2H_KEYX);  // Unmask (enable triggerable) interrupt for selected pins
 }
 
 void fpga_deinit(void){

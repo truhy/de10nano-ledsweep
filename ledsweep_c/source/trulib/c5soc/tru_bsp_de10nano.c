@@ -21,35 +21,46 @@
 	OUT OF OR IN CONNECTION WITH THE SOFTWARE OR THE USE OR OTHER DEALINGS IN THE
 	SOFTWARE.
 
-	Version: 20251206
+	Version: 20260208
 */
 
 #include "tru_bsp_de10nano.h"
 
-#if(TRU_BOARD == TRU_BOARD_DE10NANO)
+#if defined(TRU_CFG_BOARD) && (TRU_CFG_BOARD == TRU_OPT_BOARD_DE10NANO)
 
-#ifdef SEMIHOSTING
+#include "RTE_Components.h"   // CMSIS
+#include CMSIS_device_header  // CMSIS
+
+#if defined(SEMIHOSTING) || (defined(TRU_CFG_SYSCALL_IO) && TRU_CFG_SYSCALL_IO == TRU_OPT_SYSCALL_IO_SEMIHOSTING)
 	extern void initialise_monitor_handles(void);  // Reference function header from the external Semihosting library
-#else
-	#if (defined(TRU_PRINT_UART0) && TRU_PRINT_UART0 == 1U) || (defined(TRU_PRINT_UART1) && TRU_PRINT_UART1 == 1U)
-		int __io_putchar(int ch){
-			#if TRU_PRINT_UART0 == 1U
-				tru_hps_uart_ll_write_char((void *)TRU_HPS_UART0_BASE, ch);  // Re-target to UART controller 0
-			#elif TRU_PRINT_UART1 == 1U
-				tru_hps_uart_ll_write_char((void *)TRU_HPS_UART1_BASE, ch);  // Re-target to UART controller 1
-			#endif
-			return ch;
-		}
-	#endif
+#endif
+
+#if defined(TRU_SYSCALL_IO_UART_BASE)
+int _write(int fd, char *ptr, int len) {
+	for(int i = 0; i < len; i++){
+		tru_hps_uart_putc(TRU_SYSCALL_IO_UART_BASE, *ptr++);  // Re-target to UART controller
+	}
+	return len;
+}
 #endif
 
 void tru_bsp_init(void){
-	#ifdef SEMIHOSTING
+	#if defined(SEMIHOSTING) || (defined(TRU_CFG_SYSCALL_IO) && TRU_CFG_SYSCALL_IO == TRU_OPT_SYSCALL_IO_SEMIHOSTING)
 		initialise_monitor_handles();  // Initialise Semihosting
 	#endif
+
+	#if defined(TRU_SYSCALL_IO_UART_BASE)
+		tru_hps_uart_init(TRU_SYSCALL_IO_UART_BASE, 115200);
+	#endif
+
+	irq_mask(0);  // Enable IRQ mode interrupts for this CPU
 }
 
-#if defined(TRU_EXIT_TO_UBOOT) && TRU_EXIT_TO_UBOOT == 1U
+void tru_bsp_deinit(void){
+	irq_mask(1);  // Disable IRQ mode interrupts for this CPU
+}
+
+#if defined(TRU_CFG_EXIT_TO_UBOOT) && TRU_CFG_EXIT_TO_UBOOT == 1
 	// ===============================================
 	// Support code for Exit to U-Boot
 	// Global variables for returning back into U-Boot

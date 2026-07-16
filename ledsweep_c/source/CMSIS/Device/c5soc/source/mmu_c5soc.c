@@ -132,6 +132,7 @@
 // Descriptors should place all memory in domain 0
 
 #include "mmu_c5soc.h"
+
 #include <stdint.h>
 
 #if defined(__ICCARM__)
@@ -141,11 +142,6 @@
 #endif
 
 MMU_L1_SECTION uint8_t mmu_ttb_l1[L1_SIZE];
-
-#if defined(TRU_DMA_BUFFER_NONCACHEABLE) && TRU_DMA_BUFFER_NONCACHEABLE == 1U && defined(TRU_MMU) && TRU_MMU == 1U
-	extern uint32_t __dma_buffer_start;  // Reference external symbol name from the linker file
-	extern uint32_t __dma_buffer_end;  // Reference external symbol name from the linker file
-#endif
 
 void *mmu_get_ttb_l1(void){
 	return mmu_ttb_l1;
@@ -442,10 +438,13 @@ void *mmu_get_ttb_l1(void){
 	}
 #endif
 
-#if defined(TRU_DMA_BUFFER_NONCACHEABLE) && TRU_DMA_BUFFER_NONCACHEABLE == 1U && defined(TRU_MMU) && TRU_MMU == 1U
+#if defined(TRU_CFG_NONCACHEABLE_SECTION) && TRU_CFG_NONCACHEABLE_SECTION == 1U && defined(TRU_CFG_MMU) && TRU_CFG_MMU == 1U
+	extern uint32_t __noncacheable_section_start;  // Reference external symbol name from the linker file
+	extern uint32_t __noncacheable_section_end;  // Reference external symbol name from the linker file
+
 	// Note: this assumes the MMU table is using L1 entries with 1MB sections
 	void mmu_create_dma_buffer_table_entries(void){
-		uint32_t dma_buffer_size = &__dma_buffer_end - &__dma_buffer_start;
+		uint32_t dma_buffer_size = &__noncacheable_section_end - &__noncacheable_section_start;
 
 		if(dma_buffer_size){
 			mmu_region_attributes_Type region = {
@@ -467,16 +466,13 @@ void *mmu_get_ttb_l1(void){
 			uint32_t *mmu_ttb_l1 = mmu_get_ttb_l1();
 
 			MMU_GetSectionDescriptor(&L1_Section_Attrib_NonCache_RWX, region);  // Fill section attribute variable
-			MMU_TTSection(mmu_ttb_l1, (uint32_t)&__dma_buffer_start, noncache_num_sections, DESCRIPTOR_FAULT);  // Replace the old translation table entry with an invalid (faulting) entry
-			// Clean not required with the Multiprocessing Extensions
-			//uint32_t offset = (uint32_t)stream0.xfer_addr >> 20U;
-			//tru_l1_data_clean_range(mmu_ttb_l1 + offset, 4U * noncache_num_sections);
+			MMU_TTSection(mmu_ttb_l1, (uint32_t)&__noncacheable_section_start, noncache_num_sections, DESCRIPTOR_FAULT);  // Replace the old translation table entry with an invalid (faulting) entry
 			__DSB();  // Ensure faulting entry is visible
-			MMU_InvalidateRange(mmu_ttb_l1, (uint32_t)&__dma_buffer_start, noncache_num_sections);  // Invalidate TLB entries by MVA with Multiprocessing Extension support
+			MMU_InvalidateRange(mmu_ttb_l1, (uint32_t)&__noncacheable_section_start, noncache_num_sections);  // Invalidate TLB entries by MVA with Multiprocessing Extension support
 			__set_BPIALL(0);  // Invalidate entire branch predictor array
 			__DSB();  // Ensure completion of the invalidate branch predictor operation
 			__ISB();  // Ensure changes visible to instruction fetch
-			MMU_TTSection(mmu_ttb_l1, (uint32_t)&__dma_buffer_start, noncache_num_sections, L1_Section_Attrib_NonCache_RWX);  // Write MMU table 1MB section entries that are non-cacheable
+			MMU_TTSection(mmu_ttb_l1, (uint32_t)&__noncacheable_section_start, noncache_num_sections, L1_Section_Attrib_NonCache_RWX);  // Write MMU table 1MB section entries that are non-cacheable
 			__DSB();  // Ensure the new entry is visible
 		}
 	}

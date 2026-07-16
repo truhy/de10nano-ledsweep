@@ -1,10 +1,14 @@
 /*
-	Created on: 26 Oct 2024
-	Author: Truong Hy
+	Author : Truong Hy
+	Version: 20260208
 */
 
 #ifndef MMU_C5SOC_H
 #define MMU_C5SOC_H
+
+#ifdef __cplusplus
+extern "C" {
+#endif
 
 #include "c5soc.h"
 
@@ -22,7 +26,7 @@
 
 // User settings
 #define USE_L1_AND_L2_TABLE 0U
-#define USE_TTBCR_N TTBCR_N_L1_8K_L2_16K
+#define USE_TTBCR_N         TTBCR_N_L1_8K_L2_16K
 
 // L1 table size + L2 table input VA address boundary
 #if(USE_L1_AND_L2_TABLE == 1U)
@@ -82,8 +86,12 @@ static inline void MMU_InvalidateRange(uint32_t *ttb, uint32_t base_address, uin
 	}
 }
 
-#if defined(TRU_DMA_BUFFER_NONCACHEABLE) && TRU_DMA_BUFFER_NONCACHEABLE == 1U && defined(TRU_MMU) && TRU_MMU == 1U
+#if defined(TRU_UCFG_NONCACHEABLE_SECTION) && TRU_UCFG_NONCACHEABLE_SECTION == 1U && defined(TRU_CFG_MMU) && TRU_CFG_MMU == 1U
 	void mmu_create_dma_buffer_table_entries(void);
+#endif
+
+#ifdef __cplusplus
+}
 #endif
 
 #endif

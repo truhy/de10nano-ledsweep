@@ -21,24 +21,36 @@
 	OUT OF OR IN CONNECTION WITH THE SOFTWARE OR THE USE OR OTHER DEALINGS IN THE
 	SOFTWARE.
 
-	Version: 20251223
+	Version: 20260208
 
 	Template board support for Altera FPGA Cyclone V SoC custom board.
 */
 
-#ifndef TRU_BSP_C5SOC_CUSTOM_H
-#define TRU_BSP_C5SOC_CUSTOM_H
+#ifndef TRU_BSP_CUSTOM_C5SOC_H
+#define TRU_BSP_CUSTOM_C5SOC_H
+
+#ifdef __cplusplus
+extern "C" {
+#endif
 
 #include "tru_config.h"
 
-#if(TRU_BOARD == TRU_BOARD_C5SOC_CUSTOM)
+#if defined(TRU_CFG_BOARD) && TRU_CFG_BOARD == TRU_OPT_BOARD_C5SOC_CUSTOM
 
-#include "tru_c5soc_hps_ll.h"
-#include "tru_c5soc_hps_uart_ll.h"
+#include "tru_hps_c5soc.h"
+#include "tru_uart_c5soc.h"
 
 #define TRU_HPS_INPUT_CLK_HZ 25000000
 
-#if defined(TRU_EXIT_TO_UBOOT) && TRU_EXIT_TO_UBOOT == 1U
+#if defined(TRU_CFG_SYSCALL_IO)
+	#if TRU_CFG_SYSCALL_IO == TRU_OPT_SYSCALL_IO_UART0
+		#define TRU_SYSCALL_IO_UART_BASE TRU_HPS_UART0_BASE
+	#elif TRU_CFG_SYSCALL_IO == TRU_OPT_SYSCALL_IO_UART1
+		#define TRU_SYSCALL_IO_UART_BASE TRU_HPS_UART1_BASE
+	#endif
+#endif
+
+#if defined(TRU_CFG_EXIT_TO_UBOOT) && TRU_CFG_EXIT_TO_UBOOT == 1U
 	extern int uboot_argc;
 	extern char **uboot_argv;
 	extern long unsigned int uboot_lr;
@@ -53,7 +65,12 @@
 #endif
 
 void tru_bsp_init(void);
+void tru_bsp_deinit(void);
 
+#endif
+
+#ifdef __cplusplus
+}
 #endif
 
 #endif

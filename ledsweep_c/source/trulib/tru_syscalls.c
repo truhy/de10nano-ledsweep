@@ -21,14 +21,14 @@
 	OUT OF OR IN CONNECTION WITH THE SOFTWARE OR THE USE OR OTHER DEALINGS IN THE
 	SOFTWARE.
 
-	Version: 20251206
+	Version: 20260208
 
-	Minimal implementation of required newlib function stubs.
+	Minimal implementation of newlib system calls function stubs.
 */
 
 #include "tru_config.h"
 
-#if(TRU_TARGET == TRU_TARGET_C5SOC)
+#if defined(TRU_CFG_CHIPSET) && (TRU_CFG_CHIPSET == TRU_OPT_CHIPSET_C5SOC || TRU_CFG_CHIPSET == TRU_OPT_CHIPSET_SG2002)
 
 #include "tru_logger.h"
 
@@ -51,7 +51,7 @@
 	// ==========================================================================================
 
 	// Process ID
-	#define __MYPID 1U
+	#define __MYPID 1
 
 	extern int __io_putchar(int ch) __attribute__((weak));
 	extern int __io_getchar(void) __attribute__((weak));
