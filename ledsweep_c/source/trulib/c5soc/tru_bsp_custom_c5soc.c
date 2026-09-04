@@ -28,6 +28,12 @@
 
 #if defined(TRU_CFG_BOARD) && TRU_CFG_BOARD == TRU_OPT_BOARD_C5SOC_CUSTOM
 
+#include "arm/tru_cortex_a9.h"
+#include "c5soc/tru_clkmgr_c5soc.h"
+#include "tru_delay.h"
+#include "synopsys/tru_dwc2_otg0_isr.h"
+#include "synopsys/tru_dwc2_otg1_isr.h"
+
 #if defined(SEMIHOSTING) || (defined(TRU_CFG_SYSCALL_IO) && TRU_CFG_SYSCALL_IO == TRU_OPT_SYSCALL_IO_SEMIHOSTING)
 	extern void initialise_monitor_handles(void);  // Reference function header from the external Semihosting library
 #endif
@@ -42,6 +48,12 @@ int _write(int fd, char *ptr, int len) {
 #endif
 
 void tru_bsp_init(void){
+	// Setup generic delay functions to use the global timer in free running mode
+	tru_delay_set_corefreq(get_mpu_base_clk(TRU_HPS_INPUT_CLK_HZ).fout);
+	tru_delay_set_tickfreq(get_mpu_peri_clk(TRU_HPS_INPUT_CLK_HZ).fout);
+	gtim_setup_basic_mode();
+	gtim_enable();
+
 	#if defined(SEMIHOSTING) || (defined(TRU_CFG_SYSCALL_IO) && TRU_CFG_SYSCALL_IO == TRU_OPT_SYSCALL_IO_SEMIHOSTING)
 		initialise_monitor_handles();  // Initialise Semihosting
 	#endif
@@ -55,6 +67,46 @@ void tru_bsp_init(void){
 
 void tru_bsp_deinit(void){
 	irq_mask(1);  // Disable IRQ mode interrupts for this CPU
+}
+
+void tru_bsp_usb_init(uintptr_t usb_base_addr, uint32_t intr_target, uint32_t intr_priority){
+	switch(usb_base_addr){
+		#ifdef TRU_USB_U0_BASE
+			case TRU_USB_U0_BASE:
+				IRQ_SetHandler(TRU_USB_U0_IRQ, tru_dwc2_otg0_isr);  // Register user interrupt handler
+				IRQ_SetPriority(TRU_USB_U0_IRQ, intr_priority);
+				IRQ_SetMode(TRU_USB_U0_IRQ, IRQ_MODE_TYPE_IRQ | intr_target | IRQ_MODE_TRIG_LEVEL | IRQ_MODE_TRIG_LEVEL_HIGH);
+				IRQ_Enable(TRU_USB_U0_IRQ);  // Enable the interrupt
+				break;
+		#endif
+
+		#ifdef TRU_USB_U1_BASE
+			case TRU_USB_U1_BASE:
+				IRQ_SetHandler(TRU_USB_U1_IRQ, tru_dwc2_otg1_isr);  // Register user interrupt handler
+				IRQ_SetPriority(TRU_USB_U1_IRQ, intr_priority);
+				IRQ_SetMode(TRU_USB_U1_IRQ, IRQ_MODE_TYPE_IRQ | intr_target | IRQ_MODE_TRIG_LEVEL | IRQ_MODE_TRIG_LEVEL_HIGH);
+				IRQ_Enable(TRU_USB_U1_IRQ);  // Enable the interrupt
+				break;
+		#endif
+	}
+}
+
+void tru_bsp_usb_deinit(uintptr_t usb_base_addr){
+	switch(usb_base_addr){
+		#ifdef TRU_USB_U0_BASE
+			case TRU_USB_U0_BASE:
+				IRQ_Disable(TRU_USB_U0_IRQ);                      // Disable user interrupt handler
+				IRQ_SetHandler(TRU_USB_U0_IRQ, (IRQHandler_t)0);  // Unregister user interrupt handler
+				break;
+		#endif
+
+		#ifdef TRU_USB_U1_BASE
+			case TRU_USB_U1_BASE:
+				IRQ_Disable(TRU_USB_U1_IRQ);                      // Disable user interrupt handler
+				IRQ_SetHandler(TRU_USB_U1_IRQ, (IRQHandler_t)0);  // Unregister user interrupt handler
+				break;
+		#endif
+	}
 }
 
 #if defined(TRU_CFG_EXIT_TO_UBOOT) && TRU_CFG_EXIT_TO_UBOOT == 1
@@ -131,5 +183,30 @@ void tru_bsp_deinit(void){
 		while(1);
 	}
 #endif
+
+// Override weak function
+uintptr_t tru_delay_get_tick(void){
+	return gtim_get_counter();
+}
+
+// Override weak function
+void tru_delay_us(uintptr_t us){
+	uintptr_t start = tru_delay_get_tick();
+	uintptr_t delay = (float)tru_delay_get_tickfreq() / TRU_TICKFREQ_TO_US_DIVISOR * us;
+
+	while((tru_delay_get_tick() - start) < delay){
+		 __asm__ __volatile__("");
+	}
+}
+
+// Override weak function
+void tru_delay_ms(uintptr_t ms){
+	uintptr_t start = tru_delay_get_tick();
+	uintptr_t delay = (float)tru_delay_get_tickfreq() / TRU_TICKFREQ_TO_MS_DIVISOR * ms;
+
+	while((tru_delay_get_tick() - start) < delay){
+		 __asm__ __volatile__("");
+	}
+}
 
 #endif

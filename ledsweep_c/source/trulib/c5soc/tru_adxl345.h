@@ -266,6 +266,7 @@ typedef union{
 #define TRU_ADXL345_FIFO_STATUS_PTR(ptr) ((tru_adxl345_fifo_status_t *)ptr)
 
 void tru_adxl345_i2c_init(uint32_t l4_sp_clk_freq_hz, uint32_t i2c_dev_speed_khz, uint8_t mode10bit, uint16_t dev_addr);
+uint32_t tru_adxl345_determine_res(uint8_t range, uint8_t fullres);
 void tru_adxl345_i2c_read_bm(void *buf, uint32_t len, uint32_t reg_addr_start);
 void tru_adxl345_i2c_read(void *buf, uint32_t len, uint32_t reg_addr_start);
 void tru_adxl345_i2c_write(void *buf, uint32_t len, uint32_t reg_addr_start);

@@ -66,6 +66,8 @@ extern "C" {
 
 void tru_bsp_init(void);
 void tru_bsp_deinit(void);
+void tru_bsp_usb_init(uintptr_t usb_base_addr, uint32_t intr_target, uint32_t intr_priority);
+void tru_bsp_usb_deinit(uintptr_t usb_base_addr);
 
 #endif
 

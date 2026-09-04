@@ -43,7 +43,7 @@ extern "C" {
 		#define LOG(fmt, args...) fprintf(stderr, fmt, ##args)
 	#endif
 #else
-	#define LOG(fmt, args...)  do {} while(0) // Do nothing
+	#define LOG(fmt, args...) do {} while(0) // Do nothing
 #endif
 
 #ifdef __cplusplus

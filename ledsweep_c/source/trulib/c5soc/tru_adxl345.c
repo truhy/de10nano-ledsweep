@@ -101,7 +101,22 @@ void tru_adxl345_i2c_init(uint32_t l4_sp_clk_freq_hz, uint32_t i2c_dev_speed_khz
 	TRU_HPS_I2C0_IC_TAR_REG->bits.ic_tar = dev_addr;
 }
 
-// Reads using burst mode (multiple I2C reads), making better use of the FIFO
+uint32_t tru_adxl345_determine_res(uint8_t range, uint8_t fullres){
+	if(fullres){
+		// Res: +-2g = 10bit, +-4g = 11bit, +-8g = 12bit, +-16g = 13bit
+		switch(range){
+			case TRU_ADXL345_RANGE_2G: return 10; break;
+			case TRU_ADXL345_RANGE_4G: return 11; break;
+			case TRU_ADXL345_RANGE_8G: return 12; break;
+			case TRU_ADXL345_RANGE_16G: return 13; break;
+			default: return 0;
+		}
+	}
+
+	return 10;
+}
+
+// Read using burst mode (multiple I2C reads), making better use of the FIFO
 // Read data using HPS I2C0 controller
 void tru_adxl345_i2c_read_bm(void *buf, uint32_t len, uint32_t reg_addr_start){
 	uint8_t *buf8 = buf;
