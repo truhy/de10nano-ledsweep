@@ -19,7 +19,7 @@ void tru_delay_set_corefreq(uintptr_t freq);
 uintptr_t tru_delay_get_corefreq(void);
 void tru_delay_set_tickfreq(uintptr_t freq);
 uintptr_t tru_delay_get_tickfreq(void);
-__attribute__((weak)) void tru_delay_us(uintptr_t us);
-__attribute__((weak)) void tru_delay_ms(uintptr_t ms);
+void tru_delay_us(uintptr_t us);
+void tru_delay_ms(uintptr_t ms);
 
 #endif
